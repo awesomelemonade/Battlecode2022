@@ -19,7 +19,7 @@ public class Builder implements RunnableBot {
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         if (rc.isMovementReady()) {
             if (closestEnemyAttacker == null) {
-                Util.tryRandomMove();
+                Util.tryExplore();
             } else {
                 Util.tryKiteFrom(closestEnemyAttacker.location);
             }

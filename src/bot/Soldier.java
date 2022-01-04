@@ -47,7 +47,7 @@ public class Soldier implements RunnableBot {
                 if (closestEnemyAttacker != null) {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                 } else {
-                    Util.tryRandomMove();
+                    Util.tryExplore();
                 }
             }
         }

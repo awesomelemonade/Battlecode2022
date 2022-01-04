@@ -54,7 +54,7 @@ public class Miner implements RunnableBot {
                     if (closestAllyMiner != null) {
                         Util.tryKiteFrom(closestAllyMiner.location);
                     } else {
-                        Util.tryRandomMove();
+                        Util.tryExplore();
                     }
                 }
             }

@@ -13,6 +13,7 @@ public class Util {
         Cache.init();
         Communication.init();
         MapInfo.init();
+        Explorer.init();
     }
 
     public static void loop() throws GameActionException {
@@ -109,9 +110,7 @@ public class Util {
     }
 
     public static boolean tryMove(MapLocation loc) {
-        // REPLACE THIS WITH PATHFINDER STUFF WHEN THAT IS IMPLEMENTED.
-        if (loc.equals(rc.getLocation())) return false;
-        return tryMoveTowards(rc.getLocation().directionTo(loc));
+        return Pathfinder.execute(loc);
     }
 
     public static boolean tryMoveTowards(Direction direction) {
@@ -129,6 +128,10 @@ public class Util {
 
     public static boolean tryKiteFrom(MapLocation location) throws GameActionException {
         return Util.tryMoveTowards(location.directionTo(rc.getLocation()));
+    }
+
+    public static boolean tryExplore() throws GameActionException {
+        return Explorer.smartExplore();
     }
 
     public static int numAllyRobotsWithin(MapLocation location, int distanceSquared) {
