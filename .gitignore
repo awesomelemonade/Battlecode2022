@@ -16,6 +16,7 @@ build/*
 .gradle
 /client/
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.iml
 *.ipr
 *.iws
