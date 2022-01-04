@@ -3,10 +3,10 @@ package bot.util;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+
+import static bot.util.Constants.rc;
 
 public class Pathfinder {
-    private static RobotController rc;
     private static boolean bugpathBlocked = false;
     private static Direction bugpathDir;
     private static int bugpathTermCount = 0;
@@ -15,10 +15,6 @@ public class Pathfinder {
     private static MapLocation prevLoc = Cache.MY_LOCATION;
     private static int bugpathTurnCount = 0;
     private static MapLocation prevTarget;
-
-    public static void init(RobotController rc) {
-        Pathfinder.rc = rc;
-    }
 
     public static double sensePassability(MapLocation location) {
         try {

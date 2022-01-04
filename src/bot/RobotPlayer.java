@@ -66,7 +66,7 @@ public class RobotPlayer {
                         Debug.println(controller.getLocation() + " out of bytecodes: " + Cache.TURN_COUNT + " (over by " + over + ")");
                     }
                     if (errored) {
-                        Debug.setIndicatorDot(controller.getLocation(), 255, 0, 0); // red
+                        Debug.setIndicatorDot(controller.getLocation(), 255, 0, 255); // pink
                     }
                     if (overBytecodes) {
                         Debug.setIndicatorDot(controller.getLocation(), 128, 0, 255); // purple
