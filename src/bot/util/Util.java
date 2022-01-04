@@ -4,7 +4,6 @@ import battlecode.common.*;
 
 import java.util.function.Predicate;
 
-import static bot.util.Constants.ORDINAL_DIRECTIONS;
 import static bot.util.Constants.rc;
 
 public class Util {
@@ -16,10 +15,11 @@ public class Util {
 
     public static void loop() throws GameActionException {
         Cache.loop();
+        Communication.loop();
     }
 
     public static void postLoop() throws GameActionException {
-        // TODO
+        Communication.postLoop();
     }
 
     public static Direction random(Direction[] directions) {
