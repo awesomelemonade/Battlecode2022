@@ -19,10 +19,10 @@ public class Constants {
     public static final int MAX_DISTANCE_SQUARED = (MAX_MAP_SIZE - 1) * (MAX_MAP_SIZE - 1);
     public static MapLocation SPAWN;
 
-    public static RobotController controller;
+    public static RobotController rc;
 
     public static void init(RobotController controller) {
-        Constants.controller = controller;
+        Constants.rc = controller;
         ALLY_TEAM = controller.getTeam();
         ENEMY_TEAM = ALLY_TEAM.opponent();
         SPAWN = controller.getLocation();

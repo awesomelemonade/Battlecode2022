@@ -3,10 +3,12 @@ package bot;
 import battlecode.common.*;
 import bot.util.*;
 
+import static bot.util.Constants.rc;
+
 public class RobotPlayer {
     public static int currentTurn;
     public static void run(RobotController controller) throws GameActionException {
-        Constants.controller = controller;
+        Constants.rc = controller;
 
         RobotType robotType = controller.getType();
         RunnableBot bot;
@@ -14,14 +16,30 @@ public class RobotPlayer {
             case ARCHON:
                 bot = new Archon();
                 break;
+            case WATCHTOWER:
+                bot = new Watchtower();
+                break;
+            case LABORATORY:
+                bot = new Laboratory();
+                break;
+            case MINER:
+                bot = new Miner();
+                break;
+            case BUILDER:
+                bot = new Builder();
+                break;
             case SOLDIER:
                 bot = new Soldier();
+                break;
+            case SAGE:
+                bot = new Sage();
                 break;
             default:
                 throw new IllegalStateException("Unknown Robot Type: " + robotType);
         }
 
         try {
+            Util.init(controller);
             bot.init();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -30,7 +48,6 @@ public class RobotPlayer {
         boolean errored = false;
         boolean overBytecodes = false;
 
-        // Battlecodify
         while (true) {
             try {
                 while (true) {
