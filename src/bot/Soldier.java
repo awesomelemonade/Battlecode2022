@@ -18,6 +18,9 @@ public class Soldier implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
+        if (rc.isActionReady()) {
+            tryAttackLowHealth();
+        }
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         RobotInfo closestEnemy = Util.getClosestEnemyRobot();
         if (rc.isMovementReady()) {
@@ -49,19 +52,25 @@ public class Soldier implements RunnableBot {
             }
         }
         if (rc.isActionReady()) {
-            RobotInfo bestRobot = null;
-            int bestHealth = (int)1e9;
-            for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
-                if (rc.canAttack(robot.location)) {
-                    if (robot.health < bestHealth) {
-                        bestHealth = robot.health;
-                        bestRobot = robot;
-                    }
+            tryAttackLowHealth();
+        }
+    }
+
+    boolean tryAttackLowHealth() throws GameActionException {
+        RobotInfo bestRobot = null;
+        int bestHealth = (int)1e9;
+        for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
+            if (rc.canAttack(robot.location)) {
+                if (robot.health < bestHealth) {
+                    bestHealth = robot.health;
+                    bestRobot = robot;
                 }
             }
-            if (bestRobot != null) {
-                rc.attack(bestRobot.location);
-            }
         }
+        if (bestRobot != null) {
+            rc.attack(bestRobot.location);
+            return true;
+        }
+        return false;
     }
 }
