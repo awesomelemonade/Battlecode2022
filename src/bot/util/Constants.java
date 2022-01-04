@@ -51,9 +51,6 @@ public class Constants {
     };
 
     public static final Direction[] ALL_DIRECTIONS = Direction.allDirections();
-    // TODO: Was this used for pathfinding?
-    //public static final int[] ORDINAL_OFFSET_X = {0, 1, 1, 1, 0, -1, -1, -1, 1, 2, 2, 1, -1, -2, -2, -1};
-    //public static final int[] ORDINAL_OFFSET_Y = {-1, -1, 0, 1, 1, 1, 0, -1, 2, 1, -1, -2, -2, -1, 1, 2};
 
     private static final Direction[][] ATTEMPT_ORDER = new Direction[][] {
             // NORTH

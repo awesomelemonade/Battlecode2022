@@ -12,4 +12,16 @@ public class MapInfo {
         // Assume all symmetries are possible
 
     }
+
+    public static int getClosestAllyArchonDistanceSquared(MapLocation location, int searchDistance) {
+        int bestDistanceSquared = searchDistance;
+        for (int i = INITIAL_ARCHON_LOCATIONS.length; --i >= 0;) {
+            MapLocation archonLocation = INITIAL_ARCHON_LOCATIONS[i];
+            int distanceSquared = location.distanceSquaredTo(archonLocation);
+            if (distanceSquared < bestDistanceSquared) {
+                bestDistanceSquared = distanceSquared;
+            }
+        }
+        return bestDistanceSquared;
+    }
 }

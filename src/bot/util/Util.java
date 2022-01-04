@@ -130,4 +130,42 @@ public class Util {
     public static boolean tryKiteFrom(MapLocation location) throws GameActionException {
         return Util.tryMoveTowards(location.directionTo(rc.getLocation()));
     }
+
+    public static int numAllyRobotsWithin(MapLocation location, int distanceSquared) {
+        if (Cache.ALLY_ROBOTS.length >= 20) {
+            return rc.senseNearbyRobots(location, distanceSquared, Constants.ALLY_TEAM).length;
+        } else {
+            // loop through robot list
+            int count = 0;
+            for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+                if (location.isWithinDistanceSquared(Cache.ALLY_ROBOTS[i].getLocation(), distanceSquared)) {
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
+
+    public static <T> void shuffle(T[] array) {
+        for (int i = array.length; --i >= 0;) {
+            int index = (int) (Math.random() * i);
+            T temp = array[index];
+            array[index] = array[i];
+            array[i] = temp;
+        }
+    }
+
+    public static boolean onTheMap(MapLocation location) {
+        int x = location.x;
+        int y = location.y;
+        return x >= 0 && y >= 0 && x < Constants.MAP_WIDTH && y < Constants.MAP_HEIGHT;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] deepCopy(T[] array) {
+        int length = array.length;
+        T[] copy = (T[]) new Object[length];
+        System.arraycopy(array, 0, copy, 0, array.length);
+        return copy;
+    }
 }
