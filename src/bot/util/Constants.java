@@ -1,9 +1,6 @@
 package bot.util;
 
-import battlecode.common.Direction;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
-import battlecode.common.Team;
+import battlecode.common.*;
 
 public class Constants {
     // TODO: CHECK BEFORE SUBMITTING
@@ -16,11 +13,14 @@ public class Constants {
     public static Team ENEMY_TEAM;
     public static int MAP_WIDTH;
     public static int MAP_HEIGHT;
+    public static RobotType ROBOT_TYPE;
     public static final int MAX_MAP_SIZE = 60;
     public static final int MAX_DISTANCE_SQUARED = (MAX_MAP_SIZE - 1) * (MAX_MAP_SIZE - 1);
     public static MapLocation SPAWN;
 
     public static RobotController rc;
+
+    public static final int MAX_ARCHONS = 4; // From Specs
 
     public static void init(RobotController controller) {
         Constants.rc = controller;
@@ -29,6 +29,7 @@ public class Constants {
         SPAWN = controller.getLocation();
         MAP_WIDTH = controller.getMapWidth();
         MAP_HEIGHT = controller.getMapHeight();
+        ROBOT_TYPE = controller.getType();
     }
 
     public static final Direction[] CARDINAL_DIRECTIONS = {
@@ -48,6 +49,8 @@ public class Constants {
             Direction.WEST,
             Direction.NORTHWEST,
     };
+
+    public static final Direction[] ALL_DIRECTIONS = Direction.allDirections();
     // TODO: Was this used for pathfinding?
     //public static final int[] ORDINAL_OFFSET_X = {0, 1, 1, 1, 0, -1, -1, -1, 1, 2, 2, 1, -1, -2, -2, -1};
     //public static final int[] ORDINAL_OFFSET_Y = {-1, -1, 0, 1, 1, 1, 0, -1, 2, 1, -1, -2, -2, -1, 1, 2};

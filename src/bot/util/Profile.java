@@ -1,7 +1,7 @@
 package bot.util;
 
 public enum Profile {
-    MAIN(true), PATHFINDER(true);
+    CHUNK_INFO(true), PATHFINDER(true);
 
     private final boolean enabled;
 
