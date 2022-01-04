@@ -33,7 +33,7 @@ public class Communication {
                 int sharedArrayIndex = ARCHON_LOCATIONS_OFFSET + i;
                 if (rc.readSharedArray(sharedArrayIndex) == 0) {
                     // Write
-                    rc.writeSharedArray(sharedArrayIndex, (pack(Cache.MY_LOCATION) << 1) | 1);
+                    rc.writeSharedArray(sharedArrayIndex, (pack(rc.getLocation()) << 1) | 1);
                     break;
                 }
             }
@@ -49,6 +49,9 @@ public class Communication {
                     }
                     MapInfo.INITIAL_ARCHON_LOCATIONS[i] = unpack(value >> 1);
                 }
+            }
+            if (!initialized) {
+                throw new IllegalStateException("Cannot read any archon locations");
             }
         }
     }

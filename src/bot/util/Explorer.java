@@ -43,7 +43,16 @@ public class Explorer {
     private static ExploreDirection currentExploreDirection = null;
     private static boolean hasExplored = false;
     public static MapLocation currentExploreLocation;
-    public static ExploreDirection[] shuffledExploreDirections = Util.deepCopy(ExploreDirection.values());
+    public static ExploreDirection[] shuffledExploreDirections;
+
+    static {
+        ExploreDirection[] values = ExploreDirection.values();
+        int length = values.length;
+        shuffledExploreDirections = new ExploreDirection[length];
+        for (int i = length; --i >= 0;) {
+            shuffledExploreDirections[i] = values[i];
+        }
+    }
 
     public static boolean smartExplore() throws GameActionException {
         Debug.setIndicatorDot(Cache.MY_LOCATION, 255, 128, 0); // orange

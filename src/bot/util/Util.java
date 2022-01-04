@@ -163,12 +163,4 @@ public class Util {
         int y = location.y;
         return x >= 0 && y >= 0 && x < Constants.MAP_WIDTH && y < Constants.MAP_HEIGHT;
     }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T[] deepCopy(T[] array) {
-        int length = array.length;
-        T[] copy = (T[]) new Object[length];
-        System.arraycopy(array, 0, copy, 0, array.length);
-        return copy;
-    }
 }
