@@ -46,11 +46,13 @@ public class Miner implements RunnableBot {
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = -1; dy <= 1; dy++) {
                     MapLocation loc = rc.getLocation().translate(dx, dy);
-                    int amount = rc.senseLead(loc);
-                    if (amount >= 2 || closestEnemyAttacker != null) {
-                        if (rc.canMineLead(loc)) {
-                            rc.mineLead(loc);
-                            continue miningloop;
+                    if (rc.onTheMap(loc)) {
+                        int amount = rc.senseLead(loc);
+                        if (amount >= 2 || closestEnemyAttacker != null) {
+                            if (rc.canMineLead(loc)) {
+                                rc.mineLead(loc);
+                                continue miningloop;
+                            }
                         }
                     }
                 }

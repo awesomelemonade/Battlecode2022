@@ -5,6 +5,10 @@ import battlecode.common.MapLocation;
 import static bot.util.Constants.rc;
 
 public class Debug {
+    public static void println(Object o) {
+        System.out.println(o);
+    }
+
     public static void println(String line) {
         System.out.println(line);
     }

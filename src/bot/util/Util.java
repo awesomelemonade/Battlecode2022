@@ -8,9 +8,11 @@ import static bot.util.Constants.rc;
 
 public class Util {
 
-    public static void init(RobotController controller) {
+    public static void init(RobotController controller) throws GameActionException {
         Constants.init(controller);
         Cache.init();
+        Communication.init();
+        MapInfo.init();
     }
 
     public static void loop() throws GameActionException {
