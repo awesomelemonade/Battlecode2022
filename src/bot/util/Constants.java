@@ -8,13 +8,14 @@ import battlecode.common.Team;
 public class Constants {
     // TODO: CHECK BEFORE SUBMITTING
     public static final boolean ENABLE_DEBUG = true;
-    public static final Profile CURRENT_PROFILE = Profile.MAIN;
     public static final boolean DEBUG_DRAW = true;
     public static final boolean DEBUG_RESIGN = false;
     public static final boolean DEBUG_PRINT = false;
 
     public static Team ALLY_TEAM;
     public static Team ENEMY_TEAM;
+    public static int MAP_WIDTH;
+    public static int MAP_HEIGHT;
     public static final int MAX_MAP_SIZE = 60;
     public static final int MAX_DISTANCE_SQUARED = (MAX_MAP_SIZE - 1) * (MAX_MAP_SIZE - 1);
     public static MapLocation SPAWN;
@@ -26,6 +27,8 @@ public class Constants {
         ALLY_TEAM = controller.getTeam();
         ENEMY_TEAM = ALLY_TEAM.opponent();
         SPAWN = controller.getLocation();
+        MAP_WIDTH = controller.getMapWidth();
+        MAP_HEIGHT = controller.getMapHeight();
     }
 
     public static final Direction[] CARDINAL_DIRECTIONS = {

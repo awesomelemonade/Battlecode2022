@@ -89,21 +89,29 @@ public class Util {
         return bestRobot;
     }
 
-    public static boolean tryMove(Direction direction) throws GameActionException {
-        if (rc.canMove(direction)) {
+    public static void move(Direction direction) {
+        try {
             rc.move(direction);
+        } catch (GameActionException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    public static boolean tryMove(Direction direction) {
+        if (rc.canMove(direction)) {
+            move(direction);
             return true;
         } else {
             return false;
         }
     }
 
-    public static boolean tryMove(MapLocation loc) throws GameActionException {
+    public static boolean tryMove(MapLocation loc) {
         // REPLACE THIS WITH PATHFINDER STUFF WHEN THAT IS IMPLEMENTED.
         return tryMoveTowards(rc.getLocation().directionTo(loc));
     }
 
-    public static boolean tryMoveTowards(Direction direction) throws GameActionException {
+    public static boolean tryMoveTowards(Direction direction) {
         for (Direction moveDirection : Constants.getAttemptOrder(direction)) {
             if (tryMove(moveDirection)) {
                 return true;
