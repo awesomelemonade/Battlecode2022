@@ -110,6 +110,7 @@ public class Util {
 
     public static boolean tryMove(MapLocation loc) {
         // REPLACE THIS WITH PATHFINDER STUFF WHEN THAT IS IMPLEMENTED.
+        if (loc.equals(rc.getLocation())) return false;
         return tryMoveTowards(rc.getLocation().directionTo(loc));
     }
 
