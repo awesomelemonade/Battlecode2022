@@ -9,8 +9,8 @@ import static bot.util.Constants.ORDINAL_DIRECTIONS;
 import static bot.util.Constants.rc;
 
 public class Archon implements RunnableBot {
-    RobotType[] earlyGameBuildOrder = {RobotType.MINER, RobotType.MINER, RobotType.MINER, RobotType.BUILDER};
-    RobotType[] lateGameBuildOrder = {RobotType.SOLDIER, RobotType.SOLDIER, RobotType.MINER, RobotType.SOLDIER, RobotType.BUILDER};
+    RobotType[] earlyGameBuildOrder = {RobotType.MINER, RobotType.BUILDER, RobotType.MINER, RobotType.BUILDER};
+    RobotType[] lateGameBuildOrder = {RobotType.SOLDIER, RobotType.SOLDIER, RobotType.BUILDER, RobotType.MINER, RobotType.BUILDER};
     int buildCount;
     boolean builtFirstLateGame;
 
@@ -22,7 +22,7 @@ public class Archon implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        if (rc.getRoundNum() <= 30) {
+        if (rc.getRoundNum() <= 100) {
             if (tryBuild(earlyGameBuildOrder[buildCount % earlyGameBuildOrder.length])) {
                 buildCount++;
             }

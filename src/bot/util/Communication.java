@@ -17,9 +17,9 @@ public class Communication {
     private static int NUM_CHUNKS_WIDTH;
     private static int NUM_CHUNKS_HEIGHT;
 
-    private static final int CHUNK_INFO_UNEXPLORED = 0;
-    private static final int CHUNK_INFO_ALLY = 1;
-    private static final int CHUNK_INFO_ENEMY = 2;
+    public static final int CHUNK_INFO_UNEXPLORED = 0;
+    public static final int CHUNK_INFO_ALLY = 1;
+    public static final int CHUNK_INFO_ENEMY = 2;
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
 
@@ -177,5 +177,9 @@ public class Communication {
             default:
                 throw new IllegalArgumentException("Unknown");
         }
+    }
+
+    public static int getChunkInfo(MapLocation loc) {
+        return getChunkInfo(loc.x / CHUNK_SIZE, loc.y / CHUNK_SIZE);
     }
 }
