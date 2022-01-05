@@ -16,18 +16,6 @@ public class Pathfinder {
     private static int bugpathTurnCount = 0;
     private static MapLocation prevTarget;
 
-    public static double sensePassability(MapLocation location) {
-        try {
-            return rubbleToPassability(rc.senseRubble(location));
-        } catch (GameActionException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    public static double rubbleToPassability(int rubble) {
-        return 1.0 / (1.0 + rubble / 10.0);
-    }
-
     public static int moveDistance(MapLocation a, MapLocation b) {
         return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
     }
@@ -54,7 +42,7 @@ public class Pathfinder {
             if (nextLoc.equals(prevLoc)) {
                 continue;
             }
-            double tempHeuristic = -Double.MAX_VALUE;
+            double tempHeuristic = -1024;
             switch (direction) {
                 case NORTH:
                     tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTH), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), target, nextLoc));
@@ -102,7 +90,7 @@ public class Pathfinder {
             return -1024;
         }
         // double angle = getAngle(nextLoc, target, curLoc);
-        double passability = 2 * Math.log(sensePassability(nextLoc));
+        double passability = -2.0 * Math.log(1.0 + rc.senseRubble(nextLoc) / 10.0);
         double closer = Math.sqrt(curLoc.distanceSquaredTo(target)) - Math.sqrt(nextLoc.distanceSquaredTo(target));
         return (passability + closer * 0.8);
     }
@@ -157,7 +145,7 @@ public class Pathfinder {
         // euclidean distance defined by dx^2 + dy^2
         // move distance defined by max(dx, dy)
         // ties broken by "preferred direction" dictated by Constants.getAttemptOrder
-        double highestPassability = 0;
+        int lowestRubble = Integer.MAX_VALUE;
         int targetDistanceSquared = Cache.MY_LOCATION.distanceSquaredTo(target) - 1; // subtract 1 to be strictly less
         int targetMoveDistance = moveDistance(Cache.MY_LOCATION, target);
         Direction bestDirection = null;
@@ -165,10 +153,14 @@ public class Pathfinder {
             if (rc.canMove(direction)) {
                 MapLocation location = Cache.MY_LOCATION.add(direction);
                 if (location.isWithinDistanceSquared(target, targetDistanceSquared) || moveDistance(location, target) < targetMoveDistance) {
-                    double passability = sensePassability(location);
-                    if (passability > highestPassability) {
-                        highestPassability = passability;
-                        bestDirection = direction;
+                    try {
+                        int rubble = rc.senseRubble(location);
+                        if (rubble < lowestRubble) {
+                            lowestRubble = rubble;
+                            bestDirection = direction;
+                        }
+                    } catch (GameActionException ex) {
+                        throw new IllegalStateException(ex);
                     }
                 }
             }
