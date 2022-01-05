@@ -100,6 +100,6 @@ public class Explorer {
     }
 
     public static boolean reachedBorder(ExploreDirection direction) {
-        return !Util.onTheMap(rc.getLocation().translate(Integer.signum(direction.dx), Integer.signum(direction.dy)));
+        return !Util.onTheMap(rc.getLocation().translate(Integer.signum(direction.dx) * 3, Integer.signum(direction.dy) * 3));
     }
 }

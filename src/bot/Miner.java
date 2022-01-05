@@ -35,21 +35,22 @@ public class Miner implements RunnableBot {
                 if (closestEnemyAttacker != null) {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                 } else {
-                    int highestPb = 1;
-                    MapLocation highestPbLoc = null;
-                    MapLocation[] senseLocs = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), RobotType.MINER.visionRadiusSquared);
-                    for (int i = senseLocs.length; --i >= 0;) {
-                        MapLocation loc = senseLocs[i];
-                        if (rc.onTheMap(loc)) {
-                            int pb = rc.senseLead(loc);
-                            if (pb > highestPb) {
-                                highestPb = pb;
-                                highestPbLoc = loc;
-                            }
+                    int highestResource = 0;
+                    MapLocation highestResourceLocation = null;
+                    MapLocation[] miningLocations = rc.senseNearbyLocationsWithGold(MINER_VISION);
+                    if (miningLocations.length == 0) {
+                        miningLocations = rc.senseNearbyLocationsWithLead(MINER_VISION);
+                    }
+                    for (int i = miningLocations.length; --i >= 0;) {
+                        MapLocation loc = miningLocations[i];
+                        int pb = rc.senseLead(loc);
+                        if (pb > highestResource) {
+                            highestResource = pb;
+                            highestResourceLocation = loc;
                         }
                     }
-                    if (highestPbLoc != null) {
-                        Util.tryMove(highestPbLoc);
+                    if (highestResourceLocation != null) {
+                        Util.tryMove(highestResourceLocation);
                     } else {
                         RobotInfo closestAllyMiner = Util.getClosestRobot(ALLY_ROBOTS, r -> r.type == RobotType.MINER);
                         if (closestAllyMiner != null) {
