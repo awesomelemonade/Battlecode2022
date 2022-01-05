@@ -60,21 +60,20 @@ public class RobotPlayer {
                     Util.postLoop();
                     if (controller.getRoundNum() != currentTurn) {
                         overBytecodes = true;
-                        // We ran out of bytecodes! - MAGENTA
-                        Debug.setIndicatorDot(controller.getLocation(), 255, 0, 255);
+                        // We ran out of bytecodes!
                         int over = Clock.getBytecodeNum() + (controller.getRoundNum() - currentTurn - 1) * controller.getType().bytecodeLimit;
-                        Debug.println(controller.getLocation() + " out of bytecodes: " + Cache.TURN_COUNT + " (over by " + over + ")");
+                        Debug.println(Profile.ERROR_STATE, controller.getLocation() + " out of bytecodes: " + Cache.TURN_COUNT + " (over by " + over + ")");
                     }
                     if (errored) {
-                        Debug.setIndicatorDot(controller.getLocation(), 255, 0, 255); // pink
+                        Debug.setIndicatorDot(Profile.ERROR_STATE, controller.getLocation(), 255, 0, 255); // pink
                     }
                     if (overBytecodes) {
-                        Debug.setIndicatorDot(controller.getLocation(), 128, 0, 255); // purple
+                        Debug.setIndicatorDot(Profile.ERROR_STATE, controller.getLocation(), 128, 0, 255); // purple
                     }
                     Clock.yield();
                 }
             } catch (Exception ex) {
-                Debug.println(controller.getLocation() + " errored: " + Cache.TURN_COUNT);
+                Debug.println(Profile.ERROR_STATE, controller.getLocation() + " errored: " + Cache.TURN_COUNT);
                 ex.printStackTrace();
                 errored = true;
                 Clock.yield();

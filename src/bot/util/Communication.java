@@ -94,11 +94,11 @@ public class Communication {
                         MapLocation chunkLocation = new MapLocation(chunkMidX, chunkMidY);
                         if (oldChunkValue == CHUNK_INFO_ENEMY) {
                             // Remove from enemy list
-                            Debug.setIndicatorDot(chunkLocation, 0, 255, 255);
+                            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 255, 255);
                         }
                         if (chunkValue == CHUNK_INFO_ENEMY) {
                             // Add to enemy list
-                            Debug.setIndicatorDot(chunkLocation, 0, 0, 255);
+                            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 0, 255);
                         }
                     }
                 }

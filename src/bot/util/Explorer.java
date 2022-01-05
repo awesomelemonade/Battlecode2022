@@ -18,7 +18,7 @@ public class Explorer {
     }
 
     public static boolean randomExplore() {
-        Debug.setIndicatorDot(Cache.MY_LOCATION, 255, 128, 0); // orange
+        Debug.setIndicatorDot(Profile.EXPLORER, Cache.MY_LOCATION, 255, 128, 0); // orange
         Direction bestDirection = null;
         int minAllies = Integer.MAX_VALUE;
         for (Direction direction : Constants.getAttemptOrder(previousDirection)) {
@@ -55,7 +55,7 @@ public class Explorer {
     }
 
     public static boolean smartExplore() throws GameActionException {
-        Debug.setIndicatorDot(Cache.MY_LOCATION, 255, 128, 0); // orange
+        Debug.setIndicatorDot(Profile.EXPLORER, Cache.MY_LOCATION, 255, 128, 0); // orange
         // TODO: Simplify
         if (currentExploreDirection == null || reachedBorder(currentExploreDirection) || goingTowardsAllyArchon(currentExploreDirection)) {
             if (rc.getRoundNum() < 100 && !hasExplored) {
