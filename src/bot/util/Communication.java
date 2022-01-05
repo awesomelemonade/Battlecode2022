@@ -59,7 +59,51 @@ public class Communication {
     public static void loop() throws GameActionException {
         for (int i = BUFFER_SIZE; --i >= 0;) {
             int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
-            buffer[i] = rc.readSharedArray(sharedArrayIndex); // TODO: Detect Change?
+            int oldValue = buffer[i];
+            int value = rc.readSharedArray(sharedArrayIndex);
+            if (value != oldValue) {
+                for (int j = 4; --j >= 0;) {
+                    int oldChunkValue;
+                    int chunkValue;
+                    switch (j) {
+                        case 0:
+                            oldChunkValue = oldValue & 0b1111;
+                            chunkValue = value & 0b1111;
+                            break;
+                        case 1:
+                            oldChunkValue = (oldValue >> 4) & 0b1111;
+                            chunkValue = (value >> 4) & 0b1111;
+                            break;
+                        case 2:
+                            oldChunkValue = (oldValue >> 8) & 0b1111;
+                            chunkValue = (value >> 8) & 0b1111;
+                            break;
+                        case 3:
+                            oldChunkValue = (oldValue >> 12) & 0b1111;
+                            chunkValue = (value >> 12) & 0b1111;
+                            break;
+                        default:
+                            throw new IllegalStateException();
+                    }
+                    if (chunkValue != oldChunkValue) {
+                        int chunkIndex = (i << 2) + j;
+                        int chunkX = chunkIndex / NUM_CHUNKS_SIZE;
+                        int chunkY = chunkIndex % NUM_CHUNKS_SIZE;
+                        int chunkMidX = getChunkMidX(chunkX);
+                        int chunkMidY = getChunkMidY(chunkY);
+                        MapLocation chunkLocation = new MapLocation(chunkMidX, chunkMidY);
+                        if (oldChunkValue == CHUNK_INFO_ENEMY) {
+                            // Remove from enemy list
+                            Debug.setIndicatorDot(chunkLocation, 0, 255, 255);
+                        }
+                        if (chunkValue == CHUNK_INFO_ENEMY) {
+                            // Add to enemy list
+                            Debug.setIndicatorDot(chunkLocation, 0, 0, 255);
+                        }
+                    }
+                }
+                buffer[i] = value;
+            }
         }
     }
 
