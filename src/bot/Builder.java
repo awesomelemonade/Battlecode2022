@@ -22,26 +22,7 @@ public class Builder implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        if (rc.getRoundNum() == spawnRound) {
-            for (Direction d : ORDINAL_DIRECTIONS) {
-                MapLocation loc = rc.getLocation().add(d);
-                if (rc.canSenseLocation(loc)) {
-                    RobotInfo robot = rc.senseRobotAtLocation(loc);
-                    if (robot != null && robot.team == ALLY_TEAM && robot.type == RobotType.ARCHON) {
-                        Util.tryKiteFrom(robot.location);
-                        return;
-                    }
-                }
-            }
-        }
-        if (rc.isActionReady()) {
-                RobotInfo closestAllyWatchtower = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> r.type == RobotType.WATCHTOWER && r.health < r.type.health && rc.canRepair(r.location));
-            if (closestAllyWatchtower != null) {
-                rc.repair(closestAllyWatchtower.location);
-            } else {
-                tryBuild(RobotType.WATCHTOWER);
-            }
-        }
+        tryRepair();
         if (suicidal) trySeppuku();
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         if (rc.isMovementReady()) {
@@ -51,13 +32,22 @@ public class Builder implements RunnableBot {
                 Util.tryKiteFrom(closestEnemyAttacker.location);
             }
         }
-        if (rc.isActionReady()) {
-            RobotInfo closestAllyWatchtower = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> r.type == RobotType.WATCHTOWER && r.health < r.type.health && rc.canRepair(r.location));
-            if (closestAllyWatchtower != null) {
-                rc.repair(closestAllyWatchtower.location);
-            } else {
-                tryBuild(RobotType.WATCHTOWER);
-            }
+        tryRepair();
+        if (rc.getTeamLeadAmount(ALLY_TEAM) >= 4000 && Math.random() < 0.5) {
+            tryBuild(RobotType.LABORATORY);
+        }
+        tryBuild(RobotType.WATCHTOWER);
+    }
+
+    boolean tryRepair() throws GameActionException {
+        if (!rc.isActionReady()) return false;
+        RobotInfo closestRepairable = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> r.health < r.type.health && rc.getType().canRepair(r.type));
+        if (closestRepairable == null) return false;
+        if (rc.canRepair(closestRepairable.location)) {
+            rc.repair(closestRepairable.location);
+            return true;
+        } else {
+            return Util.tryMove(closestRepairable.location);
         }
     }
 

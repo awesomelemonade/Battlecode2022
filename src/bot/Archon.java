@@ -5,8 +5,7 @@ import battlecode.common.GameActionException;
 import battlecode.common.RobotType;
 import bot.util.RunnableBot;
 
-import static bot.util.Constants.ORDINAL_DIRECTIONS;
-import static bot.util.Constants.rc;
+import static bot.util.Constants.*;
 
 public class Archon implements RunnableBot {
     RobotType[] earlyGameBuildOrder = {RobotType.MINER, RobotType.BUILDER, RobotType.MINER, RobotType.BUILDER};
@@ -23,7 +22,9 @@ public class Archon implements RunnableBot {
     @Override
     public void loop() throws GameActionException {
         if (rc.getRoundNum() <= 100) {
-            if (tryBuild(earlyGameBuildOrder[buildCount % earlyGameBuildOrder.length])) {
+            RobotType buildType = earlyGameBuildOrder[buildCount % earlyGameBuildOrder.length];
+            if (buildType == RobotType.SOLDIER && rc.getTeamGoldAmount(ALLY_TEAM) >= RobotType.SAGE.buildCostGold) buildType = RobotType.SAGE;
+            if (tryBuild(buildType)) {
                 buildCount++;
             }
         } else {
@@ -31,7 +32,9 @@ public class Archon implements RunnableBot {
                 buildCount = 0;
                 builtFirstLateGame = true;
             }
-            if (tryBuild(lateGameBuildOrder[buildCount % lateGameBuildOrder.length])) {
+            RobotType buildType = lateGameBuildOrder[buildCount % earlyGameBuildOrder.length];
+            if (buildType == RobotType.SOLDIER && rc.getTeamGoldAmount(ALLY_TEAM) >= RobotType.SAGE.buildCostGold) buildType = RobotType.SAGE;
+            if (tryBuild(buildType)) {
                 buildCount++;
             }
         }
