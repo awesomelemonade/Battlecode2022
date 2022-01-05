@@ -3,8 +3,6 @@ package bot;
 import battlecode.common.*;
 import bot.util.*;
 
-import java.util.function.Predicate;
-
 import static bot.util.Cache.ALLY_ROBOTS;
 import static bot.util.Constants.*;
 
@@ -19,7 +17,7 @@ public class Miner implements RunnableBot {
     @Override
     public void loop() throws GameActionException {
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
-        tryMine(closestEnemyAttacker);
+        tryMine();
         if (rc.isMovementReady()) {
             // If first turn, just move away from our Archon (saves bytecode)
             if (rc.getRoundNum() == spawnRound) {
@@ -39,7 +37,6 @@ public class Miner implements RunnableBot {
                 } else {
                     int highestPb = 1;
                     MapLocation highestPbLoc = null;
-                    int bef = Clock.getBytecodeNum();
                     MapLocation[] senseLocs = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), RobotType.MINER.visionRadiusSquared);
                     for (int i = senseLocs.length; --i >= 0;) {
                         MapLocation loc = senseLocs[i];
@@ -51,7 +48,6 @@ public class Miner implements RunnableBot {
                             }
                         }
                     }
-                    int aft = Clock.getBytecodeNum();
                     if (highestPbLoc != null) {
                         Util.tryMove(highestPbLoc);
                     } else {
@@ -64,32 +60,57 @@ public class Miner implements RunnableBot {
                     }
                 }
             }
-            tryMine(closestEnemyAttacker);
+            tryMine();
         }
     }
 
-    void tryMine(RobotInfo closestEnemyAttacker) throws GameActionException {
+    public static void tryMine() throws GameActionException {
         // Try to mine as much Au as possible, then as much Pb as possible. Deplete Pb to -1 only if there is an enemy soldier/sage in vision.
         if (!rc.isActionReady()) return;
-        for (Direction d : ALL_DIRECTIONS) {
-            MapLocation loc = rc.getLocation().add(d);
+        MapLocation current = rc.getLocation();
+        for (int i = ALL_DIRECTIONS.length; --i >= 0;) {
+            MapLocation loc = current.add(ALL_DIRECTIONS[i]);
             if (rc.onTheMap(loc)) {
                 int amount = rc.senseGold(loc);
-                while (amount > 0) {
-                    rc.mineGold(loc);
-                    --amount;
-                    if (!rc.isActionReady()) return;
+                switch (amount) {
+                    default:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 4:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 3:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 2:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 1:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 0:
                 }
             }
         }
-        for (Direction d : ALL_DIRECTIONS) {
-            MapLocation loc = rc.getLocation().add(d);
+        for (int i = ALL_DIRECTIONS.length; --i >= 0;) {
+            MapLocation loc = current.add(ALL_DIRECTIONS[i]);
             if (rc.onTheMap(loc)) {
                 int amount = rc.senseLead(loc);
-                while (amount > 1 || (amount == 1 && closestEnemyAttacker != null)) {
-                    rc.mineLead(loc);
-                    --amount;
-                    if (!rc.isActionReady()) return;
+                switch (amount) {
+                    default:
+                        rc.mineLead(loc);
+                        if (!rc.isActionReady()) return;
+                    case 4:
+                        rc.mineLead(loc);
+                        if (!rc.isActionReady()) return;
+                    case 3:
+                        rc.mineLead(loc);
+                        if (!rc.isActionReady()) return;
+                    case 2:
+                        rc.mineLead(loc);
+                        if (!rc.isActionReady()) return;
+                    case 1:
+                    case 0:
                 }
             }
         }
