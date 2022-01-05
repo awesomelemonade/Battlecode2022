@@ -15,6 +15,7 @@ public class Pathfinder {
     private static MapLocation prevLoc = Cache.MY_LOCATION;
     private static int bugpathTurnCount = 0;
     private static MapLocation prevTarget;
+    private static MapLocation target;
 
     public static int moveDistance(MapLocation a, MapLocation b) {
         return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
@@ -30,7 +31,7 @@ public class Pathfinder {
         return (dx1 * dx2 + dy1 * dy2) / Math.sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2));
     }
 
-    public static Direction getTwoStepMoveHeuristic(MapLocation target) throws GameActionException {
+    public static Direction getTwoStepMoveHeuristic() throws GameActionException {
         Direction next = null;
         double heuristicValue = -1024;
         double heuristicValueMoveable = -1024;
@@ -45,31 +46,31 @@ public class Pathfinder {
             double tempHeuristic = -1024;
             switch (direction) {
                 case NORTH:
-                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTH), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTH), nextLoc), getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), nextLoc));
                     break;
                 case NORTHEAST:
-                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.NORTH), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.EAST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), nextLoc), getMoveHeuristic(nextLoc.add(Direction.NORTH), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.EAST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), nextLoc));
                     break;
                 case EAST:
-                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.EAST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), nextLoc), getMoveHeuristic(nextLoc.add(Direction.EAST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), nextLoc));
                     break;
                 case SOUTHEAST:
-                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.SOUTH), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.EAST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.SOUTH), nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.EAST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), nextLoc));
                     break;
                 case SOUTH:
-                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTH), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTH), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), nextLoc));
                     break;
                 case SOUTHWEST:
-                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.SOUTH), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.WEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.SOUTH), nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.WEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHEAST), nextLoc));
                     break;
                 case WEST:
-                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.WEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), nextLoc), getMoveHeuristic(nextLoc.add(Direction.WEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), nextLoc));
                     break;
                 case NORTHWEST:
-                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), target, nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.WEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), target, nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTH), target, nextLoc));
+                    tempHeuristic = Math.max(Math.max(Math.max(Math.max(getMoveHeuristic(nextLoc.add(Direction.NORTHEAST), nextLoc), getMoveHeuristic(nextLoc.add(Direction.SOUTHWEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.WEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTHWEST), nextLoc)), getMoveHeuristic(nextLoc.add(Direction.NORTH), nextLoc));
                     break;
             }
-            bugpathCache[i] = getMoveHeuristic(nextLoc, target, Cache.MY_LOCATION);
+            bugpathCache[i] = getMoveHeuristic(nextLoc, Cache.MY_LOCATION);
             tempHeuristic += bugpathCache[i];
             if (tempHeuristic > heuristicValue) {
                 next = direction;
@@ -85,7 +86,7 @@ public class Pathfinder {
         return next;
     }
 
-    public static double getMoveHeuristic(MapLocation nextLoc, MapLocation target, MapLocation curLoc) throws GameActionException {
+    public static double getMoveHeuristic(MapLocation nextLoc, MapLocation curLoc) throws GameActionException {
         if (!rc.onTheMap(nextLoc)) {
             return -1024;
         }
@@ -119,23 +120,24 @@ public class Pathfinder {
 
     public static boolean execute(MapLocation target) {
         Debug.setIndicatorLine(Profile.PATHFINDER, Cache.MY_LOCATION, target, 0, 0, 255);
+        Pathfinder.target = target;
         boolean res;
-        if (Cache.MY_LOCATION.distanceSquaredTo(target) <= 2) {
+        if (Cache.MY_LOCATION.isAdjacentTo(target)) {
             if (rc.canMove(Cache.MY_LOCATION.directionTo(target))) {
                 Util.move(Cache.MY_LOCATION.directionTo(target));
                 res = true;
             } else {
-                res = executeNaive(target);
+                res = executeNaive();
             }
         } else {
-            res = executeBugpath(target);
+            res = executeBugpath();
         }
         prevLoc = Cache.MY_LOCATION;
         prevTarget = target;
         return res;
     }
 
-    public static boolean executeNaive(MapLocation target) {
+    public static boolean executeNaive() {
         if (Cache.MY_LOCATION.equals(target)) {
             // already there
             return true;
@@ -172,7 +174,7 @@ public class Pathfinder {
         return false;
     }
 
-    public static Direction greedyMove(MapLocation target) {
+    public static Direction getGreedyDirection() {
         int leastDist = target.distanceSquaredTo(Cache.MY_LOCATION);
         Direction best = null;
         for (int i = Constants.ORDINAL_DIRECTIONS.length; --i >= 0; ) {
@@ -187,8 +189,8 @@ public class Pathfinder {
         return best;
     }
 
-    public static boolean executeFallback(MapLocation target, Direction next) {
-        Direction greedy = greedyMove(target);
+    public static boolean executeFallback(Direction next) {
+        Direction greedy = getGreedyDirection();
         if (greedy == next) {
             bugpathBlocked = false;
         }
@@ -199,7 +201,7 @@ public class Pathfinder {
         return false;
     }
 
-    public static boolean executeBugpath(MapLocation target) {
+    public static boolean executeBugpath() {
         if (Cache.MY_LOCATION.equals(target)) {
             // already there
             return true;
@@ -211,14 +213,14 @@ public class Pathfinder {
 
         Direction twoStepMoveHeuristic = null;
         try {
-            twoStepMoveHeuristic = getTwoStepMoveHeuristic(target);
+            twoStepMoveHeuristic = getTwoStepMoveHeuristic();
         } catch (GameActionException ex) {
             throw new IllegalStateException(ex);
         }
 
         if (bugpathBlocked && bugpathTurnCount > 4) {
             // Util.println("BUGPATHFAIL: " + Cache.MY_LOCATION);
-            return executeFallback(target, twoStepMoveHeuristic);
+            return executeFallback(twoStepMoveHeuristic);
         }
         if (!bugpathBlocked && Cache.MY_LOCATION.add(twoStepMoveHeuristic).distanceSquaredTo(target) < Cache.MY_LOCATION.distanceSquaredTo(target)) {
             if (rc.canMove(twoStepMoveHeuristic)) {
@@ -233,10 +235,10 @@ public class Pathfinder {
                 }
             }
         } else {
-            if (Cache.MY_LOCATION.distanceSquaredTo(target) <= 8) {
+            if (Cache.MY_LOCATION.isWithinDistanceSquared(target, 8)) {
                 bugpathBlocked = false;
                 bugpathTurnCount = 0;
-                return executeNaive(target);
+                return executeNaive();
             }
             if (!bugpathBlocked) {
                 bugpathBlocked = true;
@@ -258,7 +260,7 @@ public class Pathfinder {
                 double cosAngle = getCosAngle(nextLoc, target, Cache.MY_LOCATION);
                 if (cosAngle < -0.5) {
                     bugpathTurnCount = 5;
-                    return executeFallback(target, bestBugPathHeuristicDirection);
+                    return executeFallback(bestBugPathHeuristicDirection);
                 }
                 if (rc.canMove(bestBugPathHeuristicDirection)) {
                     Util.move(bestBugPathHeuristicDirection);

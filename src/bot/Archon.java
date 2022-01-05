@@ -3,7 +3,9 @@ package bot;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotType;
+import bot.util.Constants;
 import bot.util.RunnableBot;
+import bot.util.Util;
 
 import static bot.util.Constants.*;
 
@@ -42,7 +44,7 @@ public class Archon implements RunnableBot {
 
     boolean tryBuild(RobotType type) throws GameActionException {
         if (!rc.isActionReady()) return false;
-        for (Direction d: ORDINAL_DIRECTIONS) {
+        for (Direction d: Constants.getAttemptOrder(Util.randomAdjacentDirection())) {
             if (rc.canBuildRobot(type, d)) {
                 rc.buildRobot(type, d);
                 return true;
