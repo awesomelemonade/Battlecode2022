@@ -1,7 +1,7 @@
 package bot.util;
 
 public enum Profile {
-    ERROR_STATE(true), CHUNK_INFO(true), PATHFINDER(true), EXPLORER(true);
+    ERROR_STATE(true), CHUNK_INFO(false), PATHFINDER(false), EXPLORER(true);
 
     private final boolean enabled;
 

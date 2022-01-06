@@ -6,15 +6,15 @@ import bot.util.*;
 import static bot.util.Constants.*;
 
 public class Builder implements RunnableBot {
-    private static boolean suicidal;
+    private static int movesSinceAction;
     private static MapLocation spawnLoc;
     private static int spawnRound;
     private static MapLocation closestRepairableLocation;
 
     @Override
     public void init() throws GameActionException {
+        movesSinceAction = 0;
         spawnLoc = rc.getLocation();
-        suicidal = rc.getRoundNum() % 2 == 0;
         spawnRound = rc.getRoundNum();
     }
 
@@ -47,19 +47,25 @@ public class Builder implements RunnableBot {
     public static void tryAction() throws GameActionException {
         if (!rc.isActionReady()) return;
         if (tryRepair()) {
+            movesSinceAction = 0;
             return;
         }
         if (rc.getTeamLeadAmount(ALLY_TEAM) >= 4000 && Math.random() < 0.5) {
             if (tryBuild(RobotType.LABORATORY)) {
+                movesSinceAction = 0;
                 return;
             }
         }
-        tryBuild(RobotType.WATCHTOWER);
+        if (tryBuild(RobotType.WATCHTOWER)) {
+            movesSinceAction = 0;
+            return;
+        }
     }
 
     public static void tryMove() throws GameActionException {
         if (!rc.isMovementReady()) return;
-        if (suicidal) {
+        movesSinceAction++;
+        if (movesSinceAction >= 40) {
             if (tryMoveToSeppuku()) {
                 return;
             }

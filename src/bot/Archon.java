@@ -10,7 +10,7 @@ import bot.util.Util;
 import static bot.util.Constants.*;
 
 public class Archon implements RunnableBot {
-    RobotType[] earlyGameBuildOrder = {RobotType.MINER, RobotType.BUILDER, RobotType.MINER, RobotType.BUILDER};
+    RobotType[] earlyGameBuildOrder = {RobotType.MINER, RobotType.BUILDER, RobotType.MINER, RobotType.SOLDIER};
     RobotType[] lateGameBuildOrder = {RobotType.SOLDIER, RobotType.SOLDIER, RobotType.BUILDER, RobotType.MINER, RobotType.BUILDER};
     int buildCount;
     boolean builtFirstLateGame;
