@@ -29,6 +29,10 @@ public class Util {
         return directions[(int) (Math.random() * directions.length)];
     }
 
+    public static <T> T random(T[] array) {
+        return array[(int) (Math.random() * array.length)];
+    }
+
     public static Direction randomAdjacentDirection() {
         return random(Constants.ORDINAL_DIRECTIONS);
     }

@@ -43,18 +43,8 @@ public class Explorer {
     private static ExploreDirection currentExploreDirection = null;
     private static boolean hasExplored = false;
     public static MapLocation currentExploreLocation;
-    public static ExploreDirection[] shuffledExploreDirections;
 
-    static {
-        ExploreDirection[] values = ExploreDirection.values();
-        int length = values.length;
-        shuffledExploreDirections = new ExploreDirection[length];
-        for (int i = length; --i >= 0;) {
-            shuffledExploreDirections[i] = values[i];
-        }
-    }
-
-    public static boolean smartExplore() throws GameActionException {
+    public static boolean smartExplore() {
         Debug.setIndicatorDot(Profile.EXPLORER, Cache.MY_LOCATION, 255, 128, 0); // orange
         // TODO: Simplify
         if (currentExploreDirection == null || reachedBorder(currentExploreDirection) || goingTowardsAllyArchon(currentExploreDirection)) {
@@ -64,9 +54,9 @@ public class Explorer {
                 hasExplored = true;
             } else {
                 // shuffle directions
-                Util.shuffle(shuffledExploreDirections);
-                for (int i = shuffledExploreDirections.length; --i >= 0;) {
-                    ExploreDirection potentialDirection = shuffledExploreDirections[i];
+                currentExploreDirection = null;
+                for (int i = 5; --i >= 0;) { // Only attempt 5 times
+                    ExploreDirection potentialDirection = Util.random(ExploreDirection.values());
                     // checks that the potentialDirection is not in the same or opposite direction as exploreDirection
                     if (currentExploreDirection != null && (currentExploreDirection == potentialDirection || ExploreDirection.isOpposite(currentExploreDirection, potentialDirection))) {
                         continue;
@@ -100,6 +90,6 @@ public class Explorer {
     }
 
     public static boolean reachedBorder(ExploreDirection direction) {
-        return !Util.onTheMap(rc.getLocation().translate(Integer.signum(direction.dx) * 3, Integer.signum(direction.dy) * 3));
+        return !Util.onTheMap(rc.getLocation().translate(direction.sigDx * 3, direction.sigDy * 3));
     }
 }

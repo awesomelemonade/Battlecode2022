@@ -1,9 +1,6 @@
 package bot.util;
 
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotInfo;
-import battlecode.common.RobotType;
+import battlecode.common.*;
 
 import static bot.util.Constants.rc;
 
@@ -54,9 +51,18 @@ public class Communication {
                 throw new IllegalStateException("Cannot read any archon locations");
             }
         }
+        // Copy Initial Buffer - too expensive to detect changes
+        for (int i = BUFFER_SIZE; --i >= 0;) {
+            int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
+            buffer[i] = rc.readSharedArray(sharedArrayIndex);
+        }
     }
 
     public static void loop() throws GameActionException {
+        if (Cache.TURN_COUNT == 1) {
+            // Initialized - no need to reread shared array
+            return;
+        }
         for (int i = BUFFER_SIZE; --i >= 0;) {
             int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
             int oldValue = buffer[i];

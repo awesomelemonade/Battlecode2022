@@ -1,17 +1,14 @@
 package bot;
 
 import battlecode.common.*;
-import bot.util.Cache;
-import bot.util.Communication;
-import bot.util.RunnableBot;
-import bot.util.Util;
+import bot.util.*;
 
 import static bot.util.Constants.*;
 
 public class Builder implements RunnableBot {
-    boolean suicidal;
-    MapLocation spawnLoc;
-    int spawnRound;
+    private static boolean suicidal;
+    private static MapLocation spawnLoc;
+    private static int spawnRound;
 
     @Override
     public void init() throws GameActionException {
@@ -39,7 +36,7 @@ public class Builder implements RunnableBot {
         tryBuild(RobotType.WATCHTOWER);
     }
 
-    boolean tryRepair() throws GameActionException {
+    public static boolean tryRepair() throws GameActionException {
         if (!rc.isActionReady()) return false;
         RobotInfo closestRepairable = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> r.health < r.type.health && rc.getType().canRepair(r.type));
         if (closestRepairable == null) return false;
@@ -51,7 +48,7 @@ public class Builder implements RunnableBot {
         }
     }
 
-    boolean tryBuild(RobotType type) throws GameActionException {
+    public static boolean tryBuild(RobotType type) throws GameActionException {
         if (!rc.isActionReady()) return false;
         for (Direction d: ORDINAL_DIRECTIONS) {
             MapLocation loc = rc.getLocation().add(d);
@@ -65,16 +62,19 @@ public class Builder implements RunnableBot {
         return false;
     }
 
-    boolean trySeppuku() throws GameActionException {
+    public static boolean trySeppuku() throws GameActionException {
         // Checks for a square that has no lead and is in our territory. If one exists, go there and die.
         MapLocation[] candidateSquares = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), 2);
         MapLocation bestLoc = null;
+        int bestDistanceSquared = Integer.MAX_VALUE;
         for (int i = candidateSquares.length; --i >= 0;) {
             MapLocation loc = candidateSquares[i];
             if (!rc.onTheMap(loc)) continue;
             if (rc.senseLead(loc) == 0 && Communication.getChunkInfo(loc) == Communication.CHUNK_INFO_ALLY && (loc.equals(rc.getLocation()) || !rc.isLocationOccupied(loc))) {
-                if (bestLoc == null || loc.distanceSquaredTo(spawnLoc) < bestLoc.distanceSquaredTo(spawnLoc)) {
+                int distanceSquared = loc.distanceSquaredTo(spawnLoc);
+                if (distanceSquared < bestDistanceSquared) {
                     bestLoc = loc;
+                    bestDistanceSquared = distanceSquared;
                 }
             }
         }
