@@ -37,9 +37,9 @@ public class Miner implements RunnableBot {
                 } else {
                     int highestResource = 0;
                     MapLocation highestResourceLocation = null;
-                    MapLocation[] miningLocations = rc.senseNearbyLocationsWithGold(MINER_VISION);
+                    MapLocation[] miningLocations = rc.senseNearbyLocationsWithGold(MINER_VISION_DISTANCE_SQUARED);
                     if (miningLocations.length == 0) {
-                        miningLocations = rc.senseNearbyLocationsWithLead(MINER_VISION);
+                        miningLocations = rc.senseNearbyLocationsWithLead(MINER_VISION_DISTANCE_SQUARED);
                     }
                     for (int i = miningLocations.length; --i >= 0;) {
                         MapLocation loc = miningLocations[i];

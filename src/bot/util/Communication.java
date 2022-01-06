@@ -20,6 +20,8 @@ public class Communication {
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
 
+    private static boolean chunksLoaded = false;
+
     public static void init() throws GameActionException {
         NUM_CHUNKS_WIDTH = (Constants.MAP_WIDTH + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
         NUM_CHUNKS_HEIGHT = (Constants.MAP_HEIGHT + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
@@ -51,23 +53,21 @@ public class Communication {
                 throw new IllegalStateException("Cannot read any archon locations");
             }
         }
-        // Copy Initial Buffer - too expensive to detect changes
-        for (int i = BUFFER_SIZE; --i >= 0;) {
-            int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
-            buffer[i] = rc.readSharedArray(sharedArrayIndex);
-        }
     }
 
     public static void loop() throws GameActionException {
-        if (Cache.TURN_COUNT == 1) {
-            // Initialized - no need to reread shared array
-            return;
-        }
+        int numChangesLeft = 4;
         for (int i = BUFFER_SIZE; --i >= 0;) {
             int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
             int oldValue = buffer[i];
             int value = rc.readSharedArray(sharedArrayIndex);
             if (value != oldValue) {
+                if (numChangesLeft == 0) {
+                    // Save Bytecodes
+                    chunksLoaded = false;
+                    return;
+                }
+                numChangesLeft--;
                 for (int j = 4; --j >= 0;) {
                     int oldChunkValue;
                     int chunkValue;
@@ -111,32 +111,35 @@ public class Communication {
                 buffer[i] = value;
             }
         }
+        chunksLoaded = true;
     }
 
     public static void postLoop() throws GameActionException {
-        // Mark areas that are friendly
-        MapLocation currentLocation = rc.getLocation();
-        int currentChunkX = currentLocation.x / CHUNK_SIZE;
-        int currentChunkY = currentLocation.y / CHUNK_SIZE;
-        MapLocation chunkMid = new MapLocation(getChunkMidX(currentChunkX), getChunkMidY(currentChunkY));
-        if (currentLocation.isAdjacentTo(chunkMid)) { // hasEntireChunkInVision
-            // Label Chunk
-            // RobotInfo[] friendlies = rc.senseNearbyRobots(chunkMid, 8, Constants.ALLY_TEAM);
-            RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
-            if (enemies.length == 0) {
-                // Label as ally
-                setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
-            } else {
-                // Label as enemy
-                setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY);
+        if (chunksLoaded) {
+            // Mark areas that are friendly
+            MapLocation currentLocation = rc.getLocation();
+            int currentChunkX = currentLocation.x / CHUNK_SIZE;
+            int currentChunkY = currentLocation.y / CHUNK_SIZE;
+            MapLocation chunkMid = new MapLocation(getChunkMidX(currentChunkX), getChunkMidY(currentChunkY));
+            if (currentLocation.isAdjacentTo(chunkMid)) { // hasEntireChunkInVision
+                // Label Chunk
+                // RobotInfo[] friendlies = rc.senseNearbyRobots(chunkMid, 8, Constants.ALLY_TEAM);
+                RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
+                if (enemies.length == 0) {
+                    // Label as ally
+                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
+                } else {
+                    // Label as enemy
+                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY);
+                }
             }
-        }
 
-        // Flush Chunk Info Communication
-        for (int i = BUFFER_SIZE; --i >= 0;) {
-            int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
-            if (rc.readSharedArray(sharedArrayIndex) != buffer[i]) {
-                rc.writeSharedArray(sharedArrayIndex, buffer[i]);
+            // Flush Chunk Info Communication
+            for (int i = BUFFER_SIZE; --i >= 0; ) {
+                int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
+                if (rc.readSharedArray(sharedArrayIndex) != buffer[i]) {
+                    rc.writeSharedArray(sharedArrayIndex, buffer[i]);
+                }
             }
         }
 

@@ -21,7 +21,8 @@ public class Constants {
     public static RobotController rc;
 
     public static final int MAX_ARCHONS = 4; // From Specs
-    public static final int MINER_VISION = 20;
+    public static final int MINER_VISION_DISTANCE_SQUARED = 20;
+    public static final int BUILDER_REPAIR_DISTANCE_SQUARED = 5;
 
     public static void init(RobotController controller) {
         Constants.rc = controller;
