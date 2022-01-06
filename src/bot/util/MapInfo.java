@@ -6,6 +6,8 @@ public class MapInfo {
     // TODO: Predict symmetry - Horizontal, Vertical, Rotational
     public static MapLocation[] INITIAL_ARCHON_LOCATIONS;
 
+    public static MapLocation enemyLocation; // Temporary
+
     public static void init() {
         // Communication has to be initialized beforehand
 

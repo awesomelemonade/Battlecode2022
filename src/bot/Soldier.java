@@ -4,9 +4,7 @@ import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotInfo;
-import bot.util.Cache;
-import bot.util.RunnableBot;
-import bot.util.Util;
+import bot.util.*;
 
 import static bot.util.Constants.rc;
 
@@ -47,7 +45,12 @@ public class Soldier implements RunnableBot {
                 if (closestEnemyAttacker != null) {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                 } else {
-                    Util.tryExplore();
+                    if (MapInfo.enemyLocation == null) {
+                        Util.tryExplore();
+                    } else {
+                        Debug.setIndicatorDot(rc.getLocation(), 255, 255, 0);
+                        Util.tryMove(MapInfo.enemyLocation);
+                    }
                 }
             }
         }

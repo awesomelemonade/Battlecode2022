@@ -98,14 +98,7 @@ public class Communication {
                         int chunkMidX = getChunkMidX(chunkX);
                         int chunkMidY = getChunkMidY(chunkY);
                         MapLocation chunkLocation = new MapLocation(chunkMidX, chunkMidY);
-                        if (oldChunkValue == CHUNK_INFO_ENEMY) {
-                            // Remove from enemy list
-                            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 255, 255);
-                        }
-                        if (chunkValue == CHUNK_INFO_ENEMY) {
-                            // Add to enemy list
-                            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 0, 255);
-                        }
+                        onChunkChange(oldChunkValue, chunkValue, chunkLocation);
                     }
                 }
                 buffer[i] = value;
@@ -127,10 +120,16 @@ public class Communication {
                 RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
                 if (enemies.length == 0) {
                     // Label as ally
-                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
+                    int old = setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
+                    if (old != CHUNK_INFO_ALLY) {
+                        onChunkChange(old, CHUNK_INFO_ALLY, chunkMid);
+                    }
                 } else {
                     // Label as enemy
-                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY);
+                    int old = setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY);
+                    if (old != CHUNK_INFO_ENEMY) {
+                        onChunkChange(old, CHUNK_INFO_ENEMY, chunkMid);
+                    }
                 }
             }
 
@@ -170,6 +169,23 @@ public class Communication {
         }
     }
 
+    public static void onChunkChange(int oldChunkValue, int chunkValue, MapLocation chunkLocation) {
+        if (oldChunkValue == CHUNK_INFO_ENEMY) {
+            // Remove from enemy list
+            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 255, 255);
+            if (MapInfo.enemyLocation != null && MapInfo.enemyLocation.equals(chunkLocation)) {
+                MapInfo.enemyLocation = null;
+            }
+        }
+        if (chunkValue == CHUNK_INFO_ENEMY) {
+            // Add to enemy list
+            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 0, 255);
+            if (MapInfo.enemyLocation == null) {
+                MapInfo.enemyLocation = chunkLocation;
+            }
+        }
+    }
+
     public static int pack(MapLocation location) {
         return (location.x << 6) | location.y;
     }
@@ -187,29 +203,35 @@ public class Communication {
         return Math.min(chunkY * CHUNK_SIZE + 2, Constants.MAP_HEIGHT - 3);
     }
 
-    public static void setChunkInfo(int chunkX, int chunkY, int info) {
+    public static int setChunkInfo(int chunkX, int chunkY, int info) {
         int chunkIndex = chunkX * NUM_CHUNKS_SIZE + chunkY; // [0-144]
         // CHUNKS_PER_SHARED_INTEGER = 4
         int sharedArrayIndex = chunkIndex >> 2; // divide by 4
         int sharedArrayOffset = chunkIndex & 0b11; // mod 4
         int value = buffer[sharedArrayIndex];
+        int old;
         switch (sharedArrayOffset) {
             case 0:
+                old = value & 0b1111;
                 value = (value & 0b1111_1111_1111_0000) | info;
                 break;
             case 1:
+                old = (value >> 4) & 0b1111;
                 value = (value & 0b1111_1111_0000_1111) | (info << 4);
                 break;
             case 2:
+                old = (value >> 8) & 0b1111;
                 value = (value & 0b1111_0000_1111_1111) | (info << 8);
                 break;
             case 3:
+                old = (value >> 12) & 0b1111;
                 value = (value & 0b0000_1111_1111_1111) | (info << 12);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown");
         }
         buffer[sharedArrayIndex] = value;
+        return old;
     }
 
     public static int getChunkInfo(int chunkX, int chunkY) {
