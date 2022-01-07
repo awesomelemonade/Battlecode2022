@@ -20,7 +20,7 @@ public class Communication {
     public static final int CHUNK_INFO_ENEMY = 2;
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
-    private static final int RESERVATION_OFFSET = 1;
+    private static final int RESERVATION_OFFSET = 4;
 
     private static boolean chunksLoaded = false;
 
