@@ -3,6 +3,7 @@ package bot.util;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
+import battlecode.common.RobotType;
 
 import static bot.util.Constants.rc;
 
@@ -14,11 +15,16 @@ public class Pathfinder {
     public static boolean execute(MapLocation target) {
         Debug.setIndicatorLine(Profile.PATHFINDER, Cache.MY_LOCATION, target, 0, 0, 255);
         try {
-            //Generated.debug_execute(target);
-            //Direction d = Generated.ret;
-            Direction d = Generated.execute(target);
-            if (d != null) {
-                return Util.tryMove(d);
+            if (Constants.ROBOT_TYPE == RobotType.MINER) {
+                Direction d = Generated9.execute(target);
+                if (d != null) {
+                    return Util.tryMove(d);
+                }
+            } else {
+                Direction d = Generated13.execute(target);
+                if (d != null) {
+                    return Util.tryMove(d);
+                }
             }
             return false;
         } catch (GameActionException e) {

@@ -1,8 +1,9 @@
 import math
 from itertools import product
 
-squareLength = 9
-scanRadiusSquared = 20
+squareLength = 7
+scanRadiusSquared = 9
+edgeThreshold = 4
 
 ourLocationVar = "ourLocation"
 ourLocationXVar = "ourLocationX"
@@ -154,7 +155,7 @@ print("Direction bestDir = null;")
 print("double bestScore = Double.MAX_VALUE;")
 for x, y in visionCoords:
     dx, dy = x - offsetX, y - offsetY
-    if dx * dx + dy * dy >= 13:
+    if dx * dx + dy * dy >= edgeThreshold:
         dpVar = dpVariables[x][y]
         onTheMapVar = onTheMapVariables[x][y]
         rubbleVar = rubbleVariables[x][y]
