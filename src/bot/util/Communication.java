@@ -93,7 +93,8 @@ public class Communication {
 
     public static int getReservedGold() {
         try {
-            return ((rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_GOLD_BIT) & RESERVATION_GOLD_MASK) * RESERVATION_GOLD_INCREMENT;
+            int value = rc.readSharedArray(RESERVATION_OFFSET);
+            return ((value >> RESERVATION_SET_BIT) & 0b1) * ((value >> RESERVATION_GOLD_BIT) & RESERVATION_GOLD_MASK) * RESERVATION_GOLD_INCREMENT;
         } catch (GameActionException e) {
             e.printStackTrace();
             return 1000;
@@ -102,7 +103,8 @@ public class Communication {
 
     public static int getReservedLead() {
         try {
-            return (rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_LEAD_BIT) & RESERVATION_LEAD_MASK;
+            int value = rc.readSharedArray(RESERVATION_OFFSET);
+            return ((value >> RESERVATION_SET_BIT) & 0b1) * (value >> RESERVATION_LEAD_BIT) & RESERVATION_LEAD_MASK;
         } catch (GameActionException e) {
             e.printStackTrace();
             return 9999;
