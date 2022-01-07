@@ -55,20 +55,28 @@ print("int {} = {}.y;".format(ourLocationYVar, ourLocationVar))
 
 sortedForInitializingLocations = sorted(visionCoords, key=lambda coord: (abs(coord[0] - offsetX), abs(coord[1] - offsetY)))
 
+adjacentCoords = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, 1), (-1, -1), (1, -1)]
+adjacentDirections = ["EAST", "NORTH", "WEST", "SOUTH", "NORTHEAST", "NORTHWEST", "SOUTHWEST", "SOUTHEAST"]
+adjacentDirectionsMapping = dict(zip(adjacentCoords, adjacentDirections))
+
 for x, y in sortedForInitializingLocations:
     dx, dy = x - offsetX, y - offsetY
     if dx == 0 and dy == 0:
         continue
     locationVar = locationVariables[x][y]
-    if dx == 0:
-        if dy > 0:
-            print("{} = {}.add(Direction.NORTH);".format(locationVar, locationVariables[x][y - 1]))
-        else:
-            print("{} = {}.add(Direction.SOUTH);".format(locationVar, locationVariables[x][y + 1]))
-    elif dx < 0:
-        print("{} = {}.add(Direction.WEST);".format(locationVar, locationVariables[x + 1][y]))
+    if (dx, dy) in adjacentDirectionsMapping:
+        direction = adjacentDirectionsMapping[(dx, dy)]
+        print("{} = rc.adjacentLocation(Direction.{});".format(locationVar, direction))
     else:
-        print("{} = {}.add(Direction.EAST);".format(locationVar, locationVariables[x - 1][y]))
+        if dx == 0:
+            if dy > 0:
+                print("{} = {}.add(Direction.NORTH);".format(locationVar, locationVariables[x][y - 1]))
+            else:
+                print("{} = {}.add(Direction.SOUTH);".format(locationVar, locationVariables[x][y + 1]))
+        elif dx < 0:
+            print("{} = {}.add(Direction.WEST);".format(locationVar, locationVariables[x + 1][y]))
+        else:
+            print("{} = {}.add(Direction.EAST);".format(locationVar, locationVariables[x - 1][y]))
 
 # Initialize dp variables
 for x, y in visionCoords:
@@ -87,21 +95,21 @@ for x, y in visionCoords:
     print("}")
 
 # Populate adjacent squares
-adjacentCoords = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, 1), (-1, -1), (1, -1)]
-adjacentDirections = ["EAST", "NORTH", "WEST", "SOUTH", "NORTHEAST", "NORTHWEST", "SOUTHWEST", "SOUTHEAST"]
 for direction, (dx, dy) in zip(adjacentDirections, adjacentCoords):
     x, y = offsetX + dx, offsetY + dy
     onTheMapVar = onTheMapVariables[x][y]
     locationVar = locationVariables[x][y]
     dirVar = dirVariables[x][y]
     dpVar = dpVariables[x][y]
-    print("if ({} && !rc.isLocationOccupied({})) {{".format(onTheMapVar, locationVar))
+    print("if ({} && rc.canMove(Direction.{})) {{".format(onTheMapVar, direction))
     print("{} = {};".format(dpVar, rubbleVariables[offsetX][offsetY]))
     print("{} = Direction.{};".format(dirVar, direction))
     print("}")
     
 
 # Populate the rest of the squares
+potentiallyNotInfinityVars = set()
+
 for dist in range(1, scanRadiusSquared + 1):
     for x, y in visionCoords:
         dx, dy = x - offsetX, y - offsetY
@@ -120,10 +128,14 @@ for dist in range(1, scanRadiusSquared + 1):
                         print("double {} = {} + {};".format(nextVar, dpVariables[x][y], rubbleVariables[x][y])) # Could potentially move into static variables
                         definedNextVar = True
                     print("if ({}) {{".format(onTheMapVariables[x2][y2]))
-                    print("if ({} < {}) {{".format(nextVar, dpVariables[x2][y2]))
-                    print("{} = {};".format(dpVariables[x2][y2], nextVar))
+                    dpNextVar = dpVariables[x2][y2]
+                    if dpNextVar in potentiallyNotInfinityVars:
+                        print("if ({} < {}) {{".format(nextVar, dpNextVar))
+                    print("{} = {};".format(dpNextVar, nextVar))
                     print("{} = {};".format(dirVariables[x2][y2], dirVariables[x][y]))
-                    print("}")
+                    if dpNextVar in potentiallyNotInfinityVars:
+                        print("}")
+                    potentiallyNotInfinityVars.add(dpNextVar)
                     print("}")
 '''
 # Print out dp
