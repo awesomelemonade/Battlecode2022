@@ -8,6 +8,7 @@ import static bot.util.Constants.rc;
 
 public class Generated {
     public static Direction ret;
+
     public static void debug_execute(MapLocation target) throws GameActionException {
         ret = execute(target);
     }
@@ -165,7 +166,7 @@ public class Generated {
     public static Direction dir_4_4;
     public static double rubble_4_4;
     public static boolean onTheMap_4_4;
-    public static MapLocation loc_4_4;
+    public static MapLocation ourLocation;
     public static double dp_4_5;
     public static Direction dir_4_5;
     public static double rubble_4_5;
@@ -356,424 +357,422 @@ public class Generated {
     public static double rubble_4_3;
     public static boolean onTheMap_4_3;
     public static MapLocation loc_4_3;
-    public static MapLocation ourLocation;
     public static Direction execute(MapLocation target) throws GameActionException {
         ourLocation = rc.getLocation();
-
-        if (rc.getLocation().equals(target)) {
+        if(ourLocation.equals(target)) {
             return Direction.CENTER;
         }
-
+        int ourLocationX = ourLocation.x;
+        int ourLocationY = ourLocation.y;
+        loc_3_4 = ourLocation.add(Direction.SOUTH);
+        loc_5_4 = ourLocation.add(Direction.NORTH);
+        loc_2_4 = loc_3_4.add(Direction.SOUTH);
+        loc_6_4 = loc_5_4.add(Direction.NORTH);
+        loc_1_4 = loc_2_4.add(Direction.SOUTH);
+        loc_7_4 = loc_6_4.add(Direction.NORTH);
+        loc_0_4 = loc_1_4.add(Direction.SOUTH);
+        loc_8_4 = loc_7_4.add(Direction.NORTH);
+        loc_4_5 = ourLocation.add(Direction.EAST);
+        loc_4_3 = ourLocation.add(Direction.WEST);
+        loc_3_3 = loc_3_4.add(Direction.WEST);
+        loc_3_5 = loc_3_4.add(Direction.EAST);
+        loc_5_5 = loc_5_4.add(Direction.EAST);
+        loc_5_3 = loc_5_4.add(Direction.WEST);
+        loc_2_3 = loc_2_4.add(Direction.WEST);
+        loc_2_5 = loc_2_4.add(Direction.EAST);
+        loc_6_5 = loc_6_4.add(Direction.EAST);
+        loc_6_3 = loc_6_4.add(Direction.WEST);
+        loc_1_3 = loc_1_4.add(Direction.WEST);
+        loc_1_5 = loc_1_4.add(Direction.EAST);
+        loc_7_5 = loc_7_4.add(Direction.EAST);
+        loc_7_3 = loc_7_4.add(Direction.WEST);
+        loc_0_3 = loc_0_4.add(Direction.WEST);
+        loc_0_5 = loc_0_4.add(Direction.EAST);
+        loc_8_5 = loc_8_4.add(Direction.EAST);
+        loc_8_3 = loc_8_4.add(Direction.WEST);
+        loc_4_6 = loc_4_5.add(Direction.EAST);
+        loc_4_2 = loc_4_3.add(Direction.WEST);
+        loc_3_2 = loc_3_3.add(Direction.WEST);
+        loc_3_6 = loc_3_5.add(Direction.EAST);
+        loc_5_6 = loc_5_5.add(Direction.EAST);
+        loc_5_2 = loc_5_3.add(Direction.WEST);
+        loc_2_2 = loc_2_3.add(Direction.WEST);
+        loc_2_6 = loc_2_5.add(Direction.EAST);
+        loc_6_6 = loc_6_5.add(Direction.EAST);
+        loc_6_2 = loc_6_3.add(Direction.WEST);
+        loc_1_2 = loc_1_3.add(Direction.WEST);
+        loc_1_6 = loc_1_5.add(Direction.EAST);
+        loc_7_6 = loc_7_5.add(Direction.EAST);
+        loc_7_2 = loc_7_3.add(Direction.WEST);
+        loc_0_2 = loc_0_3.add(Direction.WEST);
+        loc_0_6 = loc_0_5.add(Direction.EAST);
+        loc_8_6 = loc_8_5.add(Direction.EAST);
+        loc_8_2 = loc_8_3.add(Direction.WEST);
+        loc_4_7 = loc_4_6.add(Direction.EAST);
+        loc_4_1 = loc_4_2.add(Direction.WEST);
+        loc_3_1 = loc_3_2.add(Direction.WEST);
+        loc_3_7 = loc_3_6.add(Direction.EAST);
+        loc_5_7 = loc_5_6.add(Direction.EAST);
+        loc_5_1 = loc_5_2.add(Direction.WEST);
+        loc_2_1 = loc_2_2.add(Direction.WEST);
+        loc_2_7 = loc_2_6.add(Direction.EAST);
+        loc_6_7 = loc_6_6.add(Direction.EAST);
+        loc_6_1 = loc_6_2.add(Direction.WEST);
+        loc_1_1 = loc_1_2.add(Direction.WEST);
+        loc_1_7 = loc_1_6.add(Direction.EAST);
+        loc_7_7 = loc_7_6.add(Direction.EAST);
+        loc_7_1 = loc_7_2.add(Direction.WEST);
+        loc_4_8 = loc_4_7.add(Direction.EAST);
+        loc_4_0 = loc_4_1.add(Direction.WEST);
+        loc_3_0 = loc_3_1.add(Direction.WEST);
+        loc_3_8 = loc_3_7.add(Direction.EAST);
+        loc_5_8 = loc_5_7.add(Direction.EAST);
+        loc_5_0 = loc_5_1.add(Direction.WEST);
+        loc_2_0 = loc_2_1.add(Direction.WEST);
+        loc_2_8 = loc_2_7.add(Direction.EAST);
+        loc_6_8 = loc_6_7.add(Direction.EAST);
+        loc_6_0 = loc_6_1.add(Direction.WEST);
         dp_3_0 = Double.MAX_VALUE;
-        loc_3_0 = ourLocation.translate(-4, -1);
         onTheMap_3_0 = rc.onTheMap(loc_3_0);
         if (onTheMap_3_0) {
             rubble_3_0 = 1.0 + rc.senseRubble(loc_3_0) / 10.0;
         }
         dp_3_1 = Double.MAX_VALUE;
-        loc_3_1 = ourLocation.translate(-3, -1);
         onTheMap_3_1 = rc.onTheMap(loc_3_1);
         if (onTheMap_3_1) {
             rubble_3_1 = 1.0 + rc.senseRubble(loc_3_1) / 10.0;
         }
         dp_2_0 = Double.MAX_VALUE;
-        loc_2_0 = ourLocation.translate(-4, -2);
         onTheMap_2_0 = rc.onTheMap(loc_2_0);
         if (onTheMap_2_0) {
             rubble_2_0 = 1.0 + rc.senseRubble(loc_2_0) / 10.0;
         }
         dp_3_2 = Double.MAX_VALUE;
-        loc_3_2 = ourLocation.translate(-2, -1);
         onTheMap_3_2 = rc.onTheMap(loc_3_2);
         if (onTheMap_3_2) {
             rubble_3_2 = 1.0 + rc.senseRubble(loc_3_2) / 10.0;
         }
         dp_2_1 = Double.MAX_VALUE;
-        loc_2_1 = ourLocation.translate(-3, -2);
         onTheMap_2_1 = rc.onTheMap(loc_2_1);
         if (onTheMap_2_1) {
             rubble_2_1 = 1.0 + rc.senseRubble(loc_2_1) / 10.0;
         }
         dp_1_1 = Double.MAX_VALUE;
-        loc_1_1 = ourLocation.translate(-3, -3);
         onTheMap_1_1 = rc.onTheMap(loc_1_1);
         if (onTheMap_1_1) {
             rubble_1_1 = 1.0 + rc.senseRubble(loc_1_1) / 10.0;
         }
         dp_2_2 = Double.MAX_VALUE;
-        loc_2_2 = ourLocation.translate(-2, -2);
         onTheMap_2_2 = rc.onTheMap(loc_2_2);
         if (onTheMap_2_2) {
             rubble_2_2 = 1.0 + rc.senseRubble(loc_2_2) / 10.0;
         }
         dp_3_3 = Double.MAX_VALUE;
-        loc_3_3 = ourLocation.translate(-1, -1);
         onTheMap_3_3 = rc.onTheMap(loc_3_3);
         if (onTheMap_3_3) {
             rubble_3_3 = 1.0 + rc.senseRubble(loc_3_3) / 10.0;
         }
         dp_1_2 = Double.MAX_VALUE;
-        loc_1_2 = ourLocation.translate(-2, -3);
         onTheMap_1_2 = rc.onTheMap(loc_1_2);
         if (onTheMap_1_2) {
             rubble_1_2 = 1.0 + rc.senseRubble(loc_1_2) / 10.0;
         }
         dp_0_2 = Double.MAX_VALUE;
-        loc_0_2 = ourLocation.translate(-2, -4);
         onTheMap_0_2 = rc.onTheMap(loc_0_2);
         if (onTheMap_0_2) {
             rubble_0_2 = 1.0 + rc.senseRubble(loc_0_2) / 10.0;
         }
         dp_2_3 = Double.MAX_VALUE;
-        loc_2_3 = ourLocation.translate(-1, -2);
         onTheMap_2_3 = rc.onTheMap(loc_2_3);
         if (onTheMap_2_3) {
             rubble_2_3 = 1.0 + rc.senseRubble(loc_2_3) / 10.0;
         }
         dp_1_3 = Double.MAX_VALUE;
-        loc_1_3 = ourLocation.translate(-1, -3);
         onTheMap_1_3 = rc.onTheMap(loc_1_3);
         if (onTheMap_1_3) {
             rubble_1_3 = 1.0 + rc.senseRubble(loc_1_3) / 10.0;
         }
         dp_0_3 = Double.MAX_VALUE;
-        loc_0_3 = ourLocation.translate(-1, -4);
         onTheMap_0_3 = rc.onTheMap(loc_0_3);
         if (onTheMap_0_3) {
             rubble_0_3 = 1.0 + rc.senseRubble(loc_0_3) / 10.0;
         }
         dp_0_4 = Double.MAX_VALUE;
-        loc_0_4 = ourLocation.translate(0, -4);
         onTheMap_0_4 = rc.onTheMap(loc_0_4);
         if (onTheMap_0_4) {
             rubble_0_4 = 1.0 + rc.senseRubble(loc_0_4) / 10.0;
         }
         dp_1_4 = Double.MAX_VALUE;
-        loc_1_4 = ourLocation.translate(0, -3);
         onTheMap_1_4 = rc.onTheMap(loc_1_4);
         if (onTheMap_1_4) {
             rubble_1_4 = 1.0 + rc.senseRubble(loc_1_4) / 10.0;
         }
         dp_2_4 = Double.MAX_VALUE;
-        loc_2_4 = ourLocation.translate(0, -2);
         onTheMap_2_4 = rc.onTheMap(loc_2_4);
         if (onTheMap_2_4) {
             rubble_2_4 = 1.0 + rc.senseRubble(loc_2_4) / 10.0;
         }
         dp_3_4 = Double.MAX_VALUE;
-        loc_3_4 = ourLocation.translate(0, -1);
         onTheMap_3_4 = rc.onTheMap(loc_3_4);
         if (onTheMap_3_4) {
             rubble_3_4 = 1.0 + rc.senseRubble(loc_3_4) / 10.0;
         }
         dp_0_5 = Double.MAX_VALUE;
-        loc_0_5 = ourLocation.translate(1, -4);
         onTheMap_0_5 = rc.onTheMap(loc_0_5);
         if (onTheMap_0_5) {
             rubble_0_5 = 1.0 + rc.senseRubble(loc_0_5) / 10.0;
         }
         dp_1_5 = Double.MAX_VALUE;
-        loc_1_5 = ourLocation.translate(1, -3);
         onTheMap_1_5 = rc.onTheMap(loc_1_5);
         if (onTheMap_1_5) {
             rubble_1_5 = 1.0 + rc.senseRubble(loc_1_5) / 10.0;
         }
         dp_2_5 = Double.MAX_VALUE;
-        loc_2_5 = ourLocation.translate(1, -2);
         onTheMap_2_5 = rc.onTheMap(loc_2_5);
         if (onTheMap_2_5) {
             rubble_2_5 = 1.0 + rc.senseRubble(loc_2_5) / 10.0;
         }
         dp_0_6 = Double.MAX_VALUE;
-        loc_0_6 = ourLocation.translate(2, -4);
         onTheMap_0_6 = rc.onTheMap(loc_0_6);
         if (onTheMap_0_6) {
             rubble_0_6 = 1.0 + rc.senseRubble(loc_0_6) / 10.0;
         }
         dp_1_6 = Double.MAX_VALUE;
-        loc_1_6 = ourLocation.translate(2, -3);
         onTheMap_1_6 = rc.onTheMap(loc_1_6);
         if (onTheMap_1_6) {
             rubble_1_6 = 1.0 + rc.senseRubble(loc_1_6) / 10.0;
         }
         dp_3_5 = Double.MAX_VALUE;
-        loc_3_5 = ourLocation.translate(1, -1);
         onTheMap_3_5 = rc.onTheMap(loc_3_5);
         if (onTheMap_3_5) {
             rubble_3_5 = 1.0 + rc.senseRubble(loc_3_5) / 10.0;
         }
         dp_2_6 = Double.MAX_VALUE;
-        loc_2_6 = ourLocation.translate(2, -2);
         onTheMap_2_6 = rc.onTheMap(loc_2_6);
         if (onTheMap_2_6) {
             rubble_2_6 = 1.0 + rc.senseRubble(loc_2_6) / 10.0;
         }
         dp_1_7 = Double.MAX_VALUE;
-        loc_1_7 = ourLocation.translate(3, -3);
         onTheMap_1_7 = rc.onTheMap(loc_1_7);
         if (onTheMap_1_7) {
             rubble_1_7 = 1.0 + rc.senseRubble(loc_1_7) / 10.0;
         }
         dp_2_7 = Double.MAX_VALUE;
-        loc_2_7 = ourLocation.translate(3, -2);
         onTheMap_2_7 = rc.onTheMap(loc_2_7);
         if (onTheMap_2_7) {
             rubble_2_7 = 1.0 + rc.senseRubble(loc_2_7) / 10.0;
         }
         dp_3_6 = Double.MAX_VALUE;
-        loc_3_6 = ourLocation.translate(2, -1);
         onTheMap_3_6 = rc.onTheMap(loc_3_6);
         if (onTheMap_3_6) {
             rubble_3_6 = 1.0 + rc.senseRubble(loc_3_6) / 10.0;
         }
         dp_2_8 = Double.MAX_VALUE;
-        loc_2_8 = ourLocation.translate(4, -2);
         onTheMap_2_8 = rc.onTheMap(loc_2_8);
         if (onTheMap_2_8) {
             rubble_2_8 = 1.0 + rc.senseRubble(loc_2_8) / 10.0;
         }
         dp_3_7 = Double.MAX_VALUE;
-        loc_3_7 = ourLocation.translate(3, -1);
         onTheMap_3_7 = rc.onTheMap(loc_3_7);
         if (onTheMap_3_7) {
             rubble_3_7 = 1.0 + rc.senseRubble(loc_3_7) / 10.0;
         }
         dp_3_8 = Double.MAX_VALUE;
-        loc_3_8 = ourLocation.translate(4, -1);
         onTheMap_3_8 = rc.onTheMap(loc_3_8);
         if (onTheMap_3_8) {
             rubble_3_8 = 1.0 + rc.senseRubble(loc_3_8) / 10.0;
         }
         dp_4_4 = 0;
-        loc_4_4 = ourLocation.translate(0, 0);
-        onTheMap_4_4 = rc.onTheMap(loc_4_4);
+        onTheMap_4_4 = rc.onTheMap(ourLocation);
         if (onTheMap_4_4) {
-            rubble_4_4 = 1.0 + rc.senseRubble(loc_4_4) / 10.0;
+            rubble_4_4 = 1.0 + rc.senseRubble(ourLocation) / 10.0;
         }
         dp_4_5 = Double.MAX_VALUE;
-        loc_4_5 = ourLocation.translate(1, 0);
         onTheMap_4_5 = rc.onTheMap(loc_4_5);
         if (onTheMap_4_5) {
             rubble_4_5 = 1.0 + rc.senseRubble(loc_4_5) / 10.0;
         }
         dp_4_6 = Double.MAX_VALUE;
-        loc_4_6 = ourLocation.translate(2, 0);
         onTheMap_4_6 = rc.onTheMap(loc_4_6);
         if (onTheMap_4_6) {
             rubble_4_6 = 1.0 + rc.senseRubble(loc_4_6) / 10.0;
         }
         dp_4_7 = Double.MAX_VALUE;
-        loc_4_7 = ourLocation.translate(3, 0);
         onTheMap_4_7 = rc.onTheMap(loc_4_7);
         if (onTheMap_4_7) {
             rubble_4_7 = 1.0 + rc.senseRubble(loc_4_7) / 10.0;
         }
         dp_4_8 = Double.MAX_VALUE;
-        loc_4_8 = ourLocation.translate(4, 0);
         onTheMap_4_8 = rc.onTheMap(loc_4_8);
         if (onTheMap_4_8) {
             rubble_4_8 = 1.0 + rc.senseRubble(loc_4_8) / 10.0;
         }
         dp_5_8 = Double.MAX_VALUE;
-        loc_5_8 = ourLocation.translate(4, 1);
         onTheMap_5_8 = rc.onTheMap(loc_5_8);
         if (onTheMap_5_8) {
             rubble_5_8 = 1.0 + rc.senseRubble(loc_5_8) / 10.0;
         }
         dp_5_7 = Double.MAX_VALUE;
-        loc_5_7 = ourLocation.translate(3, 1);
         onTheMap_5_7 = rc.onTheMap(loc_5_7);
         if (onTheMap_5_7) {
             rubble_5_7 = 1.0 + rc.senseRubble(loc_5_7) / 10.0;
         }
         dp_5_6 = Double.MAX_VALUE;
-        loc_5_6 = ourLocation.translate(2, 1);
         onTheMap_5_6 = rc.onTheMap(loc_5_6);
         if (onTheMap_5_6) {
             rubble_5_6 = 1.0 + rc.senseRubble(loc_5_6) / 10.0;
         }
         dp_6_8 = Double.MAX_VALUE;
-        loc_6_8 = ourLocation.translate(4, 2);
         onTheMap_6_8 = rc.onTheMap(loc_6_8);
         if (onTheMap_6_8) {
             rubble_6_8 = 1.0 + rc.senseRubble(loc_6_8) / 10.0;
         }
         dp_6_7 = Double.MAX_VALUE;
-        loc_6_7 = ourLocation.translate(3, 2);
         onTheMap_6_7 = rc.onTheMap(loc_6_7);
         if (onTheMap_6_7) {
             rubble_6_7 = 1.0 + rc.senseRubble(loc_6_7) / 10.0;
         }
         dp_5_5 = Double.MAX_VALUE;
-        loc_5_5 = ourLocation.translate(1, 1);
         onTheMap_5_5 = rc.onTheMap(loc_5_5);
         if (onTheMap_5_5) {
             rubble_5_5 = 1.0 + rc.senseRubble(loc_5_5) / 10.0;
         }
         dp_6_6 = Double.MAX_VALUE;
-        loc_6_6 = ourLocation.translate(2, 2);
         onTheMap_6_6 = rc.onTheMap(loc_6_6);
         if (onTheMap_6_6) {
             rubble_6_6 = 1.0 + rc.senseRubble(loc_6_6) / 10.0;
         }
         dp_7_7 = Double.MAX_VALUE;
-        loc_7_7 = ourLocation.translate(3, 3);
         onTheMap_7_7 = rc.onTheMap(loc_7_7);
         if (onTheMap_7_7) {
             rubble_7_7 = 1.0 + rc.senseRubble(loc_7_7) / 10.0;
         }
         dp_7_6 = Double.MAX_VALUE;
-        loc_7_6 = ourLocation.translate(2, 3);
         onTheMap_7_6 = rc.onTheMap(loc_7_6);
         if (onTheMap_7_6) {
             rubble_7_6 = 1.0 + rc.senseRubble(loc_7_6) / 10.0;
         }
         dp_6_5 = Double.MAX_VALUE;
-        loc_6_5 = ourLocation.translate(1, 2);
         onTheMap_6_5 = rc.onTheMap(loc_6_5);
         if (onTheMap_6_5) {
             rubble_6_5 = 1.0 + rc.senseRubble(loc_6_5) / 10.0;
         }
         dp_8_6 = Double.MAX_VALUE;
-        loc_8_6 = ourLocation.translate(2, 4);
         onTheMap_8_6 = rc.onTheMap(loc_8_6);
         if (onTheMap_8_6) {
             rubble_8_6 = 1.0 + rc.senseRubble(loc_8_6) / 10.0;
         }
         dp_7_5 = Double.MAX_VALUE;
-        loc_7_5 = ourLocation.translate(1, 3);
         onTheMap_7_5 = rc.onTheMap(loc_7_5);
         if (onTheMap_7_5) {
             rubble_7_5 = 1.0 + rc.senseRubble(loc_7_5) / 10.0;
         }
         dp_8_5 = Double.MAX_VALUE;
-        loc_8_5 = ourLocation.translate(1, 4);
         onTheMap_8_5 = rc.onTheMap(loc_8_5);
         if (onTheMap_8_5) {
             rubble_8_5 = 1.0 + rc.senseRubble(loc_8_5) / 10.0;
         }
         dp_5_4 = Double.MAX_VALUE;
-        loc_5_4 = ourLocation.translate(0, 1);
         onTheMap_5_4 = rc.onTheMap(loc_5_4);
         if (onTheMap_5_4) {
             rubble_5_4 = 1.0 + rc.senseRubble(loc_5_4) / 10.0;
         }
         dp_6_4 = Double.MAX_VALUE;
-        loc_6_4 = ourLocation.translate(0, 2);
         onTheMap_6_4 = rc.onTheMap(loc_6_4);
         if (onTheMap_6_4) {
             rubble_6_4 = 1.0 + rc.senseRubble(loc_6_4) / 10.0;
         }
         dp_7_4 = Double.MAX_VALUE;
-        loc_7_4 = ourLocation.translate(0, 3);
         onTheMap_7_4 = rc.onTheMap(loc_7_4);
         if (onTheMap_7_4) {
             rubble_7_4 = 1.0 + rc.senseRubble(loc_7_4) / 10.0;
         }
         dp_8_4 = Double.MAX_VALUE;
-        loc_8_4 = ourLocation.translate(0, 4);
         onTheMap_8_4 = rc.onTheMap(loc_8_4);
         if (onTheMap_8_4) {
             rubble_8_4 = 1.0 + rc.senseRubble(loc_8_4) / 10.0;
         }
         dp_8_3 = Double.MAX_VALUE;
-        loc_8_3 = ourLocation.translate(-1, 4);
         onTheMap_8_3 = rc.onTheMap(loc_8_3);
         if (onTheMap_8_3) {
             rubble_8_3 = 1.0 + rc.senseRubble(loc_8_3) / 10.0;
         }
         dp_7_3 = Double.MAX_VALUE;
-        loc_7_3 = ourLocation.translate(-1, 3);
         onTheMap_7_3 = rc.onTheMap(loc_7_3);
         if (onTheMap_7_3) {
             rubble_7_3 = 1.0 + rc.senseRubble(loc_7_3) / 10.0;
         }
         dp_8_2 = Double.MAX_VALUE;
-        loc_8_2 = ourLocation.translate(-2, 4);
         onTheMap_8_2 = rc.onTheMap(loc_8_2);
         if (onTheMap_8_2) {
             rubble_8_2 = 1.0 + rc.senseRubble(loc_8_2) / 10.0;
         }
         dp_6_3 = Double.MAX_VALUE;
-        loc_6_3 = ourLocation.translate(-1, 2);
         onTheMap_6_3 = rc.onTheMap(loc_6_3);
         if (onTheMap_6_3) {
             rubble_6_3 = 1.0 + rc.senseRubble(loc_6_3) / 10.0;
         }
         dp_7_2 = Double.MAX_VALUE;
-        loc_7_2 = ourLocation.translate(-2, 3);
         onTheMap_7_2 = rc.onTheMap(loc_7_2);
         if (onTheMap_7_2) {
             rubble_7_2 = 1.0 + rc.senseRubble(loc_7_2) / 10.0;
         }
         dp_7_1 = Double.MAX_VALUE;
-        loc_7_1 = ourLocation.translate(-3, 3);
         onTheMap_7_1 = rc.onTheMap(loc_7_1);
         if (onTheMap_7_1) {
             rubble_7_1 = 1.0 + rc.senseRubble(loc_7_1) / 10.0;
         }
         dp_6_2 = Double.MAX_VALUE;
-        loc_6_2 = ourLocation.translate(-2, 2);
         onTheMap_6_2 = rc.onTheMap(loc_6_2);
         if (onTheMap_6_2) {
             rubble_6_2 = 1.0 + rc.senseRubble(loc_6_2) / 10.0;
         }
         dp_5_3 = Double.MAX_VALUE;
-        loc_5_3 = ourLocation.translate(-1, 1);
         onTheMap_5_3 = rc.onTheMap(loc_5_3);
         if (onTheMap_5_3) {
             rubble_5_3 = 1.0 + rc.senseRubble(loc_5_3) / 10.0;
         }
         dp_6_1 = Double.MAX_VALUE;
-        loc_6_1 = ourLocation.translate(-3, 2);
         onTheMap_6_1 = rc.onTheMap(loc_6_1);
         if (onTheMap_6_1) {
             rubble_6_1 = 1.0 + rc.senseRubble(loc_6_1) / 10.0;
         }
         dp_6_0 = Double.MAX_VALUE;
-        loc_6_0 = ourLocation.translate(-4, 2);
         onTheMap_6_0 = rc.onTheMap(loc_6_0);
         if (onTheMap_6_0) {
             rubble_6_0 = 1.0 + rc.senseRubble(loc_6_0) / 10.0;
         }
         dp_5_2 = Double.MAX_VALUE;
-        loc_5_2 = ourLocation.translate(-2, 1);
         onTheMap_5_2 = rc.onTheMap(loc_5_2);
         if (onTheMap_5_2) {
             rubble_5_2 = 1.0 + rc.senseRubble(loc_5_2) / 10.0;
         }
         dp_5_1 = Double.MAX_VALUE;
-        loc_5_1 = ourLocation.translate(-3, 1);
         onTheMap_5_1 = rc.onTheMap(loc_5_1);
         if (onTheMap_5_1) {
             rubble_5_1 = 1.0 + rc.senseRubble(loc_5_1) / 10.0;
         }
         dp_5_0 = Double.MAX_VALUE;
-        loc_5_0 = ourLocation.translate(-4, 1);
         onTheMap_5_0 = rc.onTheMap(loc_5_0);
         if (onTheMap_5_0) {
             rubble_5_0 = 1.0 + rc.senseRubble(loc_5_0) / 10.0;
         }
         dp_4_0 = Double.MAX_VALUE;
-        loc_4_0 = ourLocation.translate(-4, 0);
         onTheMap_4_0 = rc.onTheMap(loc_4_0);
         if (onTheMap_4_0) {
             rubble_4_0 = 1.0 + rc.senseRubble(loc_4_0) / 10.0;
         }
         dp_4_1 = Double.MAX_VALUE;
-        loc_4_1 = ourLocation.translate(-3, 0);
         onTheMap_4_1 = rc.onTheMap(loc_4_1);
         if (onTheMap_4_1) {
             rubble_4_1 = 1.0 + rc.senseRubble(loc_4_1) / 10.0;
         }
         dp_4_2 = Double.MAX_VALUE;
-        loc_4_2 = ourLocation.translate(-2, 0);
         onTheMap_4_2 = rc.onTheMap(loc_4_2);
         if (onTheMap_4_2) {
             rubble_4_2 = 1.0 + rc.senseRubble(loc_4_2) / 10.0;
         }
         dp_4_3 = Double.MAX_VALUE;
-        loc_4_3 = ourLocation.translate(-1, 0);
         onTheMap_4_3 = rc.onTheMap(loc_4_3);
         if (onTheMap_4_3) {
             rubble_4_3 = 1.0 + rc.senseRubble(loc_4_3) / 10.0;
@@ -2142,411 +2141,409 @@ public class Generated {
                 dir_6_0 = dir_7_1;
             }
         }
-        if (ourLocation.isWithinDistanceSquared(target, 20)) {
-            switch (target.x - ourLocation.x) {
-                case -4:
-                    switch (target.y - ourLocation.y) {
-                        case -2:
-                            return dir_2_0;
-                        case -1:
-                            return dir_3_0;
-                        case 0:
-                            return dir_4_0;
-                        case 1:
-                            return dir_5_0;
-                        case 2:
-                            return dir_6_0;
-                    }
-                    break;
-                case -3:
-                    switch (target.y - ourLocation.y) {
-                        case -3:
-                            return dir_1_1;
-                        case -2:
-                            return dir_2_1;
-                        case -1:
-                            return dir_3_1;
-                        case 0:
-                            return dir_4_1;
-                        case 1:
-                            return dir_5_1;
-                        case 2:
-                            return dir_6_1;
-                        case 3:
-                            return dir_7_1;
-                    }
-                    break;
-                case -2:
-                    switch (target.y - ourLocation.y) {
-                        case -4:
-                            return dir_0_2;
-                        case -3:
-                            return dir_1_2;
-                        case -2:
-                            return dir_2_2;
-                        case -1:
-                            return dir_3_2;
-                        case 0:
-                            return dir_4_2;
-                        case 1:
-                            return dir_5_2;
-                        case 2:
-                            return dir_6_2;
-                        case 3:
-                            return dir_7_2;
-                        case 4:
-                            return dir_8_2;
-                    }
-                    break;
-                case -1:
-                    switch (target.y - ourLocation.y) {
-                        case -4:
-                            return dir_0_3;
-                        case -3:
-                            return dir_1_3;
-                        case -2:
-                            return dir_2_3;
-                        case -1:
-                            return dir_3_3;
-                        case 0:
-                            return dir_4_3;
-                        case 1:
-                            return dir_5_3;
-                        case 2:
-                            return dir_6_3;
-                        case 3:
-                            return dir_7_3;
-                        case 4:
-                            return dir_8_3;
-                    }
-                    break;
-                case 0:
-                    switch (target.y - ourLocation.y) {
-                        case -4:
-                            return dir_0_4;
-                        case -3:
-                            return dir_1_4;
-                        case -2:
-                            return dir_2_4;
-                        case -1:
-                            return dir_3_4;
-                        case 0:
-                            return dir_4_4;
-                        case 1:
-                            return dir_5_4;
-                        case 2:
-                            return dir_6_4;
-                        case 3:
-                            return dir_7_4;
-                        case 4:
-                            return dir_8_4;
-                    }
-                    break;
-                case 1:
-                    switch (target.y - ourLocation.y) {
-                        case -4:
-                            return dir_0_5;
-                        case -3:
-                            return dir_1_5;
-                        case -2:
-                            return dir_2_5;
-                        case -1:
-                            return dir_3_5;
-                        case 0:
-                            return dir_4_5;
-                        case 1:
-                            return dir_5_5;
-                        case 2:
-                            return dir_6_5;
-                        case 3:
-                            return dir_7_5;
-                        case 4:
-                            return dir_8_5;
-                    }
-                    break;
-                case 2:
-                    switch (target.y - ourLocation.y) {
-                        case -4:
-                            return dir_0_6;
-                        case -3:
-                            return dir_1_6;
-                        case -2:
-                            return dir_2_6;
-                        case -1:
-                            return dir_3_6;
-                        case 0:
-                            return dir_4_6;
-                        case 1:
-                            return dir_5_6;
-                        case 2:
-                            return dir_6_6;
-                        case 3:
-                            return dir_7_6;
-                        case 4:
-                            return dir_8_6;
-                    }
-                    break;
-                case 3:
-                    switch (target.y - ourLocation.y) {
-                        case -3:
-                            return dir_1_7;
-                        case -2:
-                            return dir_2_7;
-                        case -1:
-                            return dir_3_7;
-                        case 0:
-                            return dir_4_7;
-                        case 1:
-                            return dir_5_7;
-                        case 2:
-                            return dir_6_7;
-                        case 3:
-                            return dir_7_7;
-                    }
-                    break;
-                case 4:
-                    switch (target.y - ourLocation.y) {
-                        case -2:
-                            return dir_2_8;
-                        case -1:
-                            return dir_3_8;
-                        case 0:
-                            return dir_4_8;
-                        case 1:
-                            return dir_5_8;
-                        case 2:
-                            return dir_6_8;
-                    }
-                    break;
-            }
-            return null;
-        } else {
-            Direction bestDir = null;
-            double bestScore = Double.MAX_VALUE;
-            if (onTheMap_3_0) {
-                double score = dp_3_0 + rubble_3_0 + (Math.sqrt(loc_3_0.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_3_0;
+        switch (target.x - ourLocationX) {
+            case -4:
+                switch (target.y - ourLocationY) {
+                    case -2:
+                        return dir_2_0;
+                    case -1:
+                        return dir_3_0;
+                    case 0:
+                        return dir_4_0;
+                    case 1:
+                        return dir_5_0;
+                    case 2:
+                        return dir_6_0;
                 }
-            }
-            if (onTheMap_2_0) {
-                double score = dp_2_0 + rubble_2_0 + (Math.sqrt(loc_2_0.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_2_0;
+                break;
+            case -3:
+                switch (target.y - ourLocationY) {
+                    case -3:
+                        return dir_1_1;
+                    case -2:
+                        return dir_2_1;
+                    case -1:
+                        return dir_3_1;
+                    case 0:
+                        return dir_4_1;
+                    case 1:
+                        return dir_5_1;
+                    case 2:
+                        return dir_6_1;
+                    case 3:
+                        return dir_7_1;
                 }
-            }
-            if (onTheMap_2_1) {
-                double score = dp_2_1 + rubble_2_1 + (Math.sqrt(loc_2_1.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_2_1;
+                break;
+            case -2:
+                switch (target.y - ourLocationY) {
+                    case -4:
+                        return dir_0_2;
+                    case -3:
+                        return dir_1_2;
+                    case -2:
+                        return dir_2_2;
+                    case -1:
+                        return dir_3_2;
+                    case 0:
+                        return dir_4_2;
+                    case 1:
+                        return dir_5_2;
+                    case 2:
+                        return dir_6_2;
+                    case 3:
+                        return dir_7_2;
+                    case 4:
+                        return dir_8_2;
                 }
-            }
-            if (onTheMap_1_1) {
-                double score = dp_1_1 + rubble_1_1 + (Math.sqrt(loc_1_1.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_1_1;
+                break;
+            case -1:
+                switch (target.y - ourLocationY) {
+                    case -4:
+                        return dir_0_3;
+                    case -3:
+                        return dir_1_3;
+                    case -2:
+                        return dir_2_3;
+                    case -1:
+                        return dir_3_3;
+                    case 0:
+                        return dir_4_3;
+                    case 1:
+                        return dir_5_3;
+                    case 2:
+                        return dir_6_3;
+                    case 3:
+                        return dir_7_3;
+                    case 4:
+                        return dir_8_3;
                 }
-            }
-            if (onTheMap_1_2) {
-                double score = dp_1_2 + rubble_1_2 + (Math.sqrt(loc_1_2.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_1_2;
+                break;
+            case 0:
+                switch (target.y - ourLocationY) {
+                    case -4:
+                        return dir_0_4;
+                    case -3:
+                        return dir_1_4;
+                    case -2:
+                        return dir_2_4;
+                    case -1:
+                        return dir_3_4;
+                    case 0:
+                        return dir_4_4;
+                    case 1:
+                        return dir_5_4;
+                    case 2:
+                        return dir_6_4;
+                    case 3:
+                        return dir_7_4;
+                    case 4:
+                        return dir_8_4;
                 }
-            }
-            if (onTheMap_0_2) {
-                double score = dp_0_2 + rubble_0_2 + (Math.sqrt(loc_0_2.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_0_2;
+                break;
+            case 1:
+                switch (target.y - ourLocationY) {
+                    case -4:
+                        return dir_0_5;
+                    case -3:
+                        return dir_1_5;
+                    case -2:
+                        return dir_2_5;
+                    case -1:
+                        return dir_3_5;
+                    case 0:
+                        return dir_4_5;
+                    case 1:
+                        return dir_5_5;
+                    case 2:
+                        return dir_6_5;
+                    case 3:
+                        return dir_7_5;
+                    case 4:
+                        return dir_8_5;
                 }
-            }
-            if (onTheMap_0_3) {
-                double score = dp_0_3 + rubble_0_3 + (Math.sqrt(loc_0_3.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_0_3;
+                break;
+            case 2:
+                switch (target.y - ourLocationY) {
+                    case -4:
+                        return dir_0_6;
+                    case -3:
+                        return dir_1_6;
+                    case -2:
+                        return dir_2_6;
+                    case -1:
+                        return dir_3_6;
+                    case 0:
+                        return dir_4_6;
+                    case 1:
+                        return dir_5_6;
+                    case 2:
+                        return dir_6_6;
+                    case 3:
+                        return dir_7_6;
+                    case 4:
+                        return dir_8_6;
                 }
-            }
-            if (onTheMap_0_4) {
-                double score = dp_0_4 + rubble_0_4 + (Math.sqrt(loc_0_4.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_0_4;
+                break;
+            case 3:
+                switch (target.y - ourLocationY) {
+                    case -3:
+                        return dir_1_7;
+                    case -2:
+                        return dir_2_7;
+                    case -1:
+                        return dir_3_7;
+                    case 0:
+                        return dir_4_7;
+                    case 1:
+                        return dir_5_7;
+                    case 2:
+                        return dir_6_7;
+                    case 3:
+                        return dir_7_7;
                 }
-            }
-            if (onTheMap_0_5) {
-                double score = dp_0_5 + rubble_0_5 + (Math.sqrt(loc_0_5.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_0_5;
+                break;
+            case 4:
+                switch (target.y - ourLocationY) {
+                    case -2:
+                        return dir_2_8;
+                    case -1:
+                        return dir_3_8;
+                    case 0:
+                        return dir_4_8;
+                    case 1:
+                        return dir_5_8;
+                    case 2:
+                        return dir_6_8;
                 }
-            }
-            if (onTheMap_0_6) {
-                double score = dp_0_6 + rubble_0_6 + (Math.sqrt(loc_0_6.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_0_6;
-                }
-            }
-            if (onTheMap_1_6) {
-                double score = dp_1_6 + rubble_1_6 + (Math.sqrt(loc_1_6.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_1_6;
-                }
-            }
-            if (onTheMap_1_7) {
-                double score = dp_1_7 + rubble_1_7 + (Math.sqrt(loc_1_7.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_1_7;
-                }
-            }
-            if (onTheMap_2_7) {
-                double score = dp_2_7 + rubble_2_7 + (Math.sqrt(loc_2_7.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_2_7;
-                }
-            }
-            if (onTheMap_2_8) {
-                double score = dp_2_8 + rubble_2_8 + (Math.sqrt(loc_2_8.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_2_8;
-                }
-            }
-            if (onTheMap_3_8) {
-                double score = dp_3_8 + rubble_3_8 + (Math.sqrt(loc_3_8.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_3_8;
-                }
-            }
-            if (onTheMap_4_8) {
-                double score = dp_4_8 + rubble_4_8 + (Math.sqrt(loc_4_8.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_4_8;
-                }
-            }
-            if (onTheMap_5_8) {
-                double score = dp_5_8 + rubble_5_8 + (Math.sqrt(loc_5_8.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_5_8;
-                }
-            }
-            if (onTheMap_6_8) {
-                double score = dp_6_8 + rubble_6_8 + (Math.sqrt(loc_6_8.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_6_8;
-                }
-            }
-            if (onTheMap_6_7) {
-                double score = dp_6_7 + rubble_6_7 + (Math.sqrt(loc_6_7.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_6_7;
-                }
-            }
-            if (onTheMap_7_7) {
-                double score = dp_7_7 + rubble_7_7 + (Math.sqrt(loc_7_7.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_7_7;
-                }
-            }
-            if (onTheMap_7_6) {
-                double score = dp_7_6 + rubble_7_6 + (Math.sqrt(loc_7_6.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_7_6;
-                }
-            }
-            if (onTheMap_8_6) {
-                double score = dp_8_6 + rubble_8_6 + (Math.sqrt(loc_8_6.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_8_6;
-                }
-            }
-            if (onTheMap_8_5) {
-                double score = dp_8_5 + rubble_8_5 + (Math.sqrt(loc_8_5.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_8_5;
-                }
-            }
-            if (onTheMap_8_4) {
-                double score = dp_8_4 + rubble_8_4 + (Math.sqrt(loc_8_4.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_8_4;
-                }
-            }
-            if (onTheMap_8_3) {
-                double score = dp_8_3 + rubble_8_3 + (Math.sqrt(loc_8_3.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_8_3;
-                }
-            }
-            if (onTheMap_8_2) {
-                double score = dp_8_2 + rubble_8_2 + (Math.sqrt(loc_8_2.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_8_2;
-                }
-            }
-            if (onTheMap_7_2) {
-                double score = dp_7_2 + rubble_7_2 + (Math.sqrt(loc_7_2.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_7_2;
-                }
-            }
-            if (onTheMap_7_1) {
-                double score = dp_7_1 + rubble_7_1 + (Math.sqrt(loc_7_1.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_7_1;
-                }
-            }
-            if (onTheMap_6_1) {
-                double score = dp_6_1 + rubble_6_1 + (Math.sqrt(loc_6_1.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_6_1;
-                }
-            }
-            if (onTheMap_6_0) {
-                double score = dp_6_0 + rubble_6_0 + (Math.sqrt(loc_6_0.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_6_0;
-                }
-            }
-            if (onTheMap_5_0) {
-                double score = dp_5_0 + rubble_5_0 + (Math.sqrt(loc_5_0.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestDir = dir_5_0;
-                }
-            }
-            if (onTheMap_4_0) {
-                double score = dp_4_0 + rubble_4_0 + (Math.sqrt(loc_4_0.distanceSquaredTo(target)) - 1.0) * 8.0;
-                if (score < bestScore) {
-                    bestDir = dir_4_0;
-                }
-            }
-            return bestDir;
+                break;
         }
+        Direction bestDir = null;
+        double bestScore = Double.MAX_VALUE;
+        if (onTheMap_3_0) {
+            double score = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_3_0;
+            }
+        }
+        if (onTheMap_2_0) {
+            double score = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_2_0;
+            }
+        }
+        if (onTheMap_2_1) {
+            double score = dp_2_1 + rubble_2_1 + Math.sqrt(loc_2_1.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_2_1;
+            }
+        }
+        if (onTheMap_1_1) {
+            double score = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_1_1;
+            }
+        }
+        if (onTheMap_1_2) {
+            double score = dp_1_2 + rubble_1_2 + Math.sqrt(loc_1_2.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_1_2;
+            }
+        }
+        if (onTheMap_0_2) {
+            double score = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_0_2;
+            }
+        }
+        if (onTheMap_0_3) {
+            double score = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_0_3;
+            }
+        }
+        if (onTheMap_0_4) {
+            double score = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_0_4;
+            }
+        }
+        if (onTheMap_0_5) {
+            double score = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_0_5;
+            }
+        }
+        if (onTheMap_0_6) {
+            double score = dp_0_6 + rubble_0_6 + Math.sqrt(loc_0_6.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_0_6;
+            }
+        }
+        if (onTheMap_1_6) {
+            double score = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_1_6;
+            }
+        }
+        if (onTheMap_1_7) {
+            double score = dp_1_7 + rubble_1_7 + Math.sqrt(loc_1_7.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_1_7;
+            }
+        }
+        if (onTheMap_2_7) {
+            double score = dp_2_7 + rubble_2_7 + Math.sqrt(loc_2_7.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_2_7;
+            }
+        }
+        if (onTheMap_2_8) {
+            double score = dp_2_8 + rubble_2_8 + Math.sqrt(loc_2_8.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_2_8;
+            }
+        }
+        if (onTheMap_3_8) {
+            double score = dp_3_8 + rubble_3_8 + Math.sqrt(loc_3_8.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_3_8;
+            }
+        }
+        if (onTheMap_4_8) {
+            double score = dp_4_8 + rubble_4_8 + Math.sqrt(loc_4_8.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_4_8;
+            }
+        }
+        if (onTheMap_5_8) {
+            double score = dp_5_8 + rubble_5_8 + Math.sqrt(loc_5_8.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_5_8;
+            }
+        }
+        if (onTheMap_6_8) {
+            double score = dp_6_8 + rubble_6_8 + Math.sqrt(loc_6_8.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_6_8;
+            }
+        }
+        if (onTheMap_6_7) {
+            double score = dp_6_7 + rubble_6_7 + Math.sqrt(loc_6_7.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_6_7;
+            }
+        }
+        if (onTheMap_7_7) {
+            double score = dp_7_7 + rubble_7_7 + Math.sqrt(loc_7_7.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_7_7;
+            }
+        }
+        if (onTheMap_7_6) {
+            double score = dp_7_6 + rubble_7_6 + Math.sqrt(loc_7_6.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_7_6;
+            }
+        }
+        if (onTheMap_8_6) {
+            double score = dp_8_6 + rubble_8_6 + Math.sqrt(loc_8_6.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_8_6;
+            }
+        }
+        if (onTheMap_8_5) {
+            double score = dp_8_5 + rubble_8_5 + Math.sqrt(loc_8_5.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_8_5;
+            }
+        }
+        if (onTheMap_8_4) {
+            double score = dp_8_4 + rubble_8_4 + Math.sqrt(loc_8_4.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_8_4;
+            }
+        }
+        if (onTheMap_8_3) {
+            double score = dp_8_3 + rubble_8_3 + Math.sqrt(loc_8_3.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_8_3;
+            }
+        }
+        if (onTheMap_8_2) {
+            double score = dp_8_2 + rubble_8_2 + Math.sqrt(loc_8_2.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_8_2;
+            }
+        }
+        if (onTheMap_7_2) {
+            double score = dp_7_2 + rubble_7_2 + Math.sqrt(loc_7_2.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_7_2;
+            }
+        }
+        if (onTheMap_7_1) {
+            double score = dp_7_1 + rubble_7_1 + Math.sqrt(loc_7_1.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_7_1;
+            }
+        }
+        if (onTheMap_6_1) {
+            double score = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_6_1;
+            }
+        }
+        if (onTheMap_6_0) {
+            double score = dp_6_0 + rubble_6_0 + Math.sqrt(loc_6_0.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_6_0;
+            }
+        }
+        if (onTheMap_5_0) {
+            double score = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_5_0;
+            }
+        }
+        if (onTheMap_4_0) {
+            double score = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
+            if (score < bestScore) {
+                bestScore = score;
+                bestDir = dir_4_0;
+            }
+        }
+        return bestDir;
     }
+
 }

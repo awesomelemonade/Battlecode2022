@@ -16,11 +16,8 @@ public class Miner implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        Debug.println("A " + Clock.getBytecodeNum());
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
-        Debug.println("B " + Clock.getBytecodeNum());
         tryMine();
-        Debug.println("C " + Clock.getBytecodeNum());
         if (rc.isMovementReady()) {
             // If first turn, just move away from our Archon (saves bytecode)
             if (rc.getRoundNum() == spawnRound) {
@@ -35,18 +32,14 @@ public class Miner implements RunnableBot {
                     }
                 }
             } else {
-                Debug.println("D " + Clock.getBytecodeNum());
                 if (closestEnemyAttacker != null) {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                 } else {
-                    Debug.println("E " + Clock.getBytecodeNum());
                     if (!tryMoveGoodMining()) {
-                        Debug.println("F " + Clock.getBytecodeNum());
                         Util.tryExplore();
                     }
                 }
             }
-            Debug.println("G " + Clock.getBytecodeNum());
             tryMine();
         }
     }
@@ -93,8 +86,8 @@ public class Miner implements RunnableBot {
                 double dis = Math.sqrt(dis2);
                 totalMiners++;
 
-                minerForceX -= dx/dis * 1.0/dis2;
-                minerForceY -= dy/dis * 1.0/dis2;
+                minerForceX -= dx / dis * 1.0 / dis2;
+                minerForceY -= dy / dis * 1.0 / dis2;
             }
         }
 
@@ -111,9 +104,9 @@ public class Miner implements RunnableBot {
         forceX = forceX / forceMag * 5;
         forceY = forceY / forceMag * 5;
 
-        int targetX = (int)Math.round(ourX + forceX);
-        int targetY = (int)Math.round(ourY + forceY);
-        rc.setIndicatorLine(ourLoc, new MapLocation(targetX, targetY), 0, 0, 0);
+        int targetX = (int) Math.round(ourX + forceX);
+        int targetY = (int) Math.round(ourY + forceY);
+        Debug.setIndicatorLine(Profile.MINING, ourLoc, new MapLocation(targetX, targetY), 0, 0, 0);
 
         int aft = Clock.getBytecodeNum();
         Debug.println("bytecodes used before pathfinding = " + (aft - bef));

@@ -5,6 +5,8 @@ squareLength = 9
 scanRadiusSquared = 20
 
 ourLocationVar = "ourLocation"
+ourLocationXVar = "ourLocationX"
+ourLocationYVar = "ourLocationY"
 
 def genVars(prefix):
     return [[prefix + str(x) + "_" + str(y) for x in range(squareLength)] for y in range(squareLength)]
@@ -17,6 +19,8 @@ onTheMapVariables = genVars("onTheMap_")
 locationVariables = genVars("loc_")
 offsetX = int(squareLength / 2)
 offsetY = int(squareLength / 2)
+
+locationVariables[offsetX][offsetY] = ourLocationVar # Special Case
 
 visionCoords = [(x, y) for x, y in product(range(squareLength), range(squareLength)) if (x - offsetX) ** 2 + (y - offsetY) ** 2 <= scanRadiusSquared]
 visionCoords = sorted(visionCoords, key=lambda coord: math.atan2(coord[1] - offsetY, coord[0] - offsetX))
@@ -34,17 +38,37 @@ for x, y in visionCoords:
     print("public static double {};".format(rubbleVar))
     print("public static boolean {};".format(onTheMapVar))
     print("public static MapLocation {};".format(locationVar))
-print("public static MapLocation {};".format(ourLocationVar))
 
 
 # Define method
 print("public static Direction execute(MapLocation target) throws GameActionException {")
+# Initial setup
 print("{} = rc.getLocation();".format(ourLocationVar))
-print("""
-if (rc.getLocation().equals(target)) {
-    return Direction.CENTER;
-}
-""")
+print("if({}.equals(target)) {{".format(ourLocationVar))
+print("return Direction.CENTER;")
+print("}")
+print("int {} = {}.x;".format(ourLocationXVar, ourLocationVar))
+print("int {} = {}.y;".format(ourLocationYVar, ourLocationVar))
+
+# Initialize Location Variables
+
+sortedForInitializingLocations = sorted(visionCoords, key=lambda coord: (abs(coord[0] - offsetX), abs(coord[1] - offsetY)))
+
+for x, y in sortedForInitializingLocations:
+    dx, dy = x - offsetX, y - offsetY
+    if dx == 0 and dy == 0:
+        continue
+    locationVar = locationVariables[x][y]
+    if dx == 0:
+        if dy > 0:
+            print("{} = {}.add(Direction.NORTH);".format(locationVar, locationVariables[x][y - 1]))
+        else:
+            print("{} = {}.add(Direction.SOUTH);".format(locationVar, locationVariables[x][y + 1]))
+    elif dx < 0:
+        print("{} = {}.add(Direction.WEST);".format(locationVar, locationVariables[x + 1][y]))
+    else:
+        print("{} = {}.add(Direction.EAST);".format(locationVar, locationVariables[x - 1][y]))
+
 # Initialize dp variables
 for x, y in visionCoords:
     dx, dy = x - offsetX, y - offsetY
@@ -56,7 +80,6 @@ for x, y in visionCoords:
         print("{} = 0;".format(dpVar))
     else:
         print("{} = Double.MAX_VALUE;".format(dpVar))
-    print("{} = ourLocation.translate({}, {});".format(locationVar, dx, dy))
     print("{} = rc.onTheMap({});".format(onTheMapVar, locationVar))
     print("if ({}) {{".format(onTheMapVar))
     print("{} = 1.0 + rc.senseRubble({}) / 10.0;".format(rubbleVar, locationVar))
@@ -108,18 +131,17 @@ for i in range(squareLength):
     printedVars = ['0f' for j in range(squareLength)]
     for j in range(squareLength):
         if (i - offsetX) ** 2 + (j - offsetY) ** 2 <= scanRadiusSquared:
-            printedVars[j] = dpVariables[i][j]
+            printedVars[j] = "{} == Double.MAX_VALUE ? -1f : {}".format(dpVariables[i][j], dpVariables[i][j])
     print(', '.join(printedVars), end='')
     print(');')
 '''
 
 # Retrieve best direction
-print("if ({}.isWithinDistanceSquared(target, {})) {{".format(ourLocationVar, scanRadiusSquared))
-print("switch (target.x - {}.x) {{".format(ourLocationVar))
+print("switch (target.x - {}) {{".format(ourLocationXVar))
 for x in range(squareLength):
     dx = x - offsetX
     print("case {}:".format(dx))
-    print("switch (target.y - {}.y) {{".format(ourLocationVar))
+    print("switch (target.y - {}) {{".format(ourLocationYVar))
     for y in range(squareLength):
         dy = y - offsetY
         if dx * dx + dy * dy <= scanRadiusSquared:
@@ -128,8 +150,6 @@ for x in range(squareLength):
     print("}")
     print("break;")
 print("}")
-print("return null;")
-print("} else {")
 print("Direction bestDir = null;")
 print("double bestScore = Double.MAX_VALUE;")
 for x, y in visionCoords:
@@ -141,14 +161,13 @@ for x, y in visionCoords:
         locationVar = locationVariables[x][y]
         dirVar = dirVariables[x][y]
         print("if ({}) {{".format(onTheMapVar))
-        print("double score = {} + {} + (Math.sqrt({}.distanceSquaredTo(target)) - 1.0) * 8.0;".format(dpVar, rubbleVar, locationVar))
+        print("double score = {} + {} + Math.sqrt({}.distanceSquaredTo(target)) * 8.0;".format(dpVar, rubbleVar, locationVar))
         print("if (score < bestScore) {")
         print("bestScore = score;")
         print("bestDir = {};".format(dirVar))
         print("}")
         print("}")
 print("return bestDir;")
-print("}")
 
 # End method
 print("}")

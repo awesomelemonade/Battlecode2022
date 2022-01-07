@@ -14,8 +14,9 @@ public class Pathfinder {
     public static boolean execute(MapLocation target) {
         Debug.setIndicatorLine(Profile.PATHFINDER, Cache.MY_LOCATION, target, 0, 0, 255);
         try {
-            Generated.debug_execute(target);
-            Direction d = Generated.ret;
+            //Generated.debug_execute(target);
+            //Direction d = Generated.ret;
+            Direction d = Generated.execute(target);
             if (d != null) {
                 return Util.tryMove(d);
             }
