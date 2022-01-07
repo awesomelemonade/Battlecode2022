@@ -3,8 +3,6 @@ package bot;
 import battlecode.common.*;
 import bot.util.*;
 
-import static bot.util.Constants.rc;
-
 public class RobotPlayer {
     public static int currentTurn;
     public static void run(RobotController controller) throws GameActionException {

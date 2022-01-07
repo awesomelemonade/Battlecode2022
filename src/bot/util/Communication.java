@@ -1,6 +1,7 @@
 package bot.util;
 
 import battlecode.common.*;
+import bot.RobotPlayer;
 
 import static bot.util.Constants.rc;
 
@@ -19,6 +20,7 @@ public class Communication {
     public static final int CHUNK_INFO_ENEMY = 2;
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
+    private static final int RESERVATION_OFFSET = 1;
 
     private static boolean chunksLoaded = false;
 
@@ -55,7 +57,86 @@ public class Communication {
         }
     }
 
+    private static final int RESERVATION_SET_BIT = 0;
+    private static final int RESERVATION_HEARTBEAT_BIT = 1;
+    private static final int RESERVATION_GOLD_BIT = 2;
+    private static final int RESERVATION_GOLD_MASK = 0b11;
+    private static final int RESERVATION_LEAD_BIT = 3;
+    private static final int RESERVATION_LEAD_MASK = 0b1111_1111_1111; // 13 bits
+    private static final int RESERVATION_GOLD_INCREMENT = 50;
+    private static int prevReservationHeartbeatBit;
+
+    // Note: Can only reserve 50 or 100 gold and up to 2^12 = 4096 lead
+    // Only reserves for 1 turn
+    public static void reserve(int gold, int lead) {
+        try {
+            if (rc.getRoundNum() != RobotPlayer.currentTurn) {
+                // Went over bytecodes - Safety
+                return;
+            }
+            // Check if already reserved
+            int value = rc.readSharedArray(RESERVATION_OFFSET);
+            if (((value >> RESERVATION_SET_BIT) & 0b1) == 0) {
+                // No reservation yet
+                int heartbeat = (value >> RESERVATION_HEARTBEAT_BIT) & 0b1;
+                int newValue = 0;
+                newValue |= 0b1 << RESERVATION_SET_BIT;
+                newValue |= ((1 - heartbeat) << RESERVATION_HEARTBEAT_BIT);
+                newValue |= (gold / RESERVATION_GOLD_INCREMENT) << RESERVATION_GOLD_BIT;
+                newValue |= lead << RESERVATION_LEAD_BIT;
+                rc.writeSharedArray(RESERVATION_OFFSET, newValue);
+            }
+        } catch (GameActionException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static int getReservedGold() {
+        try {
+            return ((rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_GOLD_BIT) & RESERVATION_GOLD_MASK) * RESERVATION_GOLD_INCREMENT;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return 1000;
+        }
+    }
+
+    public static int getReservedLead() {
+        try {
+            return (rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_LEAD_BIT) & RESERVATION_LEAD_MASK;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return 9999;
+        }
+    }
+
+    public static void clearStaleReservation() {
+        if (rc.getRoundNum() != RobotPlayer.currentTurn) {
+            // Went over bytecodes - Safety
+            return;
+        }
+        if (Clock.getBytecodesLeft() < 300) {
+            // Not enough bytecodes - Safety (at least 100 bytecodes needed to write to shared array)
+            return;
+        }
+        try {
+            int value = rc.readSharedArray(RESERVATION_OFFSET);
+            if (((value >> RESERVATION_SET_BIT) & 0b1) == 1) {
+                int heartbeat = (value >> RESERVATION_HEARTBEAT_BIT) & 0b1;
+                if (heartbeat == prevReservationHeartbeatBit) { // if we see equivalent heartbeat
+                    rc.writeSharedArray(RESERVATION_OFFSET, heartbeat << RESERVATION_HEARTBEAT_BIT); // clear (but keep heartbeat bit)
+                }
+            }
+        } catch (GameActionException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void loop() throws GameActionException {
+        clearStaleReservation();
+        loadChunks();
+    }
+
+    public static void loadChunks() throws GameActionException {
         int numChangesLeft = 4;
         for (int i = BUFFER_SIZE; --i >= 0;) {
             int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
@@ -108,6 +189,7 @@ public class Communication {
     }
 
     public static void postLoop() throws GameActionException {
+        prevReservationHeartbeatBit = (rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_HEARTBEAT_BIT) & 0b1;
         if (chunksLoaded) {
             // Mark areas that are friendly
             MapLocation currentLocation = rc.getLocation();
