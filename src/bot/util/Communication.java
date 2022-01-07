@@ -120,6 +120,10 @@ public class Communication {
             // Not enough bytecodes - Safety (at least 100 bytecodes needed to write to shared array)
             return;
         }
+        if (Cache.TURN_COUNT == 1) {
+            // Never clear on first turn - we never got a prevReservationHeartbeatBit yet
+            return;
+        }
         try {
             int value = rc.readSharedArray(RESERVATION_OFFSET);
             if (((value >> RESERVATION_SET_BIT) & 0b1) == 1) {
