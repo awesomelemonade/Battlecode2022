@@ -9,6 +9,7 @@ ourLocationVar = "ourLocation"
 def genVars(prefix):
     return [[prefix + str(x) + "_" + str(y) for x in range(squareLength)] for y in range(squareLength)]
 
+
 dpVariables = genVars("dp_")
 dirVariables = genVars("dir_")
 rubbleVariables = genVars("rubble_")
@@ -69,6 +70,7 @@ for direction, (dx, dy) in zip(adjacentDirections, adjacentCoords):
     onTheMapVar = onTheMapVariables[x][y]
     locationVar = locationVariables[x][y]
     dirVar = dirVariables[x][y]
+    dpVar = dpVariables[x][y]
     print("if ({} && !rc.isLocationOccupied({})) {{".format(onTheMapVar, locationVar))
     print("{} = {};".format(dpVar, rubbleVariables[offsetX][offsetY]))
     print("{} = Direction.{};".format(dirVar, direction))
@@ -99,6 +101,17 @@ for dist in range(1, scanRadiusSquared + 1):
                     print("{} = {};".format(dirVariables[x2][y2], dirVariables[x][y]))
                     print("}")
                     print("}")
+'''
+# Print out dp
+for i in range(squareLength):
+    print('System.out.printf("%.02f, %.02f, %.02f, %.02f, %.02f, %.02f, %.02f, %.02f, %.02f\\n", ', end='')
+    printedVars = ['0f' for j in range(squareLength)]
+    for j in range(squareLength):
+        if (i - offsetX) ** 2 + (j - offsetY) ** 2 <= scanRadiusSquared:
+            printedVars[j] = dpVariables[i][j]
+    print(', '.join(printedVars), end='')
+    print(');')
+'''
 
 # Retrieve best direction
 print("if ({}.isWithinDistanceSquared(target, {})) {{".format(ourLocationVar, scanRadiusSquared))
