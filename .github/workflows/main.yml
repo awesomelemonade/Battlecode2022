@@ -7,6 +7,8 @@ jobs:
   test_private_action_job:
     name: Run Matches
     runs-on: ubuntu-latest
+    container:
+      options: --user root
     steps:
       # checkout this repo
       - name: Checkout Repo
