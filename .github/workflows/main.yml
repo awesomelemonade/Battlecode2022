@@ -7,12 +7,12 @@ jobs:
   test_private_action_job:
     name: Run Matches
     runs-on: ubuntu-latest
-    container:
-      options: --user root
     steps:
       # checkout this repo
       - name: Checkout Repo
         uses: actions/checkout@v2
+      - name: List Files
+        run: ls
       # run python/java to play against precompiled programs - pipe results to file
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -24,7 +24,7 @@ jobs:
         with:
           java-version: 8
       - name: Run Match
-        run: python run_matches.py
+        run: sudo python run_matches.py
       # upload match files as artifact
       - name: Archive Match Files
         uses: actions/upload-artifact@v2
