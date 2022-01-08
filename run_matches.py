@@ -28,13 +28,14 @@ def run_match(bot, map):
         #outputA = str(subprocess.check_output(['ls'], shell=True))
         outputA = str(subprocess.check_output(['java', '-version']))
         #outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"']))
-        outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
+        #outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
         outputC = str(subprocess.check_output(['echo', '"$JAVA_HOME"']))
+        outputB = str(subprocess.check_output(['printenv']))
         #resultA = subprocess.run(['./gradlew', 'tasks'], stdout=subprocess.PIPE)
         #outputA = str(resultA.stdout)
         print(outputA)
-        print(outputB)
         print(outputC)
+        print(outputB)
         #outputB = ''
     except subprocess.CalledProcessError as exc:
         print("Status: FAIL", exc.returncode, exc.output)
