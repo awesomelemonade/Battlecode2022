@@ -47,7 +47,7 @@ public class Explorer {
     public static boolean smartExplore() {
         Debug.setIndicatorDot(Profile.EXPLORER, Cache.MY_LOCATION, 255, 128, 0); // orange
         // TODO: Simplify
-        if (currentExploreDirection == null || reachedBorder(currentExploreDirection) || goingTowardsAllyArchon(currentExploreDirection)) {
+        if (currentExploreDirection == null || reachedBorder(currentExploreDirection)) {
             if (rc.getRoundNum() < 100 && !hasExplored) {
                 currentExploreDirection = ExploreDirection.fromDirection(initialExploreDirection);
                 currentExploreLocation = getExploreLocation();
@@ -61,7 +61,7 @@ public class Explorer {
                     if (currentExploreDirection != null && (currentExploreDirection == potentialDirection || ExploreDirection.isOpposite(currentExploreDirection, potentialDirection))) {
                         continue;
                     }
-                    if (reachedBorder(potentialDirection) || goingTowardsAllyArchon(potentialDirection)) {
+                    if (reachedBorder(potentialDirection)) {
                         continue;
                     }
                     currentExploreDirection = potentialDirection;
