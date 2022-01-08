@@ -29,7 +29,7 @@ def run_match(bot, map):
         outputA = str(subprocess.check_output(['java', '-version']))
         #outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"']))
         outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
-        outputC = str(subprocess.check_output(['echo', '"$NAME"']))
+        outputC = str(subprocess.check_output(['echo', '"$JAVA_HOME"']))
         #resultA = subprocess.run(['./gradlew', 'tasks'], stdout=subprocess.PIPE)
         #outputA = str(resultA.stdout)
         print(outputA)
