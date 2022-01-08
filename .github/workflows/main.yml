@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
+          cache: gradle
       - name: Make executable
         run: chmod +x gradlew
       - name: Validate Gradle wrapper
@@ -31,6 +32,13 @@ jobs:
         run: ./gradlew tasks
       - name: Run Match
         run: sudo python run_matches.py
+      - name: Cleanup Gradle Cache
+        # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle#caching-dependencies
+        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
       # upload match files as artifact
       - name: Archive Match Files
         uses: actions/upload-artifact@v2
