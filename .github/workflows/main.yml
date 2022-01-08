@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'jdkfile'
-          jdkFile: ${{ runner.temp }}/jdk-8u301-linux-aarch64.tar.gz
+          jdkFile: jdk-8u301-linux-aarch64.tar.gz
           java-version: '8'
           architecture: x64
       - name: Java Version
