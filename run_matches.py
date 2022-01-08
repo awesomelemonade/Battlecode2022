@@ -10,11 +10,11 @@ emojiMap = {
 }
 errors = []
 currentBot = 'bot'
-matches = {('examplefuncsplayer', 'eckleburg'), ('smartie', 'maptestsmall')}
+matches = {('examplefuncsplayer', 'Z'), ('smartie', 'maptestsmall')}
 
 bots = ['examplefuncsplayer', 'smartie']
 botsSet = set(bots)
-maps = ['maptestsmall', 'eckleburg', 'intersection']
+maps = ['maptestsmall', 'Z', 'intersection']
 mapsSet = set(maps)
 
 numWinsMapping = {
