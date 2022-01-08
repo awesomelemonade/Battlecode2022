@@ -22,7 +22,7 @@ jobs:
         with:
           distribution: 'jdkfile'
           jdkFile: jdk-8u301-linux-aarch64.tar.gz
-          java-version: '8'
+          java-version: '8.0.301'
           architecture: x64
       - name: Java Version
         run: java -version
