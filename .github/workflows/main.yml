@@ -28,16 +28,14 @@ jobs:
           architecture: x64
       - name: Java Version
         run: java -version
-      - name: List
-        run: ls /opt/hostedtoolcache/Java_jdkfile_jdk/8.0.301/x64
       - name: Make Executable
         run: chmod +x gradlew
-      #- name: Validate Gradle wrapper
-      #  uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      #- name: Build with Gradle
-      #  run: ./gradlew build
-      #- name: List Tasks
-      #  run: ./gradlew tasks
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Build with Gradle
+        run: ./gradlew build
+      - name: List Tasks
+        run: ./gradlew tasks
       - name: Run Match
         run: python run_matches.py
       # upload match files as artifact
