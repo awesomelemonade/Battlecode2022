@@ -45,7 +45,6 @@ public class Miner implements RunnableBot {
     }
 
     public static boolean tryMoveGoodMining() throws GameActionException {
-        int bef = Clock.getBytecodeNum();
         if (!rc.isMovementReady()) return false;
 
         MapLocation ourLoc = rc.getLocation();
@@ -108,11 +107,7 @@ public class Miner implements RunnableBot {
         int targetY = (int) Math.round(ourY + forceY);
         Debug.setIndicatorLine(Profile.MINING, ourLoc, new MapLocation(targetX, targetY), 0, 0, 0);
 
-        int aft = Clock.getBytecodeNum();
-        Debug.println("bytecodes used before pathfinding = " + (aft - bef));
         Util.tryMove(new MapLocation(targetX, targetY));
-        aft = Clock.getBytecodeNum();
-        Debug.println("full bytecodes used = " + (aft - bef));
         return true;
     }
 
