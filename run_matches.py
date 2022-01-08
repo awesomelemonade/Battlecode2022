@@ -26,7 +26,7 @@ def run_match(bot, map):
     print("Running {} vs {} on {}".format(currentBot, bot, map))
     try:
         #outputA = str(subprocess.check_output(['ls'], shell=True))
-        outputA = str(subprocess.check_output(['java', '-version'], env={"JAVA_HOME": "/opt/hostedtoolcache/Java_jdkfile_jdk/8.0.301/x64"}))
+        outputA = str(subprocess.check_output(['java', '-version']))
         #outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"']))
         #outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
         #resultA = subprocess.run(['./gradlew', 'tasks'], stdout=subprocess.PIPE)
