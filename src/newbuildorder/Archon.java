@@ -55,11 +55,11 @@ public class Archon implements RunnableBot {
 
     public boolean tryBuildPoor() throws GameActionException {
         int mapSize = rc.getMapWidth() + rc.getMapHeight();
-        if (minerCount <= 5 + mapSize/10) {
+        if (minerCount <= (10 + mapSize/20)/rc.getArchonCount()) {
             tryBuild(RobotType.MINER);
         } else {
             double r = Math.random();
-            if (r < 0.2) {
+            if (r < 0.2 && rc.getTeamLeadAmount(rc.getTeam()) >= RobotType.SOLDIER.buildCostLead) {
                 tryBuild(RobotType.MINER);
             } else {
                 tryBuildAttacker();

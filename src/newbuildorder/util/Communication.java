@@ -197,7 +197,6 @@ public class Communication {
     public static void postLoop() throws GameActionException {
         prevReservationHeartbeatBit = (rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_HEARTBEAT_BIT) & 0b1;
         if (chunksLoaded) {
-            // Mark areas that are friendly
             MapLocation currentLocation = rc.getLocation();
             int currentChunkX = currentLocation.x / CHUNK_SIZE;
             int currentChunkY = currentLocation.y / CHUNK_SIZE;
@@ -211,6 +210,18 @@ public class Communication {
                     int old = setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
                     if (old != CHUNK_INFO_ALLY) {
                         onChunkChange(old, CHUNK_INFO_ALLY, currentChunkX, currentChunkY);
+                    }
+
+                    // Update chunk enemy is on
+                    RobotInfo closestEnemy = Util.getClosestEnemyRobot();
+                    if (closestEnemy != null) {
+                        MapLocation loc = closestEnemy.location;
+                        int chunkX = loc.x / CHUNK_SIZE;
+                        int chunkY = loc.y / CHUNK_SIZE;
+                        old = setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY);
+                        if (old != CHUNK_INFO_ENEMY) {
+                            onChunkChange(old, CHUNK_INFO_ENEMY, chunkX, chunkY);
+                        }
                     }
                 } else {
                     // Label as enemy
