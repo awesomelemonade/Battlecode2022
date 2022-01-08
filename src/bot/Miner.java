@@ -26,14 +26,14 @@ public class Miner implements RunnableBot {
                     if (rc.canSenseLocation(loc)) {
                         RobotInfo robot = rc.senseRobotAtLocation(loc);
                         if (robot != null && robot.team == ALLY_TEAM && robot.type == RobotType.ARCHON) {
-                            Util.tryKiteFrom(robot.location);
+                            tryKite(robot);
                             break;
                         }
                     }
                 }
             } else {
                 if (closestEnemyAttacker != null) {
-                    Util.tryKiteFrom(closestEnemyAttacker.location);
+                    tryKite(closestEnemyAttacker);
                 } else {
                     if (!tryMoveGoodMining()) {
                         Util.tryExplore();
@@ -45,7 +45,6 @@ public class Miner implements RunnableBot {
     }
 
     public static boolean tryMoveGoodMining() throws GameActionException {
-        int bef = Clock.getBytecodeNum();
         if (!rc.isMovementReady()) return false;
 
         MapLocation ourLoc = rc.getLocation();
@@ -108,11 +107,7 @@ public class Miner implements RunnableBot {
         int targetY = (int) Math.round(ourY + forceY);
         Debug.setIndicatorLine(Profile.MINING, ourLoc, new MapLocation(targetX, targetY), 0, 0, 0);
 
-        int aft = Clock.getBytecodeNum();
-        Debug.println("bytecodes used before pathfinding = " + (aft - bef));
         Util.tryMove(new MapLocation(targetX, targetY));
-        aft = Clock.getBytecodeNum();
-        Debug.println("full bytecodes used = " + (aft - bef));
         return true;
     }
 
@@ -165,6 +160,33 @@ public class Miner implements RunnableBot {
                     case 0:
                 }
             }
+        }
+    }
+
+    void tryKite(RobotInfo closestEnemy) throws GameActionException {
+        double bestScore = 0;
+        double curDist = rc.getLocation().distanceSquaredTo(closestEnemy.location);
+        Direction bestDir = null;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                MapLocation loc = rc.getLocation().translate(dx, dy);
+                Direction dir = rc.getLocation().directionTo(loc);
+                if (dir == Direction.CENTER || rc.canMove(dir)) {
+                    int dist = loc.distanceSquaredTo(closestEnemy.location);
+                    if (dist < curDist) continue;
+                    double distScore = dist - curDist;
+                    double cooldown = 1.0 + rc.senseRubble(loc)/10.0;
+                    double cdScore = 1.0 / cooldown;
+                    double score = distScore + 10*cdScore;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestDir = dir;
+                    }
+                }
+            }
+        }
+        if (bestDir != null && bestDir != Direction.CENTER) {
+            Util.tryMove(bestDir);
         }
     }
 }
