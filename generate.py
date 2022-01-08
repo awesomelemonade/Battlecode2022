@@ -2,17 +2,20 @@ import math
 from itertools import product
 
 # Generated9
-# squareLength = 7
-# scanRadiusSquared = 9
-# edgeThreshold = 4
+squareLength = 7
+scanRadiusSquared = 9
+edgeThreshold = 4
+useIsLocationOccupied = False
 # Generated13
 # squareLength = 7
 # scanRadiusSquared = 13
 # edgeThreshold = 8
+# useIsLocationOccupied = False
 # Generated34
-squareLength = 11
-scanRadiusSquared = 34
-edgeThreshold = 25
+# squareLength = 11
+# scanRadiusSquared = 34
+# edgeThreshold = 25
+# useIsLocationOccupied = True # For archons
 
 ourLocationVar = "ourLocation"
 ourLocationXVar = "ourLocationX"
@@ -110,7 +113,10 @@ for direction, (dx, dy) in zip(adjacentDirections, adjacentCoords):
     locationVar = locationVariables[x][y]
     dirVar = dirVariables[x][y]
     dpVar = dpVariables[x][y]
-    print("if ({} && rc.canMove(Direction.{})) {{".format(onTheMapVar, direction))
+    if useIsLocationOccupied:
+        print("if ({} && !rc.isLocationOccupied({})) {{".format(onTheMapVar, locationVar))
+    else:
+        print("if (rc.canMove(Direction.{})) {{".format(direction))
     print("{} = {};".format(dpVar, rubbleVariables[offsetX][offsetY]))
     print("{} = Direction.{};".format(dirVar, direction))
     print("}")
@@ -132,7 +138,7 @@ for dist in range(1, scanRadiusSquared + 1):
                 dx2, dy2 = dx + adx, dy + ady
                 dist2 = dx2 * dx2 + dy2 * dy2
                 x2, y2 = dx2 + offsetX, dy2 + offsetY
-                if dist2 <= scanRadiusSquared and dist2 > dist:
+                if dist2 <= scanRadiusSquared and dist2 > dist and dist2 > 2:
                     if not definedNextVar:
                         print("double {} = {} + {};".format(nextVar, dpVariables[x][y], rubbleVariables[x][y])) # Could potentially move into static variables
                         definedNextVar = True
@@ -146,10 +152,12 @@ for dist in range(1, scanRadiusSquared + 1):
                         print("}")
                     potentiallyNotInfinityVars.add(dpNextVar)
                     print("}")
+
 '''
 # Print out dp
 for i in range(squareLength):
-    print('System.out.printf("%.02f, %.02f, %.02f, %.02f, %.02f, %.02f, %.02f, %.02f, %.02f\\n", ', end='')
+    formatString = ', '.join(['%.02f'] * squareLength)
+    print('System.out.printf("{}\\n", '.format(formatString), end='')
     printedVars = ['0f' for j in range(squareLength)]
     for j in range(squareLength):
         if (i - offsetX) ** 2 + (j - offsetY) ** 2 <= scanRadiusSquared:

@@ -1,5 +1,6 @@
 package bot.util;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -120,6 +121,18 @@ public class LambdaUtil {
             T item = array[i];
             if (predicate.test(item)) {
                 sum += mapper.applyAsInt(item);
+            }
+        }
+        return sum;
+    }
+
+    // Replacement for Arrays.stream(array).filter(predicate).count()
+    public static <T> int arraysStreamSum(T[] array, Predicate<T> predicate) {
+        int sum = 0;
+        for (int i = array.length; --i >= 0; ) {
+            T item = array[i];
+            if (predicate.test(item)) {
+                sum++;
             }
         }
         return sum;

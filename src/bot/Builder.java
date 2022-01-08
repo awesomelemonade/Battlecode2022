@@ -20,6 +20,7 @@ public class Builder implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
+        //canBuildLaboratory = LambdaUtil.arraysStreamSum(Cache.ALLY_ROBOTS, r -> r.type == RobotType.WATCHTOWER) >= 5;
         RobotInfo closestRepairable = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> r.health < r.type.health && rc.getType().canRepair(r.type));
         if (closestRepairable == null) {
             closestRepairableLocation = null;

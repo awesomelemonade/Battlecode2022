@@ -337,47 +337,39 @@ public class Generated9 {
         if (onTheMap_3_2) {
             rubble_3_2 = 1.0 + rc.senseRubble(loc_3_2) / 10.0;
         }
-        if (onTheMap_3_4 && rc.canMove(Direction.EAST)) {
+        if (rc.canMove(Direction.EAST)) {
             dp_3_4 = rubble_3_3;
             dir_3_4 = Direction.EAST;
         }
-        if (onTheMap_4_3 && rc.canMove(Direction.NORTH)) {
+        if (rc.canMove(Direction.NORTH)) {
             dp_4_3 = rubble_3_3;
             dir_4_3 = Direction.NORTH;
         }
-        if (onTheMap_3_2 && rc.canMove(Direction.WEST)) {
+        if (rc.canMove(Direction.WEST)) {
             dp_3_2 = rubble_3_3;
             dir_3_2 = Direction.WEST;
         }
-        if (onTheMap_2_3 && rc.canMove(Direction.SOUTH)) {
+        if (rc.canMove(Direction.SOUTH)) {
             dp_2_3 = rubble_3_3;
             dir_2_3 = Direction.SOUTH;
         }
-        if (onTheMap_4_4 && rc.canMove(Direction.NORTHEAST)) {
+        if (rc.canMove(Direction.NORTHEAST)) {
             dp_4_4 = rubble_3_3;
             dir_4_4 = Direction.NORTHEAST;
         }
-        if (onTheMap_4_2 && rc.canMove(Direction.NORTHWEST)) {
+        if (rc.canMove(Direction.NORTHWEST)) {
             dp_4_2 = rubble_3_3;
             dir_4_2 = Direction.NORTHWEST;
         }
-        if (onTheMap_2_2 && rc.canMove(Direction.SOUTHWEST)) {
+        if (rc.canMove(Direction.SOUTHWEST)) {
             dp_2_2 = rubble_3_3;
             dir_2_2 = Direction.SOUTHWEST;
         }
-        if (onTheMap_2_4 && rc.canMove(Direction.SOUTHEAST)) {
+        if (rc.canMove(Direction.SOUTHEAST)) {
             dp_2_4 = rubble_3_3;
             dir_2_4 = Direction.SOUTHEAST;
         }
         double next_3_2 = dp_2_3 + rubble_2_3;
-        if (onTheMap_2_4) {
-            dp_2_4 = next_3_2;
-            dir_2_4 = dir_2_3;
-        }
-        if (onTheMap_2_2) {
-            dp_2_2 = next_3_2;
-            dir_2_2 = dir_2_3;
-        }
         if (onTheMap_1_3) {
             dp_1_3 = next_3_2;
             dir_1_3 = dir_2_3;
@@ -395,16 +387,6 @@ public class Generated9 {
             dp_3_5 = next_4_3;
             dir_3_5 = dir_3_4;
         }
-        if (onTheMap_4_4) {
-            dp_4_4 = next_4_3;
-            dir_4_4 = dir_3_4;
-        }
-        if (onTheMap_2_4) {
-            if (next_4_3 < dp_2_4) {
-                dp_2_4 = next_4_3;
-                dir_2_4 = dir_3_4;
-            }
-        }
         if (onTheMap_4_5) {
             dp_4_5 = next_4_3;
             dir_4_5 = dir_3_4;
@@ -414,19 +396,9 @@ public class Generated9 {
             dir_2_5 = dir_3_4;
         }
         double next_3_4 = dp_4_3 + rubble_4_3;
-        if (onTheMap_4_4) {
-            if (next_3_4 < dp_4_4) {
-                dp_4_4 = next_3_4;
-                dir_4_4 = dir_4_3;
-            }
-        }
         if (onTheMap_5_3) {
             dp_5_3 = next_3_4;
             dir_5_3 = dir_4_3;
-        }
-        if (onTheMap_4_2) {
-            dp_4_2 = next_3_4;
-            dir_4_2 = dir_4_3;
         }
         if (onTheMap_5_4) {
             dp_5_4 = next_3_4;
@@ -437,21 +409,9 @@ public class Generated9 {
             dir_5_2 = dir_4_3;
         }
         double next_2_3 = dp_3_2 + rubble_3_2;
-        if (onTheMap_4_2) {
-            if (next_2_3 < dp_4_2) {
-                dp_4_2 = next_2_3;
-                dir_4_2 = dir_3_2;
-            }
-        }
         if (onTheMap_3_1) {
             dp_3_1 = next_2_3;
             dir_3_1 = dir_3_2;
-        }
-        if (onTheMap_2_2) {
-            if (next_2_3 < dp_2_2) {
-                dp_2_2 = next_2_3;
-                dir_2_2 = dir_3_2;
-            }
         }
         if (onTheMap_4_1) {
             dp_4_1 = next_2_3;

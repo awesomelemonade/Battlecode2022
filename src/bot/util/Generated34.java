@@ -1217,47 +1217,39 @@ public class Generated34 {
         if (onTheMap_5_4) {
             rubble_5_4 = 1.0 + rc.senseRubble(loc_5_4) / 10.0;
         }
-        if (onTheMap_5_6 && rc.canMove(Direction.EAST)) {
+        if (onTheMap_5_6 && !rc.isLocationOccupied(loc_5_6)) {
             dp_5_6 = rubble_5_5;
             dir_5_6 = Direction.EAST;
         }
-        if (onTheMap_6_5 && rc.canMove(Direction.NORTH)) {
+        if (onTheMap_6_5 && !rc.isLocationOccupied(loc_6_5)) {
             dp_6_5 = rubble_5_5;
             dir_6_5 = Direction.NORTH;
         }
-        if (onTheMap_5_4 && rc.canMove(Direction.WEST)) {
+        if (onTheMap_5_4 && !rc.isLocationOccupied(loc_5_4)) {
             dp_5_4 = rubble_5_5;
             dir_5_4 = Direction.WEST;
         }
-        if (onTheMap_4_5 && rc.canMove(Direction.SOUTH)) {
+        if (onTheMap_4_5 && !rc.isLocationOccupied(loc_4_5)) {
             dp_4_5 = rubble_5_5;
             dir_4_5 = Direction.SOUTH;
         }
-        if (onTheMap_6_6 && rc.canMove(Direction.NORTHEAST)) {
+        if (onTheMap_6_6 && !rc.isLocationOccupied(loc_6_6)) {
             dp_6_6 = rubble_5_5;
             dir_6_6 = Direction.NORTHEAST;
         }
-        if (onTheMap_6_4 && rc.canMove(Direction.NORTHWEST)) {
+        if (onTheMap_6_4 && !rc.isLocationOccupied(loc_6_4)) {
             dp_6_4 = rubble_5_5;
             dir_6_4 = Direction.NORTHWEST;
         }
-        if (onTheMap_4_4 && rc.canMove(Direction.SOUTHWEST)) {
+        if (onTheMap_4_4 && !rc.isLocationOccupied(loc_4_4)) {
             dp_4_4 = rubble_5_5;
             dir_4_4 = Direction.SOUTHWEST;
         }
-        if (onTheMap_4_6 && rc.canMove(Direction.SOUTHEAST)) {
+        if (onTheMap_4_6 && !rc.isLocationOccupied(loc_4_6)) {
             dp_4_6 = rubble_5_5;
             dir_4_6 = Direction.SOUTHEAST;
         }
         double next_5_4 = dp_4_5 + rubble_4_5;
-        if (onTheMap_4_6) {
-            dp_4_6 = next_5_4;
-            dir_4_6 = dir_4_5;
-        }
-        if (onTheMap_4_4) {
-            dp_4_4 = next_5_4;
-            dir_4_4 = dir_4_5;
-        }
         if (onTheMap_3_5) {
             dp_3_5 = next_5_4;
             dir_3_5 = dir_4_5;
@@ -1275,16 +1267,6 @@ public class Generated34 {
             dp_5_7 = next_6_5;
             dir_5_7 = dir_5_6;
         }
-        if (onTheMap_6_6) {
-            dp_6_6 = next_6_5;
-            dir_6_6 = dir_5_6;
-        }
-        if (onTheMap_4_6) {
-            if (next_6_5 < dp_4_6) {
-                dp_4_6 = next_6_5;
-                dir_4_6 = dir_5_6;
-            }
-        }
         if (onTheMap_6_7) {
             dp_6_7 = next_6_5;
             dir_6_7 = dir_5_6;
@@ -1294,19 +1276,9 @@ public class Generated34 {
             dir_4_7 = dir_5_6;
         }
         double next_5_6 = dp_6_5 + rubble_6_5;
-        if (onTheMap_6_6) {
-            if (next_5_6 < dp_6_6) {
-                dp_6_6 = next_5_6;
-                dir_6_6 = dir_6_5;
-            }
-        }
         if (onTheMap_7_5) {
             dp_7_5 = next_5_6;
             dir_7_5 = dir_6_5;
-        }
-        if (onTheMap_6_4) {
-            dp_6_4 = next_5_6;
-            dir_6_4 = dir_6_5;
         }
         if (onTheMap_7_6) {
             dp_7_6 = next_5_6;
@@ -1317,21 +1289,9 @@ public class Generated34 {
             dir_7_4 = dir_6_5;
         }
         double next_4_5 = dp_5_4 + rubble_5_4;
-        if (onTheMap_6_4) {
-            if (next_4_5 < dp_6_4) {
-                dp_6_4 = next_4_5;
-                dir_6_4 = dir_5_4;
-            }
-        }
         if (onTheMap_5_3) {
             dp_5_3 = next_4_5;
             dir_5_3 = dir_5_4;
-        }
-        if (onTheMap_4_4) {
-            if (next_4_5 < dp_4_4) {
-                dp_4_4 = next_4_5;
-                dir_4_4 = dir_5_4;
-            }
         }
         if (onTheMap_6_3) {
             dp_6_3 = next_4_5;

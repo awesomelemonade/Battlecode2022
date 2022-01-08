@@ -1,9 +1,6 @@
 package bot;
 
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotType;
+import battlecode.common.*;
 import bot.util.*;
 
 import static bot.util.Constants.*;
@@ -40,6 +37,7 @@ public class Archon implements RunnableBot {
                 buildCount++;
             }
         }
+        tryRepair();
     }
 
     public static boolean tryBuild(RobotType type) throws GameActionException {
@@ -63,7 +61,8 @@ public class Archon implements RunnableBot {
             }
         } else {
             // Build if we can, otherwise reserve
-            for (Direction d: Constants.getAttemptOrder(Util.randomAdjacentDirection())) {
+            Direction idealDirection = type == RobotType.MINER ? getIdealBuildDirectionForMining() : Util.randomAdjacentDirection();
+            for (Direction d: Constants.getAttemptOrder(idealDirection)) {
                 if (rc.canBuildRobot(type, d)) {
                     rc.buildRobot(type, d);
                     return true;
@@ -74,14 +73,90 @@ public class Archon implements RunnableBot {
         }
     }
 
+    public static void tryRepair() throws GameActionException {
+        if (!rc.isActionReady()) {
+            return;
+        }
+        if (rc.getTeamLeadAmount(ALLY_TEAM) < 500 && rc.senseRubble(Cache.MY_LOCATION) > 20) {
+            return; // We should probably be saving to build units
+        }
+        MapLocation bestLocation = null;
+        double bestScore = -Double.MAX_VALUE;
+        if (Cache.ENEMY_ROBOTS.length > 0) {
+            // If we see any enemies
+            // Repair the lowest health so they can survive
+            for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+                RobotInfo robot = Cache.ALLY_ROBOTS[i];
+                MapLocation location = robot.location;
+                if (!rc.canRepair(location)) {
+                    continue;
+                }
+                int health = robot.health;
+                int maxHealth = robot.type.getMaxHealth(robot.level);
+                if (health >= maxHealth) {
+                    continue;
+                }
+                double score = health;
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestLocation = location;
+                }
+            }
+        } else {
+            // No enemies in sight
+            // Repair the highest health that isn't full so they can leave (unclogging mechanism)
+            for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+                RobotInfo robot = Cache.ALLY_ROBOTS[i];
+                MapLocation location = robot.location;
+                if (!rc.canRepair(location)) {
+                    continue;
+                }
+                int health = robot.health;
+                int maxHealth = robot.type.getMaxHealth(robot.level);
+                if (health >= maxHealth) {
+                    continue;
+                }
+                double score = maxHealth - health;
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestLocation = location;
+                }
+            }
+        }
+        if (bestLocation != null) {
+            rc.repair(bestLocation);
+        }
+    }
+
     public static Direction getIdealBuildDirectionForMining() throws GameActionException {
         MapLocation[] leadLocations = rc.senseNearbyLocationsWithLead(ARCHON_VISION_DISTANCE_SQUARED);
-        // TODO
         MapLocation bestLocation = null;
+        double bestScore = -Double.MAX_VALUE;
+        for (int i = leadLocations.length; --i >= 0;) {
+            MapLocation location = leadLocations[i];
+            int lead = rc.senseLead(location);
+            if (lead <= 6) {
+                continue;
+            }
+            double score = lead + Math.random();
+            if (score > bestScore) {
+                bestScore = score;
+                bestLocation = location;
+            }
+        }
         if (bestLocation == null) {
-            return null;
+            return Util.randomAdjacentDirection();
         } else {
-            return Generated34.execute(bestLocation);
+            int a = Clock.getBytecodeNum();
+            Direction ret = Generated34.execute(bestLocation);
+            int b = Clock.getBytecodeNum();
+            Debug.setIndicatorLine(Profile.MINING, Cache.MY_LOCATION, bestLocation, 255, 255, 0);
+            Debug.setIndicatorString("Gen34: " + (b - a) + " - " + ret);
+            if (ret == null) {
+                return Util.randomAdjacentDirection();
+            } else {
+                return ret;
+            }
         }
     }
 }
