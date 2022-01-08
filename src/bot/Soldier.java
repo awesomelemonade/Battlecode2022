@@ -1,9 +1,6 @@
 package bot;
 
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotInfo;
+import battlecode.common.*;
 import bot.util.*;
 
 import static bot.util.Constants.rc;
@@ -27,11 +24,15 @@ public class Soldier implements RunnableBot {
                 if (closestEnemy != null) {
                     tryKite(closestEnemy);
                 } else {
-                    if (MapInfo.enemyLocation == null) {
+                    int bef = Clock.getBytecodeNum();
+                    MapLocation loc = Communication.getClosestEnemyChunk();
+                    int aft = Clock.getBytecodeNum();
+                    rc.setIndicatorString("time to find enemy chunk = " + (aft-bef));
+                    if (loc == null) {
                         Util.tryExplore();
                     } else {
                         Debug.setIndicatorDot(rc.getLocation(), 255, 255, 0);
-                        Util.tryMove(MapInfo.enemyLocation);
+                        Util.tryMove(loc);
                     }
                 }
             }

@@ -7,13 +7,13 @@ import static bot.util.Constants.rc;
 
 public class Communication {
     private static final int CHUNK_INFO_OFFSET = 28; // 64 - 36 = 28
-    private static final int CHUNK_SIZE = 5; // 5 x 5 chunks
+    public static final int CHUNK_SIZE = 5; // 5 x 5 chunks
     private static final int NUM_CHUNKS_SIZE = 12; // The entire map is 12 x 12 chunks
     private static final int BUFFER_SIZE = 36; // Number of 16 bit ints it would take in communication
     private static final int[] buffer = new int[BUFFER_SIZE];
 
-    private static int NUM_CHUNKS_WIDTH;
-    private static int NUM_CHUNKS_HEIGHT;
+    public static int NUM_CHUNKS_WIDTH;
+    public static int NUM_CHUNKS_HEIGHT;
 
     public static final int CHUNK_INFO_UNEXPLORED = 0;
     public static final int CHUNK_INFO_ALLY = 1;
@@ -23,6 +23,8 @@ public class Communication {
     private static final int RESERVATION_OFFSET = 4;
 
     private static boolean chunksLoaded = false;
+
+    private static ChunkAccessor enemyChunkTracker;
 
     public static void init() throws GameActionException {
         NUM_CHUNKS_WIDTH = (Constants.MAP_WIDTH + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
@@ -55,6 +57,7 @@ public class Communication {
                 throw new IllegalStateException("Cannot read any archon locations");
             }
         }
+        enemyChunkTracker = new ChunkAccessor();
     }
 
     private static final int RESERVATION_SET_BIT = 0;
@@ -230,8 +233,11 @@ public class Communication {
             }
         }
 
-        // Debug Draw
-        if (Constants.ROBOT_TYPE == RobotType.ARCHON) {
+        //debug_drawChunks();
+    }
+
+    public static void debug_drawChunks() {
+        if (Constants.ROBOT_TYPE == RobotType.ARCHON || Constants.ROBOT_TYPE == RobotType.SOLDIER) {
             for (int i = NUM_CHUNKS_WIDTH; --i >= 0;) {
                 for (int j = NUM_CHUNKS_HEIGHT; --j >= 0;) {
                     int midX = getChunkMidX(i);
@@ -260,18 +266,16 @@ public class Communication {
     public static void onChunkChange(int oldChunkValue, int chunkValue, MapLocation chunkLocation) {
         if (oldChunkValue == CHUNK_INFO_ENEMY) {
             // Remove from enemy list
-            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 255, 255);
-            if (MapInfo.enemyLocation != null && MapInfo.enemyLocation.equals(chunkLocation)) {
-                MapInfo.enemyLocation = null;
-            }
+            enemyChunkTracker.removeChunk(chunkLocation.x/CHUNK_SIZE, chunkLocation.y/CHUNK_SIZE);
         }
         if (chunkValue == CHUNK_INFO_ENEMY) {
             // Add to enemy list
-            Debug.setIndicatorDot(Profile.CHUNK_INFO, chunkLocation, 0, 0, 255);
-            if (MapInfo.enemyLocation == null) {
-                MapInfo.enemyLocation = chunkLocation;
-            }
+            enemyChunkTracker.addChunk(chunkLocation.x/CHUNK_SIZE, chunkLocation.y/CHUNK_SIZE);
         }
+    }
+
+    public static MapLocation getClosestEnemyChunk() {
+        return enemyChunkTracker.getNearestChunk(20);
     }
 
     public static int pack(MapLocation location) {
