@@ -5,7 +5,8 @@ emojiMap = {
     'Won': ':heavy_check_mark:',
     'Lost': ':x:',
     'Tied': ':warning:',
-    'N/A': ':heavy_minus_sign:'
+    'N/A': ':heavy_minus_sign:',
+    'Error': ':heavy_exclamation_mark:'
 }
 errors = []
 currentBot = 'bot'
@@ -23,16 +24,21 @@ numWinsMapping = {
 }
 def run_match(bot, map):
     print("Running {} vs {} on {}".format(currentBot, bot, map))
-    outputA = str(subprocess.check_output(['sudo', './gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"'], shell=True))
-    outputB = str(subprocess.check_output(['sudo', './gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"'], shell=True))
-    winAString = '{} (A) wins'.format(currentBot)
-    winBString = '{} (B) wins'.format(currentBot)
-    numWins = 0
-    if winAString in outputA:
-        numWins += 1
-    if winBString in outputB:
-        numWins += 1
-    return numWinsMapping[numWins]
+    try:
+        outputA = str(subprocess.check_output(['sudo', './gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"'], shell=True))
+        outputB = str(subprocess.check_output(['sudo', './gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"'], shell=True))
+    except subprocess.CalledProcessError as exc:
+        print("Status: FAIL", exc.returncode, exc.output)
+        return 'Error'
+    else:
+        winAString = '{} (A) wins'.format(currentBot)
+        winBString = '{} (B) wins'.format(currentBot)
+        numWins = 0
+        if winAString in outputA:
+            numWins += 1
+        if winBString in outputB:
+            numWins += 1
+        return numWinsMapping[numWins]
 
 
 results = {}
