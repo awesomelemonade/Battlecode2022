@@ -30,8 +30,6 @@ jobs:
         run: java -version
       - name: List
         run: ls /opt/hostedtoolcache/Java_jdkfile_jdk/8.0.301/x64
-      - name: Export JAVA_HOME
-        run: export JAVA_HOME=/opt/hostedtoolcache/Java_jdkfile_jdk/8.0.301/x64
       - name: Make Executable
         run: chmod +x gradlew
       #- name: Validate Gradle wrapper
