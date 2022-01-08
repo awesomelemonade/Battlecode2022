@@ -5,7 +5,6 @@ import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
 import newbuildorder.util.*;
-import newbuildorder.util.*;
 
 public class RobotPlayer {
     public static int currentTurn;

@@ -166,13 +166,21 @@ public class Archon implements RunnableBot {
         MapLocation[] leadLocations = rc.senseNearbyLocationsWithLead(ARCHON_VISION_DISTANCE_SQUARED);
         MapLocation bestLocation = null;
         double bestScore = -Double.MAX_VALUE;
+        if (leadLocations.length > 64) {
+            // Search in restricted range to save bytecodes
+            leadLocations = rc.senseNearbyLocationsWithLead(13);
+        }
         for (int i = leadLocations.length; --i >= 0;) {
             MapLocation location = leadLocations[i];
             int lead = rc.senseLead(location);
             if (lead <= 6) {
                 continue;
             }
-            double score = lead + Math.random();
+            int dx = location.x - Cache.MY_LOCATION.x;
+            int dy = location.y - Cache.MY_LOCATION.y;
+            double distance = Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(location));
+            double atan2 = Math.atan2(dy, dx);
+            double score = (lead / 5.0 - distance) * (2.0 * Math.PI) + atan2;
             if (score > bestScore) {
                 bestScore = score;
                 bestLocation = location;
@@ -181,11 +189,8 @@ public class Archon implements RunnableBot {
         if (bestLocation == null) {
             return Util.randomAdjacentDirection();
         } else {
-            int a = Clock.getBytecodeNum();
             Direction ret = Generated34.execute(bestLocation);
-            int b = Clock.getBytecodeNum();
             Debug.setIndicatorLine(Profile.MINING, Cache.MY_LOCATION, bestLocation, 255, 255, 0);
-            Debug.setIndicatorString("Gen34: " + (b - a) + " - " + ret);
             if (ret == null) {
                 return Util.randomAdjacentDirection();
             } else {
