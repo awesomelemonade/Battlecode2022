@@ -31,6 +31,7 @@ def run_match(bot, map):
         print("Status: FAIL", exc.returncode, exc.output)
         return 'Error'
     else:
+        print(outputA)
         winAString = '{} (A) wins'.format(currentBot)
         winBString = '{} (B) wins'.format(currentBot)
         numWins = 0
