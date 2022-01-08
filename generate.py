@@ -1,9 +1,18 @@
 import math
 from itertools import product
 
-squareLength = 7
-scanRadiusSquared = 9
-edgeThreshold = 4
+# Generated9
+# squareLength = 7
+# scanRadiusSquared = 9
+# edgeThreshold = 4
+# Generated13
+# squareLength = 7
+# scanRadiusSquared = 13
+# edgeThreshold = 8
+# Generated34
+squareLength = 11
+scanRadiusSquared = 34
+edgeThreshold = 25
 
 ourLocationVar = "ourLocation"
 ourLocationXVar = "ourLocationX"

@@ -244,18 +244,18 @@ public class Generated13 {
         }
         int ourLocationX = ourLocation.x;
         int ourLocationY = ourLocation.y;
-        loc_2_3 = ourLocation.add(Direction.SOUTH);
-        loc_4_3 = ourLocation.add(Direction.NORTH);
+        loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
+        loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
         loc_0_3 = loc_1_3.add(Direction.SOUTH);
         loc_6_3 = loc_5_3.add(Direction.NORTH);
-        loc_3_4 = ourLocation.add(Direction.EAST);
-        loc_3_2 = ourLocation.add(Direction.WEST);
-        loc_2_2 = loc_2_3.add(Direction.WEST);
-        loc_2_4 = loc_2_3.add(Direction.EAST);
-        loc_4_4 = loc_4_3.add(Direction.EAST);
-        loc_4_2 = loc_4_3.add(Direction.WEST);
+        loc_3_4 = rc.adjacentLocation(Direction.EAST);
+        loc_3_2 = rc.adjacentLocation(Direction.WEST);
+        loc_2_2 = rc.adjacentLocation(Direction.SOUTHWEST);
+        loc_2_4 = rc.adjacentLocation(Direction.SOUTHEAST);
+        loc_4_4 = rc.adjacentLocation(Direction.NORTHEAST);
+        loc_4_2 = rc.adjacentLocation(Direction.NORTHWEST);
         loc_1_2 = loc_1_3.add(Direction.WEST);
         loc_1_4 = loc_1_3.add(Direction.EAST);
         loc_5_4 = loc_5_3.add(Direction.EAST);
@@ -513,81 +513,67 @@ public class Generated13 {
         if (onTheMap_3_2) {
             rubble_3_2 = 1.0 + rc.senseRubble(loc_3_2) / 10.0;
         }
-        if (onTheMap_3_4 && !rc.isLocationOccupied(loc_3_4)) {
+        if (onTheMap_3_4 && rc.canMove(Direction.EAST)) {
             dp_3_4 = rubble_3_3;
             dir_3_4 = Direction.EAST;
         }
-        if (onTheMap_4_3 && !rc.isLocationOccupied(loc_4_3)) {
+        if (onTheMap_4_3 && rc.canMove(Direction.NORTH)) {
             dp_4_3 = rubble_3_3;
             dir_4_3 = Direction.NORTH;
         }
-        if (onTheMap_3_2 && !rc.isLocationOccupied(loc_3_2)) {
+        if (onTheMap_3_2 && rc.canMove(Direction.WEST)) {
             dp_3_2 = rubble_3_3;
             dir_3_2 = Direction.WEST;
         }
-        if (onTheMap_2_3 && !rc.isLocationOccupied(loc_2_3)) {
+        if (onTheMap_2_3 && rc.canMove(Direction.SOUTH)) {
             dp_2_3 = rubble_3_3;
             dir_2_3 = Direction.SOUTH;
         }
-        if (onTheMap_4_4 && !rc.isLocationOccupied(loc_4_4)) {
+        if (onTheMap_4_4 && rc.canMove(Direction.NORTHEAST)) {
             dp_4_4 = rubble_3_3;
             dir_4_4 = Direction.NORTHEAST;
         }
-        if (onTheMap_4_2 && !rc.isLocationOccupied(loc_4_2)) {
+        if (onTheMap_4_2 && rc.canMove(Direction.NORTHWEST)) {
             dp_4_2 = rubble_3_3;
             dir_4_2 = Direction.NORTHWEST;
         }
-        if (onTheMap_2_2 && !rc.isLocationOccupied(loc_2_2)) {
+        if (onTheMap_2_2 && rc.canMove(Direction.SOUTHWEST)) {
             dp_2_2 = rubble_3_3;
             dir_2_2 = Direction.SOUTHWEST;
         }
-        if (onTheMap_2_4 && !rc.isLocationOccupied(loc_2_4)) {
+        if (onTheMap_2_4 && rc.canMove(Direction.SOUTHEAST)) {
             dp_2_4 = rubble_3_3;
             dir_2_4 = Direction.SOUTHEAST;
         }
         double next_3_2 = dp_2_3 + rubble_2_3;
         if (onTheMap_2_4) {
-            if (next_3_2 < dp_2_4) {
-                dp_2_4 = next_3_2;
-                dir_2_4 = dir_2_3;
-            }
+            dp_2_4 = next_3_2;
+            dir_2_4 = dir_2_3;
         }
         if (onTheMap_2_2) {
-            if (next_3_2 < dp_2_2) {
-                dp_2_2 = next_3_2;
-                dir_2_2 = dir_2_3;
-            }
+            dp_2_2 = next_3_2;
+            dir_2_2 = dir_2_3;
         }
         if (onTheMap_1_3) {
-            if (next_3_2 < dp_1_3) {
-                dp_1_3 = next_3_2;
-                dir_1_3 = dir_2_3;
-            }
+            dp_1_3 = next_3_2;
+            dir_1_3 = dir_2_3;
         }
         if (onTheMap_1_2) {
-            if (next_3_2 < dp_1_2) {
-                dp_1_2 = next_3_2;
-                dir_1_2 = dir_2_3;
-            }
+            dp_1_2 = next_3_2;
+            dir_1_2 = dir_2_3;
         }
         if (onTheMap_1_4) {
-            if (next_3_2 < dp_1_4) {
-                dp_1_4 = next_3_2;
-                dir_1_4 = dir_2_3;
-            }
+            dp_1_4 = next_3_2;
+            dir_1_4 = dir_2_3;
         }
         double next_4_3 = dp_3_4 + rubble_3_4;
         if (onTheMap_3_5) {
-            if (next_4_3 < dp_3_5) {
-                dp_3_5 = next_4_3;
-                dir_3_5 = dir_3_4;
-            }
+            dp_3_5 = next_4_3;
+            dir_3_5 = dir_3_4;
         }
         if (onTheMap_4_4) {
-            if (next_4_3 < dp_4_4) {
-                dp_4_4 = next_4_3;
-                dir_4_4 = dir_3_4;
-            }
+            dp_4_4 = next_4_3;
+            dir_4_4 = dir_3_4;
         }
         if (onTheMap_2_4) {
             if (next_4_3 < dp_2_4) {
@@ -596,16 +582,12 @@ public class Generated13 {
             }
         }
         if (onTheMap_4_5) {
-            if (next_4_3 < dp_4_5) {
-                dp_4_5 = next_4_3;
-                dir_4_5 = dir_3_4;
-            }
+            dp_4_5 = next_4_3;
+            dir_4_5 = dir_3_4;
         }
         if (onTheMap_2_5) {
-            if (next_4_3 < dp_2_5) {
-                dp_2_5 = next_4_3;
-                dir_2_5 = dir_3_4;
-            }
+            dp_2_5 = next_4_3;
+            dir_2_5 = dir_3_4;
         }
         double next_3_4 = dp_4_3 + rubble_4_3;
         if (onTheMap_4_4) {
@@ -615,28 +597,20 @@ public class Generated13 {
             }
         }
         if (onTheMap_5_3) {
-            if (next_3_4 < dp_5_3) {
-                dp_5_3 = next_3_4;
-                dir_5_3 = dir_4_3;
-            }
+            dp_5_3 = next_3_4;
+            dir_5_3 = dir_4_3;
         }
         if (onTheMap_4_2) {
-            if (next_3_4 < dp_4_2) {
-                dp_4_2 = next_3_4;
-                dir_4_2 = dir_4_3;
-            }
+            dp_4_2 = next_3_4;
+            dir_4_2 = dir_4_3;
         }
         if (onTheMap_5_4) {
-            if (next_3_4 < dp_5_4) {
-                dp_5_4 = next_3_4;
-                dir_5_4 = dir_4_3;
-            }
+            dp_5_4 = next_3_4;
+            dir_5_4 = dir_4_3;
         }
         if (onTheMap_5_2) {
-            if (next_3_4 < dp_5_2) {
-                dp_5_2 = next_3_4;
-                dir_5_2 = dir_4_3;
-            }
+            dp_5_2 = next_3_4;
+            dir_5_2 = dir_4_3;
         }
         double next_2_3 = dp_3_2 + rubble_3_2;
         if (onTheMap_4_2) {
@@ -646,10 +620,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_3_1) {
-            if (next_2_3 < dp_3_1) {
-                dp_3_1 = next_2_3;
-                dir_3_1 = dir_3_2;
-            }
+            dp_3_1 = next_2_3;
+            dir_3_1 = dir_3_2;
         }
         if (onTheMap_2_2) {
             if (next_2_3 < dp_2_2) {
@@ -658,16 +630,12 @@ public class Generated13 {
             }
         }
         if (onTheMap_4_1) {
-            if (next_2_3 < dp_4_1) {
-                dp_4_1 = next_2_3;
-                dir_4_1 = dir_3_2;
-            }
+            dp_4_1 = next_2_3;
+            dir_4_1 = dir_3_2;
         }
         if (onTheMap_2_1) {
-            if (next_2_3 < dp_2_1) {
-                dp_2_1 = next_2_3;
-                dir_2_1 = dir_3_2;
-            }
+            dp_2_1 = next_2_3;
+            dir_2_1 = dir_3_2;
         }
         double next_2_2 = dp_2_2 + rubble_2_2;
         if (onTheMap_2_1) {
@@ -689,10 +657,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_1_1) {
-            if (next_2_2 < dp_1_1) {
-                dp_1_1 = next_2_2;
-                dir_1_1 = dir_2_2;
-            }
+            dp_1_1 = next_2_2;
+            dir_1_1 = dir_2_2;
         }
         if (onTheMap_1_3) {
             if (next_2_2 < dp_1_3) {
@@ -726,10 +692,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_1_5) {
-            if (next_4_2 < dp_1_5) {
-                dp_1_5 = next_4_2;
-                dir_1_5 = dir_2_4;
-            }
+            dp_1_5 = next_4_2;
+            dir_1_5 = dir_2_4;
         }
         double next_4_4 = dp_4_4 + rubble_4_4;
         if (onTheMap_4_5) {
@@ -745,10 +709,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_5_5) {
-            if (next_4_4 < dp_5_5) {
-                dp_5_5 = next_4_4;
-                dir_5_5 = dir_4_4;
-            }
+            dp_5_5 = next_4_4;
+            dir_5_5 = dir_4_4;
         }
         if (onTheMap_5_3) {
             if (next_4_4 < dp_5_3) {
@@ -782,10 +744,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_5_1) {
-            if (next_2_4 < dp_5_1) {
-                dp_5_1 = next_2_4;
-                dir_5_1 = dir_4_2;
-            }
+            dp_5_1 = next_2_4;
+            dir_5_1 = dir_4_2;
         }
         if (onTheMap_3_1) {
             if (next_2_4 < dp_3_1) {
@@ -807,29 +767,21 @@ public class Generated13 {
             }
         }
         if (onTheMap_0_3) {
-            if (next_3_1 < dp_0_3) {
-                dp_0_3 = next_3_1;
-                dir_0_3 = dir_1_3;
-            }
+            dp_0_3 = next_3_1;
+            dir_0_3 = dir_1_3;
         }
         if (onTheMap_0_2) {
-            if (next_3_1 < dp_0_2) {
-                dp_0_2 = next_3_1;
-                dir_0_2 = dir_1_3;
-            }
+            dp_0_2 = next_3_1;
+            dir_0_2 = dir_1_3;
         }
         if (onTheMap_0_4) {
-            if (next_3_1 < dp_0_4) {
-                dp_0_4 = next_3_1;
-                dir_0_4 = dir_1_3;
-            }
+            dp_0_4 = next_3_1;
+            dir_0_4 = dir_1_3;
         }
         double next_5_3 = dp_3_5 + rubble_3_5;
         if (onTheMap_3_6) {
-            if (next_5_3 < dp_3_6) {
-                dp_3_6 = next_5_3;
-                dir_3_6 = dir_3_5;
-            }
+            dp_3_6 = next_5_3;
+            dir_3_6 = dir_3_5;
         }
         if (onTheMap_4_5) {
             if (next_5_3 < dp_4_5) {
@@ -844,16 +796,12 @@ public class Generated13 {
             }
         }
         if (onTheMap_4_6) {
-            if (next_5_3 < dp_4_6) {
-                dp_4_6 = next_5_3;
-                dir_4_6 = dir_3_5;
-            }
+            dp_4_6 = next_5_3;
+            dir_4_6 = dir_3_5;
         }
         if (onTheMap_2_6) {
-            if (next_5_3 < dp_2_6) {
-                dp_2_6 = next_5_3;
-                dir_2_6 = dir_3_5;
-            }
+            dp_2_6 = next_5_3;
+            dir_2_6 = dir_3_5;
         }
         double next_3_5 = dp_5_3 + rubble_5_3;
         if (onTheMap_5_4) {
@@ -863,10 +811,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_6_3) {
-            if (next_3_5 < dp_6_3) {
-                dp_6_3 = next_3_5;
-                dir_6_3 = dir_5_3;
-            }
+            dp_6_3 = next_3_5;
+            dir_6_3 = dir_5_3;
         }
         if (onTheMap_5_2) {
             if (next_3_5 < dp_5_2) {
@@ -875,16 +821,12 @@ public class Generated13 {
             }
         }
         if (onTheMap_6_4) {
-            if (next_3_5 < dp_6_4) {
-                dp_6_4 = next_3_5;
-                dir_6_4 = dir_5_3;
-            }
+            dp_6_4 = next_3_5;
+            dir_6_4 = dir_5_3;
         }
         if (onTheMap_6_2) {
-            if (next_3_5 < dp_6_2) {
-                dp_6_2 = next_3_5;
-                dir_6_2 = dir_5_3;
-            }
+            dp_6_2 = next_3_5;
+            dir_6_2 = dir_5_3;
         }
         double next_1_3 = dp_3_1 + rubble_3_1;
         if (onTheMap_4_1) {
@@ -894,10 +836,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_3_0) {
-            if (next_1_3 < dp_3_0) {
-                dp_3_0 = next_1_3;
-                dir_3_0 = dir_3_1;
-            }
+            dp_3_0 = next_1_3;
+            dir_3_0 = dir_3_1;
         }
         if (onTheMap_2_1) {
             if (next_1_3 < dp_2_1) {
@@ -906,16 +846,12 @@ public class Generated13 {
             }
         }
         if (onTheMap_4_0) {
-            if (next_1_3 < dp_4_0) {
-                dp_4_0 = next_1_3;
-                dir_4_0 = dir_3_1;
-            }
+            dp_4_0 = next_1_3;
+            dir_4_0 = dir_3_1;
         }
         if (onTheMap_2_0) {
-            if (next_1_3 < dp_2_0) {
-                dp_2_0 = next_1_3;
-                dir_2_0 = dir_3_1;
-            }
+            dp_2_0 = next_1_3;
+            dir_2_0 = dir_3_1;
         }
         double next_1_2 = dp_2_1 + rubble_2_1;
         if (onTheMap_2_0) {
@@ -937,10 +873,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_1_0) {
-            if (next_1_2 < dp_1_0) {
-                dp_1_0 = next_1_2;
-                dir_1_0 = dir_2_1;
-            }
+            dp_1_0 = next_1_2;
+            dir_1_0 = dir_2_1;
         }
         double next_2_1 = dp_1_2 + rubble_1_2;
         if (onTheMap_1_1) {
@@ -956,10 +890,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_0_1) {
-            if (next_2_1 < dp_0_1) {
-                dp_0_1 = next_2_1;
-                dir_0_1 = dir_1_2;
-            }
+            dp_0_1 = next_2_1;
+            dir_0_1 = dir_1_2;
         }
         if (onTheMap_0_3) {
             if (next_2_1 < dp_0_3) {
@@ -987,10 +919,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_0_5) {
-            if (next_4_1 < dp_0_5) {
-                dp_0_5 = next_4_1;
-                dir_0_5 = dir_1_4;
-            }
+            dp_0_5 = next_4_1;
+            dir_0_5 = dir_1_4;
         }
         double next_5_2 = dp_2_5 + rubble_2_5;
         if (onTheMap_2_6) {
@@ -1012,10 +942,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_1_6) {
-            if (next_5_2 < dp_1_6) {
-                dp_1_6 = next_5_2;
-                dir_1_6 = dir_2_5;
-            }
+            dp_1_6 = next_5_2;
+            dir_1_6 = dir_2_5;
         }
         double next_5_4 = dp_4_5 + rubble_4_5;
         if (onTheMap_4_6) {
@@ -1031,10 +959,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_5_6) {
-            if (next_5_4 < dp_5_6) {
-                dp_5_6 = next_5_4;
-                dir_5_6 = dir_4_5;
-            }
+            dp_5_6 = next_5_4;
+            dir_5_6 = dir_4_5;
         }
         if (onTheMap_3_6) {
             if (next_5_4 < dp_3_6) {
@@ -1056,10 +982,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_6_5) {
-            if (next_4_5 < dp_6_5) {
-                dp_6_5 = next_4_5;
-                dir_6_5 = dir_5_4;
-            }
+            dp_6_5 = next_4_5;
+            dir_6_5 = dir_5_4;
         }
         if (onTheMap_6_3) {
             if (next_4_5 < dp_6_3) {
@@ -1087,10 +1011,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_6_1) {
-            if (next_2_5 < dp_6_1) {
-                dp_6_1 = next_2_5;
-                dir_6_1 = dir_5_2;
-            }
+            dp_6_1 = next_2_5;
+            dir_6_1 = dir_5_2;
         }
         double next_1_4 = dp_4_1 + rubble_4_1;
         if (onTheMap_5_1) {
@@ -1106,10 +1028,8 @@ public class Generated13 {
             }
         }
         if (onTheMap_5_0) {
-            if (next_1_4 < dp_5_0) {
-                dp_5_0 = next_1_4;
-                dir_5_0 = dir_4_1;
-            }
+            dp_5_0 = next_1_4;
+            dir_5_0 = dir_4_1;
         }
         if (onTheMap_3_0) {
             if (next_1_4 < dp_3_0) {
@@ -1611,7 +1531,6 @@ public class Generated13 {
         if (onTheMap_3_0) {
             double score = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
             if (score < bestScore) {
-                bestScore = score;
                 bestDir = dir_3_0;
             }
         }

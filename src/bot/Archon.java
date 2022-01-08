@@ -2,19 +2,17 @@ package bot;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 import battlecode.common.RobotType;
-import bot.util.Communication;
-import bot.util.Constants;
-import bot.util.RunnableBot;
-import bot.util.Util;
+import bot.util.*;
 
 import static bot.util.Constants.*;
 
 public class Archon implements RunnableBot {
-    RobotType[] earlyGameBuildOrder = {RobotType.MINER, RobotType.MINER, RobotType.SOLDIER, RobotType.MINER, RobotType.SOLDIER};
-    RobotType[] lateGameBuildOrder = {RobotType.SOLDIER, RobotType.SOLDIER, RobotType.SOLDIER, RobotType.MINER, RobotType.BUILDER};
-    int buildCount;
-    boolean builtFirstLateGame;
+    private static final RobotType[] earlyGameBuildOrder = {RobotType.MINER, RobotType.MINER, RobotType.SOLDIER, RobotType.MINER, RobotType.SOLDIER};
+    private static final RobotType[] lateGameBuildOrder = {RobotType.SOLDIER, RobotType.SOLDIER, RobotType.SOLDIER, RobotType.MINER, RobotType.BUILDER};
+    private static int buildCount;
+    private static boolean builtFirstLateGame;
 
     @Override
     public void init() throws GameActionException {
@@ -44,7 +42,7 @@ public class Archon implements RunnableBot {
         }
     }
 
-    boolean tryBuild(RobotType type) throws GameActionException {
+    public static boolean tryBuild(RobotType type) throws GameActionException {
         int reservedLead = Communication.getReservedLead();
         int reservedGold = Communication.getReservedGold();
 
@@ -52,8 +50,9 @@ public class Archon implements RunnableBot {
             // There already exists a reservation
             int remainingLead = rc.getTeamLeadAmount(ALLY_TEAM) - type.buildCostLead;
             int remainingGold = rc.getTeamGoldAmount(ALLY_TEAM) - type.buildCostGold;
-            if (remainingLead < reservedLead || remainingGold < reservedGold) return false;
-            else {
+            if (remainingLead < reservedLead || remainingGold < reservedGold) {
+                return false;
+            } else {
                 for (Direction d: Constants.getAttemptOrder(Util.randomAdjacentDirection())) {
                     if (rc.canBuildRobot(type, d)) {
                         rc.buildRobot(type, d);
@@ -72,6 +71,17 @@ public class Archon implements RunnableBot {
             }
             Communication.reserve(type.buildCostGold, type.buildCostLead);
             return false;
+        }
+    }
+
+    public static Direction getIdealBuildDirectionForMining() throws GameActionException {
+        MapLocation[] leadLocations = rc.senseNearbyLocationsWithLead(ARCHON_VISION_DISTANCE_SQUARED);
+        // TODO
+        MapLocation bestLocation = null;
+        if (bestLocation == null) {
+            return null;
+        } else {
+            return Generated34.execute(bestLocation);
         }
     }
 }
