@@ -39,7 +39,7 @@ jobs:
       #- name: List Tasks
       #  run: ./gradlew tasks
       - name: Run Match
-        run: sudo python run_matches.py
+        run: python run_matches.py
         env:
           JAVA_HOME: /opt/hostedtoolcache/Java_jdkfile_jdk/8.0.301/x64
       # upload match files as artifact
