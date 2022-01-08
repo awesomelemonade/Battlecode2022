@@ -329,10 +329,8 @@ public class Communication {
     public static int getChunkInfo(int chunkX, int chunkY) {
         int chunkIndex = chunkX * NUM_CHUNKS_SIZE + chunkY; // [0-144]
         // CHUNKS_PER_SHARED_INTEGER = 4
-        int sharedArrayIndex = chunkIndex >> 2; // divide by 4
-        int sharedArrayOffset = chunkIndex & 0b11; // mod 4
-        int value = buffer[sharedArrayIndex];
-        switch (sharedArrayOffset) {
+        int value = buffer[chunkIndex >> 2]; // sharedArrayIndex - divide by 4
+        switch (chunkIndex & 0b11) { // sharedArrayOffset - mod 4
             case 0:
                 return value & 0b1111;
             case 1:

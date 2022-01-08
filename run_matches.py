@@ -5,15 +5,16 @@ emojiMap = {
     'Won': ':heavy_check_mark:',
     'Lost': ':x:',
     'Tied': ':warning:',
-    'N/A': ':heavy_minus_sign:'
+    'N/A': ':heavy_minus_sign:',
+    'Error': ':heavy_exclamation_mark:'
 }
 errors = []
 currentBot = 'bot'
-matches = {('examplefuncsplayer', 'eckleburg'), ('smartie', 'maptestsmall')}
+matches = {('examplefuncsplayer', 'Z'), ('smartie', 'maptestsmall')}
 
 bots = ['examplefuncsplayer', 'smartie']
 botsSet = set(bots)
-maps = ['maptestsmall', 'eckleburg', 'intersection']
+maps = ['maptestsmall', 'Z', 'intersection']
 mapsSet = set(maps)
 
 numWinsMapping = {
@@ -23,16 +24,23 @@ numWinsMapping = {
 }
 def run_match(bot, map):
     print("Running {} vs {} on {}".format(currentBot, bot, map))
-    outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"'], shell=True))
-    outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"'], shell=True))
-    winAString = '{} (A) wins'.format(currentBot)
-    winBString = '{} (B) wins'.format(currentBot)
-    numWins = 0
-    if winAString in outputA:
-        numWins += 1
-    if winBString in outputB:
-        numWins += 1
-    return numWinsMapping[numWins]
+    try:
+        outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"']))
+        outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
+    except subprocess.CalledProcessError as exc:
+        print("Status: FAIL", exc.returncode, exc.output)
+        return 'Error'
+    else:
+        print(outputA)
+        print(outputB)
+        winAString = '{} (A) wins'.format(currentBot)
+        winBString = '{} (B) wins'.format(currentBot)
+        numWins = 0
+        if winAString in outputA:
+            numWins += 1
+        if winBString in outputB:
+            numWins += 1
+        return numWinsMapping[numWins]
 
 
 results = {}
