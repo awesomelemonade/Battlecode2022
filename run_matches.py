@@ -28,7 +28,7 @@ def run_match(bot, map):
         #outputA = str(subprocess.check_output(['ls'], shell=True))
         #outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"'], shell=True))
         #outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"'], shell=True))
-        resultA = subprocess.run(['./gradlew', 'tasks'], shell=True, stdout=subprocess.PIPE)
+        resultA = subprocess.run(['./gradlew', 'tasks'], stdout=subprocess.PIPE)
         outputA = str(resultA.stdout)
         print(outputA)
         outputB = ''
