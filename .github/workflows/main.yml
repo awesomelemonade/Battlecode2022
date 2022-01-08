@@ -11,8 +11,6 @@ jobs:
       # checkout this repo
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: List Files
-        run: ls
       # run python/java to play against precompiled programs - pipe results to file
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -23,6 +21,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
+      - name: Make executable
+        run: chmod +x gradlew
       - name: Run Match
         run: sudo python run_matches.py
       # upload match files as artifact
