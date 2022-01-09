@@ -1,9 +1,6 @@
 package fixedmicro.util;
 
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotType;
+import battlecode.common.*;
 
 import static fixedmicro.util.Constants.rc;
 

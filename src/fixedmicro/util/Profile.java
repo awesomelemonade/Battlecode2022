@@ -1,7 +1,7 @@
 package fixedmicro.util;
 
 public enum Profile {
-    ERROR_STATE(true), CHUNK_INFO(false), PATHFINDER(false), EXPLORER(true), MINING(true), ATTACKING(true);
+    ERROR_STATE(true), CHUNK_INFO(false), PATHFINDER(true), EXPLORER(true), MINING(true), ATTACKING(true);
 
     private final boolean enabled;
 
