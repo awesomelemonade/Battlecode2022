@@ -14,7 +14,7 @@ public class Laboratory implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        if (rc.getTeamLeadAmount(ALLY_TEAM) >= 5000) {
+        if (rc.getTeamLeadAmount(ALLY_TEAM) >= 4000) {
             if (rc.canTransmute()) {
                 rc.transmute();
             }

@@ -29,8 +29,6 @@ public class Soldier implements RunnableBot {
                     if (loc == null) {
                         Util.tryExplore();
                     } else {
-                        Debug.setIndicatorDot(rc.getLocation(), 255, 255, 0);
-                        Debug.setIndicatorLine(rc.getLocation(), loc, 255, 255, 0);
                         Util.tryMove(loc);
                     }
                 }
