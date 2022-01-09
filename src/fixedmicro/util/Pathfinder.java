@@ -17,12 +17,12 @@ public class Pathfinder {
         try {
             if (Constants.ROBOT_TYPE == RobotType.MINER) {
                 Direction d = Generated9.execute(target);
-                if (d != null) {
+                if (d != null && d != Direction.CENTER) {
                     return Util.tryMove(d);
                 }
             } else {
                 Direction d = Generated13.execute(target);
-                if (d != null) {
+                if (d != null && d != Direction.CENTER) {
                     return Util.tryMove(d);
                 }
             }

@@ -1,11 +1,15 @@
 package fixedmicro;
 
+import fixedmicro.util.Cache;
+import fixedmicro.util.LambdaUtil;
 import battlecode.common.*;
 import fixedmicro.util.Debug;
 import fixedmicro.util.Profile;
 import fixedmicro.util.RunnableBot;
 import fixedmicro.util.Util;
 
+import static fixedmicro.util.Constants.ALL_DIRECTIONS;
+import static fixedmicro.util.Constants.rc;
 import static fixedmicro.util.Cache.ALLY_ROBOTS;
 import static fixedmicro.util.Constants.*;
 
@@ -20,7 +24,12 @@ public class Miner implements RunnableBot {
     @Override
     public void loop() throws GameActionException {
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
-        tryMine();
+        boolean inEnemyTerritory = LambdaUtil.arraysAnyMatch(Cache.ENEMY_ROBOTS, r -> r.type == RobotType.ARCHON) && !LambdaUtil.arraysAnyMatch(ALLY_ROBOTS, r -> r.type == RobotType.ARCHON);
+        if (inEnemyTerritory) {
+            tryMineDeplete();
+        } else {
+            tryMine();
+        }
         if (rc.isMovementReady()) {
             // If first turn, just move away from our Archon (saves bytecode)
             if (rc.getRoundNum() == spawnRound) {
@@ -43,7 +52,11 @@ public class Miner implements RunnableBot {
                     }
                 }
             }
-            tryMine();
+            if (inEnemyTerritory) {
+                tryMineDeplete();
+            } else {
+                tryMine();
+            }
         }
     }
 
@@ -160,6 +173,68 @@ public class Miner implements RunnableBot {
                         rc.mineLead(loc);
                         if (!rc.isActionReady()) return;
                     case 1:
+                    case 0:
+                }
+            }
+        }
+    }
+
+    public static void tryMineDeplete() throws GameActionException {
+        if (!rc.isActionReady()) return;
+        MapLocation current = rc.getLocation();
+        while (true) {
+            MapLocation bestLoc = null;
+            int bestAmount = 150;
+            for (int i = ALL_DIRECTIONS.length; --i >= 0;) {
+                MapLocation loc = current.add(ALL_DIRECTIONS[i]);
+                if (rc.onTheMap(loc)) {
+                    int amount = rc.senseLead(loc);
+                    if (amount > 0 && amount < bestAmount) {
+                        bestAmount = amount;
+                        bestLoc = loc;
+                    }
+                }
+            }
+            if (bestLoc == null) break;
+            switch (bestAmount) {
+                default:
+                    rc.mineLead(bestLoc);
+                    if (!rc.isActionReady()) return;
+                case 4:
+                    rc.mineLead(bestLoc);
+                    if (!rc.isActionReady()) return;
+                case 3:
+                    rc.mineLead(bestLoc);
+                    if (!rc.isActionReady()) return;
+                case 2:
+                    rc.mineLead(bestLoc);
+                    if (!rc.isActionReady()) return;
+                case 1:
+                    rc.mineLead(bestLoc);
+                    if (!rc.isActionReady()) return;
+                case 0:
+            }
+        }
+        for (int i = ALL_DIRECTIONS.length; --i >= 0;) {
+            MapLocation loc = current.add(ALL_DIRECTIONS[i]);
+            if (rc.onTheMap(loc)) {
+                int amount = rc.senseGold(loc);
+                switch (amount) {
+                    default:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 4:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 3:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 2:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
+                    case 1:
+                        rc.mineGold(loc);
+                        if (!rc.isActionReady()) return;
                     case 0:
                 }
             }
