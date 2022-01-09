@@ -131,8 +131,33 @@ public class Util {
         return tryMove(randomAdjacentDirection());
     }
 
-    public static boolean tryKiteFrom(MapLocation location) throws GameActionException {
-        return Util.tryMoveTowards(location.directionTo(rc.getLocation()));
+    public static void tryKiteFrom(MapLocation location) throws GameActionException {
+        double bestScore = 0;
+        double curDist2 = rc.getLocation().distanceSquaredTo(location);
+        double curDist = Math.sqrt(curDist2);
+        Direction bestDir = null;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                MapLocation loc = rc.getLocation().translate(dx, dy);
+                Direction dir = rc.getLocation().directionTo(loc);
+                if (dir == Direction.CENTER || rc.canMove(dir)) {
+                    int dist2 = loc.distanceSquaredTo(location);
+                    if (dist2 < curDist2) continue;
+                    double dist = Math.sqrt(dist2);
+                    double distScore = dist - curDist;
+                    double cooldown = 1.0 + rc.senseRubble(loc)/10.0;
+                    double cdScore = 1.0 / cooldown;
+                    double score = distScore + 10*cdScore;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestDir = dir;
+                    }
+                }
+            }
+        }
+        if (bestDir != null && bestDir != Direction.CENTER) {
+            tryMove(bestDir);
+        }
     }
 
     public static boolean tryExplore() throws GameActionException {

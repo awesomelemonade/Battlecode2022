@@ -29,14 +29,14 @@ public class Miner implements RunnableBot {
                     if (rc.canSenseLocation(loc)) {
                         RobotInfo robot = rc.senseRobotAtLocation(loc);
                         if (robot != null && robot.team == ALLY_TEAM && robot.type == RobotType.ARCHON) {
-                            tryKite(robot);
+                            Util.tryKiteFrom(robot.location);
                             break;
                         }
                     }
                 }
             } else {
                 if (closestEnemyAttacker != null) {
-                    tryKite(closestEnemyAttacker);
+                    Util.tryKiteFrom(closestEnemyAttacker.location);
                 } else {
                     if (!tryMoveGoodMining()) {
                         Util.tryExplore();
@@ -64,7 +64,7 @@ public class Miner implements RunnableBot {
                 double dy = loc.y - ourY;
                 double dis2 = loc.distanceSquaredTo(ourLoc);
                 double dis = Math.sqrt(dis2);
-                int leadAmount = rc.senseLead(loc);
+                int leadAmount = rc.senseLead(loc) - 1;
                 totalLead += leadAmount;
 
                 leadForceX += dx/dis * leadAmount/dis2;
@@ -163,33 +163,6 @@ public class Miner implements RunnableBot {
                     case 0:
                 }
             }
-        }
-    }
-
-    void tryKite(RobotInfo closestEnemy) throws GameActionException {
-        double bestScore = 0;
-        double curDist = rc.getLocation().distanceSquaredTo(closestEnemy.location);
-        Direction bestDir = null;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                MapLocation loc = rc.getLocation().translate(dx, dy);
-                Direction dir = rc.getLocation().directionTo(loc);
-                if (dir == Direction.CENTER || rc.canMove(dir)) {
-                    int dist = loc.distanceSquaredTo(closestEnemy.location);
-                    if (dist < curDist) continue;
-                    double distScore = dist - curDist;
-                    double cooldown = 1.0 + rc.senseRubble(loc)/10.0;
-                    double cdScore = 1.0 / cooldown;
-                    double score = distScore + 10*cdScore;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestDir = dir;
-                    }
-                }
-            }
-        }
-        if (bestDir != null && bestDir != Direction.CENTER) {
-            Util.tryMove(bestDir);
         }
     }
 }

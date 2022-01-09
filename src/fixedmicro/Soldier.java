@@ -20,13 +20,18 @@ public class Soldier implements RunnableBot {
         if (rc.isActionReady()) {
             tryAttackLowHealth();
         }
-        RobotInfo closestEnemy = Util.getClosestEnemyRobot();
+        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> r.getType() == RobotType.SOLDIER || r.getType() == RobotType.SAGE || r.getType() == RobotType.WATCHTOWER);
         if (rc.isMovementReady()) {
-            if (rc.isActionReady() && closestEnemy != null) {
-                tryMoveAttackingSquare(closestEnemy);
+            if (closestEnemyAttacker != null) {
+                if (rc.isActionReady()) {
+                    tryMoveAttackingSquare(closestEnemyAttacker);
+                } else {
+                    Util.tryKiteFrom(closestEnemyAttacker.location);
+                }
             } else {
+                RobotInfo closestEnemy = Util.getClosestEnemyRobot();
                 if (closestEnemy != null) {
-                    tryKite(closestEnemy);
+                    Util.tryMove(closestEnemy.location);
                 } else {
                     MapLocation loc = Communication.getClosestEnemyChunk();
                     if (loc == null) {
@@ -70,33 +75,6 @@ public class Soldier implements RunnableBot {
                 if (dir == Direction.CENTER || rc.canMove(dir)) {
                     int dist = loc.distanceSquaredTo(closestEnemy.location);
                     double distScore = dist <= 13 ? 0.5 + (dist/26.0) : 0;
-                    double cooldown = 1.0 + rc.senseRubble(loc)/10.0;
-                    double cdScore = 1.0 / cooldown;
-                    double score = distScore + 10*cdScore;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestDir = dir;
-                    }
-                }
-            }
-        }
-        if (bestDir != null && bestDir != Direction.CENTER) {
-            Util.tryMove(bestDir);
-        }
-    }
-
-    void tryKite(RobotInfo closestEnemy) throws GameActionException {
-        double bestScore = 0;
-        double curDist = rc.getLocation().distanceSquaredTo(closestEnemy.location);
-        Direction bestDir = null;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                MapLocation loc = rc.getLocation().translate(dx, dy);
-                Direction dir = rc.getLocation().directionTo(loc);
-                if (dir == Direction.CENTER || rc.canMove(dir)) {
-                    int dist = loc.distanceSquaredTo(closestEnemy.location);
-                    if (dist < curDist) continue;
-                    double distScore = dist - curDist;
                     double cooldown = 1.0 + rc.senseRubble(loc)/10.0;
                     double cdScore = 1.0 / cooldown;
                     double score = distScore + 10*cdScore;
