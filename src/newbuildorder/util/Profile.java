@@ -1,7 +1,7 @@
 package newbuildorder.util;
 
 public enum Profile {
-    ERROR_STATE(true), CHUNK_INFO(false), PATHFINDER(false), EXPLORER(true), MINING(true);
+    ERROR_STATE(true), CHUNK_INFO(false), PATHFINDER(false), EXPLORER(true), MINING(true), ATTACKING(true);
 
     private final boolean enabled;
 

@@ -2,7 +2,6 @@ package newbuildorder;
 
 import battlecode.common.*;
 import newbuildorder.util.*;
-import newbuildorder.util.*;
 
 import static newbuildorder.util.Constants.rc;
 
@@ -29,6 +28,8 @@ public class Soldier implements RunnableBot {
                     if (loc == null) {
                         Util.tryExplore();
                     } else {
+                        Debug.setIndicatorDot(Profile.ATTACKING, Constants.rc.getLocation(), 255, 255, 0);
+                        Debug.setIndicatorLine(Profile.ATTACKING, Constants.rc.getLocation(), loc, 255, 255, 0);
                         Util.tryMove(loc);
                     }
                 }

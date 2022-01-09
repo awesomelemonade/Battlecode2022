@@ -1,10 +1,7 @@
 package newbuildorder;
 
 import battlecode.common.*;
-import newbuildorder.util.Debug;
-import newbuildorder.util.Profile;
-import newbuildorder.util.RunnableBot;
-import newbuildorder.util.Util;
+import newbuildorder.util.*;
 
 import static newbuildorder.util.Cache.ALLY_ROBOTS;
 import static newbuildorder.util.Constants.*;
@@ -19,7 +16,6 @@ public class Miner implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         tryMine();
         if (rc.isMovementReady()) {
             // If first turn, just move away from our Archon (saves bytecode)
@@ -29,21 +25,33 @@ public class Miner implements RunnableBot {
                     if (rc.canSenseLocation(loc)) {
                         RobotInfo robot = rc.senseRobotAtLocation(loc);
                         if (robot != null && robot.team == ALLY_TEAM && robot.type == RobotType.ARCHON) {
-                            tryKite(robot);
+                            tryKite(robot.location);
                             break;
                         }
                     }
                 }
             } else {
-                if (closestEnemyAttacker != null) {
-                    tryKite(closestEnemyAttacker);
-                } else {
-                    if (!tryMoveGoodMining()) {
-                        Util.tryExplore();
-                    }
-                }
+                tryMove();
             }
             tryMine();
+        }
+    }
+
+    public static void tryMove() throws GameActionException {
+        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
+        if (closestEnemyAttacker != null) {
+            tryKite(closestEnemyAttacker.location);
+            return;
+        }
+        MapLocation closestChunk = Communication.getClosestEnemyAttackerChunk();
+        if (closestChunk != null) {
+            if (closestChunk.isWithinDistanceSquared(rc.getLocation(), 40)) {
+                tryKite(closestChunk);
+                return;
+            }
+        }
+        if (!tryMoveGoodMining()) {
+            Util.tryExplore();
         }
     }
 
@@ -166,16 +174,17 @@ public class Miner implements RunnableBot {
         }
     }
 
-    void tryKite(RobotInfo closestEnemy) throws GameActionException {
+    public static void tryKite(MapLocation location) throws GameActionException {
+        Debug.setIndicatorLine(Profile.MINING, Cache.MY_LOCATION, location, 255, 0, 255);
         double bestScore = 0;
-        double curDist = rc.getLocation().distanceSquaredTo(closestEnemy.location);
+        double curDist = rc.getLocation().distanceSquaredTo(location);
         Direction bestDir = null;
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
                 MapLocation loc = rc.getLocation().translate(dx, dy);
                 Direction dir = rc.getLocation().directionTo(loc);
                 if (dir == Direction.CENTER || rc.canMove(dir)) {
-                    int dist = loc.distanceSquaredTo(closestEnemy.location);
+                    int dist = loc.distanceSquaredTo(location);
                     if (dist < curDist) continue;
                     double distScore = dist - curDist;
                     double cooldown = 1.0 + rc.senseRubble(loc)/10.0;

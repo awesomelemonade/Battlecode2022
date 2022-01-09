@@ -17,14 +17,16 @@ public class Communication {
 
     public static final int CHUNK_INFO_UNEXPLORED = 0;
     public static final int CHUNK_INFO_ALLY = 1;
-    public static final int CHUNK_INFO_ENEMY = 2;
+    public static final int CHUNK_INFO_ENEMY_ATTACKER = 2;
+    public static final int CHUNK_INFO_ENEMY_GENERAL = 3;
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
     private static final int RESERVATION_OFFSET = 4;
 
     private static boolean chunksLoaded = false;
 
-    private static ChunkAccessor enemyChunkTracker;
+    private static ChunkAccessor attackerEnemyChunkTracker;
+    private static ChunkAccessor generalEnemyChunkTracker;
 
     public static void init() throws GameActionException {
         NUM_CHUNKS_WIDTH = (Constants.MAP_WIDTH + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
@@ -57,7 +59,8 @@ public class Communication {
                 throw new IllegalStateException("Cannot read any archon locations");
             }
         }
-        enemyChunkTracker = new ChunkAccessor();
+        generalEnemyChunkTracker = new ChunkAccessor();
+        attackerEnemyChunkTracker = new ChunkAccessor();
     }
 
     private static final int RESERVATION_SET_BIT = 0;
@@ -204,31 +207,30 @@ public class Communication {
             if (currentLocation.isAdjacentTo(chunkMid)) { // hasEntireChunkInVision
                 // Label Chunk
                 // RobotInfo[] friendlies = rc.senseNearbyRobots(chunkMid, 8, Constants.ALLY_TEAM);
-                RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
-                if (enemies.length == 0) {
+                RobotInfo[] enemiesInChunk = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
+                if (enemiesInChunk.length == 0) {
                     // Label as ally
-                    int old = setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
-                    if (old != CHUNK_INFO_ALLY) {
-                        onChunkChange(old, CHUNK_INFO_ALLY, currentChunkX, currentChunkY);
-                    }
-
+                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
                     // Update chunk enemy is on
                     RobotInfo closestEnemy = Util.getClosestEnemyRobot();
                     if (closestEnemy != null) {
                         MapLocation loc = closestEnemy.location;
                         int chunkX = loc.x / CHUNK_SIZE;
                         int chunkY = loc.y / CHUNK_SIZE;
-                        old = setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY);
-                        if (old != CHUNK_INFO_ENEMY) {
-                            onChunkChange(old, CHUNK_INFO_ENEMY, chunkX, chunkY);
+                        // Potential bytecode optimization
+                        if (isPassiveType(closestEnemy.type)) {
+                            int old = getChunkInfo(chunkX, chunkY);
+                            if (old != CHUNK_INFO_ENEMY_ATTACKER) {
+                                setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
+                            }
+                        } else {
+                            setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_ATTACKER);
                         }
                     }
                 } else {
+                    boolean hasAttacker = LambdaUtil.arraysAnyMatch(enemiesInChunk, r -> !isPassiveType(r.type));
                     // Label as enemy
-                    int old = setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY);
-                    if (old != CHUNK_INFO_ENEMY) {
-                        onChunkChange(old, CHUNK_INFO_ENEMY, currentChunkX, currentChunkY);
-                    }
+                    setChunkInfo(currentChunkX, currentChunkY, hasAttacker ? CHUNK_INFO_ENEMY_ATTACKER : CHUNK_INFO_ENEMY_GENERAL);
                 }
             }
 
@@ -241,7 +243,7 @@ public class Communication {
             }
         }
 
-        if (Profile.CHUNK_INFO != null) {
+        if (Profile.CHUNK_INFO.enabled()) {
             debug_drawChunks();
         }
     }
@@ -261,7 +263,10 @@ public class Communication {
                         case CHUNK_INFO_ALLY:
                             Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 0, 255, 0); // green
                             break;
-                        case CHUNK_INFO_ENEMY:
+                        case CHUNK_INFO_ENEMY_ATTACKER:
+                            Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 255, 200, 200); // pink
+                            break;
+                        case CHUNK_INFO_ENEMY_GENERAL:
                             Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 255, 0, 0); // red
                             break;
                         default:
@@ -274,18 +279,28 @@ public class Communication {
     }
 
     public static void onChunkChange(int oldChunkValue, int chunkValue, int chunkX, int chunkY) {
-        if (oldChunkValue == CHUNK_INFO_ENEMY) {
-            // Remove from enemy list
-            enemyChunkTracker.removeChunk(chunkX, chunkY);
+        switch (oldChunkValue) {
+            case CHUNK_INFO_ENEMY_ATTACKER:
+                attackerEnemyChunkTracker.removeChunk(chunkX, chunkY);
+            case CHUNK_INFO_ENEMY_GENERAL:
+                generalEnemyChunkTracker.removeChunk(chunkX, chunkY);
+                break;
         }
-        if (chunkValue == CHUNK_INFO_ENEMY) {
-            // Add to enemy list
-            enemyChunkTracker.addChunk(chunkX, chunkY);
+        switch (chunkValue) {
+            case CHUNK_INFO_ENEMY_ATTACKER:
+                attackerEnemyChunkTracker.addChunk(chunkX, chunkY);
+            case CHUNK_INFO_ENEMY_GENERAL:
+                generalEnemyChunkTracker.addChunk(chunkX, chunkY);
+                break;
         }
     }
 
     public static MapLocation getClosestEnemyChunk() {
-        return enemyChunkTracker.getNearestChunk(20);
+        return generalEnemyChunkTracker.getNearestChunk(20);
+    }
+
+    public static MapLocation getClosestEnemyAttackerChunk() {
+        return attackerEnemyChunkTracker.getNearestChunk(20);
     }
 
     public static int pack(MapLocation location) {
@@ -305,7 +320,7 @@ public class Communication {
         return Math.min(chunkY * CHUNK_SIZE + 2, Constants.MAP_HEIGHT - 1);
     }
 
-    public static int setChunkInfo(int chunkX, int chunkY, int info) {
+    public static void setChunkInfo(int chunkX, int chunkY, int info) {
         int chunkIndex = chunkX * NUM_CHUNKS_SIZE + chunkY; // [0-144]
         // CHUNKS_PER_SHARED_INTEGER = 4
         int sharedArrayIndex = chunkIndex >> 2; // divide by 4
@@ -333,7 +348,9 @@ public class Communication {
                 throw new IllegalArgumentException("Unknown");
         }
         buffer[sharedArrayIndex] = value;
-        return old;
+        if (old != info) {
+            onChunkChange(old, info, chunkX, chunkY);
+        }
     }
 
     public static int getChunkInfo(int chunkX, int chunkY) {
@@ -356,5 +373,16 @@ public class Communication {
 
     public static int getChunkInfo(MapLocation loc) {
         return getChunkInfo(loc.x / CHUNK_SIZE, loc.y / CHUNK_SIZE);
+    }
+
+    public static boolean isPassiveType(RobotType type) {
+        switch (type) {
+            case MINER:
+            case BUILDER:
+            case LABORATORY:
+                return true;
+            default:
+                return false;
+        }
     }
 }
