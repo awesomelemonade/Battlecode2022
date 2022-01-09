@@ -48,7 +48,7 @@ public class Miner implements RunnableBot {
                     if (closestEnemyAttacker != null) {
                         Util.tryKiteFrom(closestEnemyAttacker.location);
                     } else {
-                        if (!tryMoveGoodMining()) {
+                        if (!tryMoveGoodMining(false)) {
                             Util.tryExplore();
                         }
                     }
@@ -77,7 +77,7 @@ public class Miner implements RunnableBot {
         if (SPAWN.isWithinDistanceSquared(Cache.MY_LOCATION, 34)) inEnemyTerritory = false;
         if (inEnemyTerritory) {
             tryMineDeplete();
-            if (!tryMoveGoodMining()) {
+            if (!tryMoveGoodMining(true)) {
                 Util.tryExplore();
             }
             tryMineDeplete();
@@ -88,7 +88,7 @@ public class Miner implements RunnableBot {
         }
     }
 
-    public static boolean tryMoveGoodMining() throws GameActionException {
+    public static boolean tryMoveGoodMining(boolean deplete) throws GameActionException {
         if (!rc.isMovementReady()) return false;
 
         MapLocation ourLoc = rc.getLocation();
@@ -105,7 +105,14 @@ public class Miner implements RunnableBot {
                 double dy = loc.y - ourY;
                 double dis2 = loc.distanceSquaredTo(ourLoc);
                 double dis = Math.sqrt(dis2);
-                int leadAmount = rc.senseLead(loc) - 1;
+                int leadAmount = rc.senseLead(loc);
+                if (deplete) {
+                    if (leadAmount < 10) {
+                        leadAmount = 100 * (10 - leadAmount);
+                    }
+                } else {
+                    leadAmount--;
+                }
                 totalLead += leadAmount;
 
                 leadForceX += dx/dis * leadAmount/dis2;
