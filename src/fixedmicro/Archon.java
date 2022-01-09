@@ -190,9 +190,8 @@ public class Archon implements RunnableBot {
             return Util.randomAdjacentDirection();
         } else {
             Direction ret = Generated34.execute(bestLocation);
-            if (ret.equals(Direction.CENTER)) ret = Direction.NORTH;
             Debug.setIndicatorLine(Profile.MINING, Cache.MY_LOCATION, bestLocation, 255, 255, 0);
-            if (ret == null) {
+            if (ret == null || ret == Direction.CENTER) {
                 return Util.randomAdjacentDirection();
             } else {
                 return ret;
