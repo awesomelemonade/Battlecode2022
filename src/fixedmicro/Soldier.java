@@ -1,18 +1,13 @@
 package fixedmicro;
 
 import battlecode.common.*;
-import fixedmicro.util.Cache;
-import fixedmicro.util.Communication;
-import fixedmicro.util.RunnableBot;
-import fixedmicro.util.Util;
+import fixedmicro.util.*;
 
-import static fixedmicro.util.Constants.ENEMY_TEAM;
 import static fixedmicro.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
     @Override
     public void init() throws GameActionException {
-
     }
 
     @Override
@@ -37,6 +32,8 @@ public class Soldier implements RunnableBot {
                     if (loc == null) {
                         Util.tryExplore();
                     } else {
+                        Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, loc, 255, 255, 0);
+                        Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
                         Util.tryMove(loc);
                     }
                 }

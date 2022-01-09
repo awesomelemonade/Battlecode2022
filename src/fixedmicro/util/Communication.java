@@ -23,6 +23,7 @@ public class Communication {
     private static final int RESERVATION_OFFSET = 4;
 
     private static boolean chunksLoaded = false;
+    private static boolean guessed = false;
 
     private static ChunkAccessor enemyChunkTracker;
 
@@ -143,6 +144,18 @@ public class Communication {
     public static void loop() throws GameActionException {
         clearStaleReservation();
         loadChunks();
+        if (chunksLoaded && !guessed && Constants.ROBOT_TYPE == RobotType.ARCHON) {
+            guessed = true;
+            guessEnemyArchonLocations();
+        }
+    }
+
+    public static void guessEnemyArchonLocations() {
+        int symX = Constants.MAP_WIDTH - Cache.MY_LOCATION.x - 1;
+        int symY = Constants.MAP_HEIGHT - Cache.MY_LOCATION.y - 1;
+        setChunkInfo(new MapLocation(Cache.MY_LOCATION.x, symY), CHUNK_INFO_ENEMY);
+        setChunkInfo(new MapLocation(symX, Cache.MY_LOCATION.y), CHUNK_INFO_ENEMY);
+        setChunkInfo(new MapLocation(symX, symY), CHUNK_INFO_ENEMY);
     }
 
     public static void loadChunks() throws GameActionException {
@@ -207,10 +220,7 @@ public class Communication {
                 RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
                 if (enemies.length == 0) {
                     // Label as ally
-                    int old = setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
-                    if (old != CHUNK_INFO_ALLY) {
-                        onChunkChange(old, CHUNK_INFO_ALLY, currentChunkX, currentChunkY);
-                    }
+                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
 
                     // Update chunk enemy is on
                     RobotInfo closestEnemy = Util.getClosestEnemyRobot();
@@ -218,17 +228,11 @@ public class Communication {
                         MapLocation loc = closestEnemy.location;
                         int chunkX = loc.x / CHUNK_SIZE;
                         int chunkY = loc.y / CHUNK_SIZE;
-                        old = setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY);
-                        if (old != CHUNK_INFO_ENEMY) {
-                            onChunkChange(old, CHUNK_INFO_ENEMY, chunkX, chunkY);
-                        }
+                        setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY);
                     }
                 } else {
                     // Label as enemy
-                    int old = setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY);
-                    if (old != CHUNK_INFO_ENEMY) {
-                        onChunkChange(old, CHUNK_INFO_ENEMY, currentChunkX, currentChunkY);
-                    }
+                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY);
                 }
             }
 
@@ -305,7 +309,7 @@ public class Communication {
         return Math.min(chunkY * CHUNK_SIZE + 2, Constants.MAP_HEIGHT - 1);
     }
 
-    public static int setChunkInfo(int chunkX, int chunkY, int info) {
+    public static void setChunkInfo(int chunkX, int chunkY, int info) {
         int chunkIndex = chunkX * NUM_CHUNKS_SIZE + chunkY; // [0-144]
         // CHUNKS_PER_SHARED_INTEGER = 4
         int sharedArrayIndex = chunkIndex >> 2; // divide by 4
@@ -333,7 +337,13 @@ public class Communication {
                 throw new IllegalArgumentException("Unknown");
         }
         buffer[sharedArrayIndex] = value;
-        return old;
+        if (old != info) {
+            onChunkChange(old, info, chunkX, chunkY);
+        }
+    }
+
+    public static void setChunkInfo(MapLocation loc, int info) {
+        setChunkInfo(loc.x/CHUNK_SIZE, loc.y/CHUNK_SIZE, info);
     }
 
     public static int getChunkInfo(int chunkX, int chunkY) {
