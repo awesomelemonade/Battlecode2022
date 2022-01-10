@@ -54,7 +54,9 @@ public class Builder implements RunnableBot {
             movesSinceAction = 0;
             return;
         }
-        if (rc.getTeamLeadAmount(ALLY_TEAM) >= 5000 && Math.random() < 0.5) {
+        int lead = rc.getTeamLeadAmount(ALLY_TEAM);
+        if ((lead >= 5000 && Math.random() < 0.5) ||
+                (lead >= 800 && rc.getRoundNum() > 1900)) {
             if (tryBuild(RobotType.LABORATORY)) {
                 movesSinceAction = 0;
                 return;

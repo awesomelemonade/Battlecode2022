@@ -16,6 +16,11 @@ public class Archon implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
+        int numArchons = Communication.getAliveRobotTypeCount(RobotType.ARCHON);
+        int numMiners = Communication.getAliveRobotTypeCount(RobotType.MINER);
+        int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
+        int numWatchtowers = Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER);
+        Debug.setIndicatorString("A: " + numArchons + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers);
         if (rc.getMode() == RobotMode.TURRET) {
             // TODO: build more miners based on lead communication
             if (!Communication.hasPortableArchon()) {

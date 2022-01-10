@@ -24,6 +24,16 @@ public class Communication {
     private static final int RESERVATION_OFFSET = 4;
     private static final int ARCHON_PORTABLE_OFFSET = 5;
 
+    private static final int UNIT_COUNT_OFFSET = 6;
+    private static final int UNIT_COUNT_MOD = 4096;
+    private static final int NUM_UNIT_TYPES = 7;
+    private static final int[] prevUnitCountValues = new int[NUM_UNIT_TYPES];
+    private static final int[] currentUnitCount = new int[NUM_UNIT_TYPES];
+
+    public static int getAliveRobotTypeCount(RobotType type) {
+        return currentUnitCount[type.ordinal()];
+    }
+
     private static boolean chunksLoaded = false;
     private static boolean guessed = false;
 
@@ -214,6 +224,17 @@ public class Communication {
             guessed = true;
             guessEnemyArchonLocations();
         }
+        if (Cache.TURN_COUNT > 1) {
+            for (int i = NUM_UNIT_TYPES; --i >= 0;) {
+                int prev = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
+                currentUnitCount[i] = ((prev - prevUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
+            }
+        }
+        for (int i = NUM_UNIT_TYPES; --i >= 0;) {
+            prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
+        }
+        int unitCountSharedIndex = UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
+        rc.writeSharedArray(unitCountSharedIndex, (rc.readSharedArray(unitCountSharedIndex) + 1) % UNIT_COUNT_MOD);
     }
 
     public static void guessEnemyArchonLocations() {
