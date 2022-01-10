@@ -19,14 +19,14 @@ public class Soldier implements RunnableBot {
         if (rc.isMovementReady()) {
             if (closestEnemyAttacker != null) {
                 if (rc.isActionReady()) {
-                    tryMoveAttackingSquare(closestEnemyAttacker);
+                    tryMoveAttackingSquare(closestEnemyAttacker.location, 13);
                 } else {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                 }
             } else {
                 RobotInfo closestEnemy = Util.getClosestEnemyRobot();
                 if (closestEnemy != null) {
-                    Util.tryMove(closestEnemy.location);
+                    tryMoveAttackingSquare(closestEnemy.location, 10); // Don't want to lose track
                 } else {
                     MapLocation loc = Communication.getClosestEnemyChunk();
                     if (loc == null) {
@@ -62,7 +62,7 @@ public class Soldier implements RunnableBot {
         return false;
     }
 
-    void tryMoveAttackingSquare(RobotInfo closestEnemy) throws GameActionException {
+    public static void tryMoveAttackingSquare(MapLocation location, int range) throws GameActionException {
         double bestScore = 0;
         Direction bestDir = null;
         for (int dx = -1; dx <= 1; dx++) {
@@ -70,11 +70,11 @@ public class Soldier implements RunnableBot {
                 MapLocation loc = rc.getLocation().translate(dx, dy);
                 Direction dir = rc.getLocation().directionTo(loc);
                 if (dir == Direction.CENTER || rc.canMove(dir)) {
-                    int dist = loc.distanceSquaredTo(closestEnemy.location);
-                    double distScore = dist <= 13 ? 0.5 + (dist/26.0) : 0;
-                    double cooldown = 1.0 + rc.senseRubble(loc)/10.0;
+                    int dist = loc.distanceSquaredTo(location);
+                    double distScore = dist <= range ? 0.5 + (dist / (2.0 * range)) : 0;
+                    double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
                     double cdScore = 1.0 / cooldown;
-                    double score = distScore + 10*cdScore;
+                    double score = distScore + 10 * cdScore;
                     if (score > bestScore) {
                         bestScore = score;
                         bestDir = dir;
