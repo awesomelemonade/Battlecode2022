@@ -22,6 +22,7 @@ public class Communication {
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
     private static final int RESERVATION_OFFSET = 4;
+    private static final int ARCHON_PORTABLE_OFFSET = 5;
 
     private static boolean chunksLoaded = false;
     private static boolean guessed = false;
@@ -62,6 +63,67 @@ public class Communication {
         }
         enemyGeneralChunkTracker = new ChunkAccessor();
         enemyArchonChunkTracker = new ChunkAccessor();
+    }
+
+    private static final int ARCHON_PORTABLE_SET_BIT = 0;
+    private static final int ARCHON_PORTABLE_HEARTBEAT_BIT = 1;
+    private static int prevArchonPortableHeartbeatBit;
+
+    public static void setPortableArchon() {
+        try {
+            if (rc.getRoundNum() != RobotPlayer.currentTurn) {
+                // Went over bytecodes - Safety
+                return;
+            }
+            // Check if already reserved
+            int value = rc.readSharedArray(ARCHON_PORTABLE_OFFSET);
+            if (((value >> ARCHON_PORTABLE_SET_BIT) & 0b1) == 0) {
+                // No portable archon yet
+                int heartbeat = (value >> ARCHON_PORTABLE_HEARTBEAT_BIT) & 0b1;
+                int newValue = 0;
+                newValue |= 0b1 << ARCHON_PORTABLE_SET_BIT;
+                newValue |= ((1 - heartbeat) << ARCHON_PORTABLE_HEARTBEAT_BIT);
+                rc.writeSharedArray(ARCHON_PORTABLE_OFFSET, newValue);
+            }
+        } catch (GameActionException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static boolean hasPortableArchon() {
+        try {
+            return ((rc.readSharedArray(ARCHON_PORTABLE_OFFSET) >> ARCHON_PORTABLE_SET_BIT) & 0b1) == 1;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void clearStalePortableArchon() {
+        if (rc.getRoundNum() != RobotPlayer.currentTurn) {
+            // Went over bytecodes - Safety
+            return;
+        }
+        if (Clock.getBytecodesLeft() < 300) {
+            // Not enough bytecodes - Safety (at least 100 bytecodes needed to write to shared array)
+            return;
+        }
+        if (Cache.TURN_COUNT == 1) {
+            // Never clear on first turn - we never got a prevReservationHeartbeatBit yet
+            return;
+        }
+        try {
+            int value = rc.readSharedArray(ARCHON_PORTABLE_OFFSET);
+            if (((value >> ARCHON_PORTABLE_SET_BIT) & 0b1) == 1) {
+                int heartbeat = (value >> ARCHON_PORTABLE_HEARTBEAT_BIT) & 0b1;
+                if (heartbeat == prevArchonPortableHeartbeatBit) { // if we see equivalent heartbeat
+                    Debug.setIndicatorString("CLEAR: " + heartbeat);
+                    rc.writeSharedArray(ARCHON_PORTABLE_OFFSET, heartbeat << ARCHON_PORTABLE_HEARTBEAT_BIT); // clear (but keep heartbeat bit)
+                }
+            }
+        } catch (GameActionException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static final int RESERVATION_SET_BIT = 0;
@@ -146,6 +208,7 @@ public class Communication {
 
     public static void loop() throws GameActionException {
         clearStaleReservation();
+        clearStalePortableArchon();
         loadChunks();
         if (chunksLoaded && !guessed && Constants.ROBOT_TYPE == RobotType.ARCHON) {
             guessed = true;
@@ -212,6 +275,7 @@ public class Communication {
 
     public static void postLoop() throws GameActionException {
         prevReservationHeartbeatBit = (rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_HEARTBEAT_BIT) & 0b1;
+        prevArchonPortableHeartbeatBit = (rc.readSharedArray(ARCHON_PORTABLE_OFFSET) >> ARCHON_PORTABLE_HEARTBEAT_BIT) & 0b1;
         if (chunksLoaded) {
             MapLocation currentLocation = rc.getLocation();
             int currentChunkX = currentLocation.x / CHUNK_SIZE;

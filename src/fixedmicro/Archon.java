@@ -6,7 +6,8 @@ import fixedmicro.util.*;
 import static fixedmicro.util.Constants.*;
 
 public class Archon implements RunnableBot {
-    private int minerCount;
+    private static int minerCount;
+    private static MapLocation relocationTarget;
 
     @Override
     public void init() throws GameActionException {
@@ -15,11 +16,39 @@ public class Archon implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        // TODO: build more miners based on lead communication
-        if (tryBuildDefenders()) return;
-        if (tryBuildRich()) return;
-        if (tryBuildPoor()) return;
-        tryRepair();
+        if (rc.getMode() == RobotMode.TURRET) {
+            // TODO: build more miners based on lead communication
+            if (!Communication.hasPortableArchon()) {
+                MapLocation potentialRelocationTarget = getTargetMoveLocation();
+                if (potentialRelocationTarget != null && isWorthToMove(potentialRelocationTarget)) {
+                    relocationTarget = potentialRelocationTarget;
+                    if (rc.canTransform()) {
+                        rc.transform();
+                        Communication.setPortableArchon();
+                    }
+                }
+            }
+            if (tryBuildDefenders()) return;
+            if (tryBuildRich()) return;
+            if (tryBuildPoor()) return;
+            tryRepair();
+        } else {
+            // Portable
+            Communication.setPortableArchon();
+            if (relocationTarget == null) {
+                // wtf???
+                Debug.println("No relocation target??");
+                relocationTarget = Cache.MY_LOCATION;
+            }
+            if (Cache.MY_LOCATION.equals(relocationTarget)) {
+                if (rc.canTransform()) {
+                    rc.transform();
+                }
+            } else {
+                Util.tryMove(relocationTarget);
+            }
+        }
+
     }
 
     public boolean tryBuildAttacker() throws GameActionException {
@@ -197,5 +226,60 @@ public class Archon implements RunnableBot {
                 return ret;
             }
         }
+    }
+
+    public static MapLocation getTargetMoveLocation() throws GameActionException {
+        MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, RobotType.ARCHON.visionRadiusSquared);
+        MapLocation bestLocation = null;
+        int bestRubble = rc.senseRubble(Cache.MY_LOCATION);
+        int bestDistanceSquared = 0;
+        for (int i = locations.length; --i >= 0;) {
+            MapLocation location = locations[i];
+            if (rc.onTheMap(location)) {
+                int rubble = rc.senseRubble(location);
+                int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
+                if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
+                    bestLocation = location;
+                    bestRubble = rubble;
+                    bestDistanceSquared = distanceSquared;
+                }
+            }
+        }
+        return bestLocation;
+    }
+
+    public static boolean isWorthToMove(MapLocation location) throws GameActionException {
+        if (rc.getRoundNum() < 20 || rc.getArchonCount() <= 1) {
+            return false;
+        }
+        int currentRubble = rc.senseRubble(Cache.MY_LOCATION);
+        int destinationRubble = rc.senseRubble(location);
+        double currentCooldown = 1.0 + currentRubble / 10.0; // turns / unit
+        double currentCooldownTurns = currentCooldown * 2.4; // turns
+        double destinationCooldown = (1.0 + destinationRubble / 10.0);
+        double destinationCooldownTurns = destinationCooldown * 2.4;
+        if (rc.getTeamLeadAmount(ALLY_TEAM) < 100 && destinationCooldown < currentCooldown * 2.0 / 3.0) {
+            return true;
+        }
+        double averageCooldownTurns = (currentCooldownTurns + destinationCooldownTurns) / 2.0;
+        double turnsToDestination = Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(location)) * averageCooldownTurns;
+        double totalTurns = turnsToDestination + 10.0 * currentCooldown + 10.0 * destinationCooldown; // turns
+        double unitsMissed = totalTurns / currentCooldown; // units
+        double catchUpRate = 1.0 / destinationCooldown - 1.0 / currentCooldown; // number of more units per turn (units / turn)
+        double payoffTurns = unitsMissed / catchUpRate;
+        return 10.0 + 1.5 * payoffTurns < getNextVortexOrSingularity() - rc.getRoundNum();
+    }
+
+    public static int getNextVortexOrSingularity() {
+        int currentRound = rc.getRoundNum();
+        AnomalyScheduleEntry[] schedule = rc.getAnomalySchedule();
+        int ret = 2000;
+        for (int i = Math.min(20, schedule.length); --i >= 0;) {
+            AnomalyScheduleEntry entry = schedule[i];
+            if (entry.anomalyType == AnomalyType.VORTEX && entry.roundNumber >= currentRound) {
+                ret = Math.min(ret, entry.roundNumber);
+            }
+        }
+        return ret;
     }
 }

@@ -4,7 +4,7 @@ import static fixedmicro.util.Constants.rc;
 
 public enum Profile {
     ERROR_STATE(true),
-    CHUNK_INFO(true),
+    CHUNK_INFO(false),
     PATHFINDER(false),
     EXPLORER(true),
     MINING(true),
