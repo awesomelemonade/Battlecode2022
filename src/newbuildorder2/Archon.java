@@ -130,7 +130,7 @@ public class Archon implements RunnableBot {
     public static boolean weAreMakingUselessSoldiers() {
         int numPassive = Communication.getPassiveSoldierCount();
         int totalSoldierCount = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
-        if (totalSoldierCount < 5) {
+        if (totalSoldierCount <= 10) {
             return false;
         } else {
             double passivePercentage = ((double) numPassive) / ((double) totalSoldierCount);
