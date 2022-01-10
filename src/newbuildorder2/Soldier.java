@@ -13,7 +13,8 @@ public class Soldier implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        if (Cache.TURN_COUNT > 10 && rc.getRoundNum() - lastTurnAttacked >= 5){
+        int threshold = rc.getRoundNum() > 1500 ? 50 : (rc.getRoundNum() > 1000 ? 100 : 200);
+        if (Cache.TURN_COUNT > 10 && rc.getRoundNum() - lastTurnAttacked >= threshold) {
             Communication.setPassiveSoldier();
             // we're counted as a passive soldier - otherwise we're an active soldier
         }

@@ -83,7 +83,7 @@ public class Archon implements RunnableBot {
                     tryBuild(RobotType.MINER);
                 } else {
                     int builderCount = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
-                    if (builderCount < 10 || Math.random() < 0.15) {
+                    if (builderCount < 10 || Math.random() < 0.02) {
                         tryBuild(RobotType.BUILDER);
                     } else if (Math.random() < 0.1) {
                         tryBuildAttacker();
@@ -105,7 +105,27 @@ public class Archon implements RunnableBot {
 
     public boolean tryBuildPoor() throws GameActionException {
         int mapSize = rc.getMapWidth() + rc.getMapHeight();
-        if (Cache.TURN_COUNT == 1 || Communication.getAliveRobotTypeCount(RobotType.MINER) <= 10 + mapSize / 20) {
+        boolean shouldBuildMiners = false;
+        if (Cache.TURN_COUNT == 1) {
+            shouldBuildMiners = true;
+        }
+        if (rc.getRoundNum() < 200) {
+            if (Communication.getAliveRobotTypeCount(RobotType.MINER) <= 10 + mapSize / 20) {
+                shouldBuildMiners = true;
+            }
+        } else {
+            if (Communication.getAliveRobotTypeCount(RobotType.SOLDIER) <= 3) {
+                if (Communication.getAliveRobotTypeCount(RobotType.MINER) <= 3 + mapSize / 20) {
+                    shouldBuildMiners = true;
+                }
+            } else {
+                if (Communication.getAliveRobotTypeCount(RobotType.MINER) <= 10 + mapSize / 20) {
+                    shouldBuildMiners = true;
+                }
+            }
+        }
+
+        if (shouldBuildMiners) {
             tryBuild(RobotType.MINER);
         } else {
             double r = Math.random();
@@ -114,10 +134,19 @@ public class Archon implements RunnableBot {
             } else {
                 if (weAreMakingUselessSoldiers()) {
                     int builderCount = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
-                    if (builderCount < 10 || Math.random() < 0.15) {
+                    int watchtowerCount = Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER);
+                    if (builderCount < 3 || Math.random() < 0.02) {
                         tryBuild(RobotType.BUILDER);
-                    } else if (Math.random() < 0.05) {
-                        tryBuildAttacker();
+                    } else {
+                        if (watchtowerCount < 3) {
+                            if (Math.random() < 0.05) {
+                                tryBuildAttacker();
+                            }
+                        } else {
+                            if (Math.random() < 0.5) {
+                                tryBuildAttacker();
+                            }
+                        }
                     }
                 } else {
                     tryBuildAttacker();
