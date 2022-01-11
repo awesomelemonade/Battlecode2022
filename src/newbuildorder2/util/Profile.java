@@ -6,9 +6,9 @@ public enum Profile {
     ERROR_STATE(true),
     CHUNK_INFO(false),
     PATHFINDER(false),
-    EXPLORER(true),
-    MINING(true),
-    ATTACKING(true);
+    EXPLORER(false),
+    MINING(false),
+    ATTACKING(false);
 
     private static final int id = -1; // Filter by id
 
