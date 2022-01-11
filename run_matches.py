@@ -25,18 +25,12 @@ numWinsMapping = {
 def run_match(bot, map):
     print("Running {} vs {} on {}".format(currentBot, bot, map))
     try:
-        print("Running", str(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
-        outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps=' + map + '']))
-        #outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
-        #outputA = ''
-        outputB = str(subprocess.check_output(['ls', 'maps']))
-        print("TEST: " + outputB)
+        outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps=' + map]))
+        outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps=' + map]))
     except subprocess.CalledProcessError as exc:
         print("Status: FAIL", exc.returncode, exc.output)
         return 'Error'
     else:
-        print("OUTPUT A: " + outputA)
-        print("OUTPUT B: " + outputB)
         winAString = '{} (A) wins'.format(currentBot)
         winBString = '{} (B) wins'.format(currentBot)
         numWins = 0
