@@ -143,7 +143,6 @@ public class Communication {
             if (((value >> ARCHON_PORTABLE_SET_BIT) & 0b1) == 1) {
                 int heartbeat = (value >> ARCHON_PORTABLE_HEARTBEAT_BIT) & 0b1;
                 if (heartbeat == prevArchonPortableHeartbeatBit) { // if we see equivalent heartbeat
-                    Debug.setIndicatorString("CLEAR: " + heartbeat);
                     rc.writeSharedArray(ARCHON_PORTABLE_OFFSET, heartbeat << ARCHON_PORTABLE_HEARTBEAT_BIT); // clear (but keep heartbeat bit)
                 }
             }
