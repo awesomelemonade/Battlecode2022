@@ -103,7 +103,6 @@ public class Explorer {
                     continue;
                 }
                 currentExploreDirection = potentialDirection;
-                currentExploreLocation = getExploreLocation();
                 noNewDirection = false;
                 break;
             }
@@ -111,13 +110,10 @@ public class Explorer {
                 currentExploreDirection = null;
             }
         }
-        if (rc.getRoundNum() == 206 && rc.getID() == 10384);
-        Debug.println(currentExploreDirection);
-        Debug.println(currentExploreLocation);
-        Debug.println(getExploreLocation());
         if (currentExploreDirection == null) {
             return randomExplore();
         } else {
+            currentExploreLocation = getExploreLocation();
             Debug.setIndicatorLine(Profile.EXPLORER, Cache.MY_LOCATION, Cache.MY_LOCATION.translate(currentExploreDirection.dx, currentExploreDirection.dy), 255, 128, 0);
             return Pathfinder.execute(currentExploreLocation);
         }
