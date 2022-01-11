@@ -28,7 +28,7 @@ def run_match(bot, map):
         #outputA = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + currentBot, '-PteamB=' + bot, '-Pmaps="' + map + '"']))
         #outputB = str(subprocess.check_output(['./gradlew', 'run', '-PteamA=' + bot, '-PteamB=' + currentBot, '-Pmaps="' + map + '"']))
         outputA = ''
-        outputB = str(subprocess.check_output(['ls maps']))
+        outputB = str(subprocess.check_output(['ls', 'maps']))
         print("TEST: " + outputB)
     except subprocess.CalledProcessError as exc:
         print("Status: FAIL", exc.returncode, exc.output)
