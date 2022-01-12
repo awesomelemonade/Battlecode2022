@@ -21,35 +21,40 @@ public class Soldier implements RunnableBot {
         if (rc.isActionReady()) {
             tryAttackLowHealth();
         }
-        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> r.getType() == RobotType.SOLDIER || r.getType() == RobotType.SAGE || r.getType() == RobotType.WATCHTOWER);
         if (rc.isMovementReady()) {
-            if (closestEnemyAttacker != null) {
-                if (rc.isActionReady()) {
-                    tryMoveAttackingSquare(closestEnemyAttacker.location, 13);
-                } else {
-                    Util.tryKiteFrom(closestEnemyAttacker.location);
-                }
-            } else {
-                RobotInfo closestEnemy = Util.getClosestEnemyRobot();
-                if (closestEnemy != null) {
-                    tryMoveAttackingSquare(closestEnemy.location, 10); // Don't want to lose track
-                } else {
-                    MapLocation loc = Communication.getClosestEnemyChunk();
-                    if (loc == null) {
-                        Util.tryExplore();
-                    } else {
-                        Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, loc, 255, 255, 0);
-                        Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
-                        Util.tryMove(loc);
-                    }
-                }
-            }
+            tryMove();
         }
         if (rc.isActionReady()) {
             tryAttackLowHealth();
         }
     }
 
+
+    public static void tryMove() throws GameActionException {
+        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> r.getType() == RobotType.SOLDIER || r.getType() == RobotType.SAGE || r.getType() == RobotType.WATCHTOWER);
+        if (tryRetreat()) {
+            return;
+        }
+        if (closestEnemyAttacker != null) {
+            if (rc.isActionReady()) {
+                tryMoveAttackingSquare(closestEnemyAttacker.location, 13);
+            } else {
+                Util.tryKiteFrom(closestEnemyAttacker.location);
+            }
+        } else {
+            RobotInfo closestEnemy = Util.getClosestEnemyRobot();
+            if (closestEnemy != null) {
+                tryMoveAttackingSquare(closestEnemy.location, 10); // Don't want to lose track
+            } else {
+                MapLocation loc = Communication.getClosestEnemyChunk();
+                if (loc == null) {
+                    Util.tryExplore();
+                } else {
+                    Util.tryMove(loc);
+                }
+            }
+        }
+    }
     public static boolean tryAttackLowHealth() throws GameActionException {
         RobotInfo bestRobot = null;
         int bestHealth = (int)1e9;
@@ -92,5 +97,35 @@ public class Soldier implements RunnableBot {
         if (bestDir != null && bestDir != Direction.CENTER) {
             Util.tryMove(bestDir);
         }
+    }
+
+
+    public static boolean tryRetreat() throws GameActionException {
+        RobotInfo[] allies = Cache.ALLY_ROBOTS;
+        int distanceToArchon = Integer.MAX_VALUE;
+        MapLocation bestArchonLocation = null;
+        for (int i = 0; i < allies.length; i++) {
+            if (allies[i].getType().equals(RobotType.ARCHON)) {
+                MapLocation archonLoc = allies[i].getLocation();
+                int squaredDistance = archonLoc.distanceSquaredTo(rc.getLocation());
+                if (distanceToArchon > squaredDistance) {
+                    distanceToArchon = squaredDistance;
+                    bestArchonLocation = archonLoc;
+                }
+            }
+        }
+        // No archon nearby
+        if (bestArchonLocation == null) {
+            return false;
+        }
+        int healthThreshold = 10;
+        if (rc.getHealth() < healthThreshold) {
+            Util.tryMove(bestArchonLocation);
+            return true;
+        }
+        else if (rc.getHealth() >= healthThreshold && rc.getHealth() < rc.getType().health && bestArchonLocation.distanceSquaredTo(rc.getLocation()) <= RobotType.ARCHON.actionRadiusSquared && Cache.ENEMY_ROBOTS.length == 0) {
+            return true;
+        }
+        return false;
     }
 }
