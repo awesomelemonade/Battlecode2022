@@ -40,7 +40,8 @@ public class Miner implements RunnableBot {
                 if (closestEnemyAttacker != null) {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                 } else {
-                    if (!tryMoveGoodMining()) {
+                    debug_tryMoveGoodMining();;
+                    if (!tryMoveGoodMiningRet) {
                         Util.tryExplore();
                     }
                 }
@@ -77,46 +78,45 @@ public class Miner implements RunnableBot {
         // Maximize lead in k turns
         int k = 30; // turns
         int numRegenRounds = k / 20 + (((rc.getRoundNum()-1) % 20 + (k % 20) >= 20) ? 1 : 0);
-        if (target.x == 12 && target.y == 8) {
-            Debug.println(Profile.MINING, "numRegenRounds = " + numRegenRounds);
-            Debug.println(Profile.MINING, "totalLead = " + totalLead);
-            Debug.println(Profile.MINING, "numMiners = " + numMiners);
-            Debug.println(Profile.MINING, "leadAmount = " + leadAmount);
-        }
-
         leadAmount += numRegenRounds * numLeadSquares * 5.0 / numMiners;
-        if (target.x == 12 && target.y == 8) {
-            Debug.println(Profile.MINING, "leadAmount after = " + leadAmount);
-        }
         score = Math.min(leadAmount, k * leadPerTurn);
-/*
-        // Minimize turns for k lead
-        int k = 10; // lead
-        if (leadAmount < k) {
-
-        }*/
     }
 
-    public static boolean tryMoveGoodMining() throws GameActionException {
-        if (!rc.isMovementReady()) return false;
+    static boolean tryMoveGoodMiningRet;
+
+    public static void debug_tryMoveGoodMining() throws GameActionException {
+        if (!rc.isMovementReady()) {
+            tryMoveGoodMiningRet = false;
+            return;
+        }
 
         MapLocation[] locs = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, RobotType.MINER.visionRadiusSquared);
         MapLocation bestLoc = null;
         double bestScore = 0;
+        double cnt = 0;
         for (MapLocation loc : locs) {
             debug_getMiningScore(loc);
             if (score > bestScore) {
+                cnt = 1;
                 bestScore = score;
                 bestLoc = loc;
+            } else if (score == bestScore) {
+                cnt++;
+                if (Math.random() < 1.0 / cnt) {
+                    bestScore = score;
+                    bestLoc = loc;
+                }
             }
         }
-        rc.setIndicatorString("score = " + bestScore);
+        Debug.setIndicatorString("score = " + bestScore);
         if (bestScore < 30) {
-            return false;
+            tryMoveGoodMiningRet = false;
+            return;
         }
-        rc.setIndicatorLine(Cache.MY_LOCATION, bestLoc, 0, 0, 0);
+        Debug.setIndicatorLine(Cache.MY_LOCATION, bestLoc, 0, 0, 0);
         Util.tryMove(bestLoc);
-        return true;
+        tryMoveGoodMiningRet = true;
+        return;
     }
 
     public static void tryMine() throws GameActionException {
