@@ -72,7 +72,7 @@ public class Miner implements RunnableBot {
             }
         }
         int curDist = Cache.MY_LOCATION.distanceSquaredTo(target);
-        double numMiners = LambdaUtil.arraysStreamSum(ALLY_ROBOTS, r -> r.type == RobotType.MINER && r.location.isWithinDistanceSquared(target, curDist - 1)) + 1;
+        double numMiners = LambdaUtil.arraysStreamSum(ALLY_ROBOTS, r -> r.type == RobotType.MINER && r.location.isWithinDistanceSquared(target, curDist)) + 1;
         double leadAmount = totalLead / numMiners; // lead
 
         // Maximize lead in k turns
