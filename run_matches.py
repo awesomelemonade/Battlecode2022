@@ -1,3 +1,4 @@
+from itertools import product
 import subprocess
 
 emojiMode = True
@@ -9,13 +10,17 @@ emojiMap = {
     'Error': ':heavy_exclamation_mark:'
 }
 errors = []
-currentBot = 'bot'
-matches = {('examplefuncsplayer', 'Z'), ('smartie', 'maptestsmall')}
+currentBot = 'newbuildorder3'
 
-bots = ['examplefuncsplayer', 'smartie']
+bots = ['bot', 'newbuildorder2']
 botsSet = set(bots)
-maps = ['maptestsmall', 'Z', 'intersection']
+# maps = ['maptestsmall', 'eckleburg', 'intersection', 'Barrier', 'BarrierWithLead', 'Circles', 'CloseArchons', 'colosseum', 'fortress', 'jellyfish', 'MoveYourArchons', 'MultiplePortableArchonsMoreLead', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley', 'Z']
+maps = ['maptestsmall', 'eckleburg', 'intersection', 'colosseum', 'fortress', 'jellyfish', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley']
 mapsSet = set(maps)
+
+matches = set(product(bots, maps))
+
+print(matches)
 
 numWinsMapping = {
     0: 'Lost',
