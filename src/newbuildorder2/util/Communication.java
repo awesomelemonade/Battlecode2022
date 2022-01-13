@@ -34,9 +34,22 @@ public class Communication {
     private static final int[] prevPassiveUnitCountValues = new int[NUM_UNIT_TYPES];
     private static final int[] currentPassiveUnitCount = new int[NUM_UNIT_TYPES];
 
+    private static final int LEAD_COUNT_MOD = 65536;
+    private static final int LEAD_COUNT_OFFSET = 20;
+    private static int prevLeadCountValues;
+    private static int currentLeadCount;
+
+    public static void setMinedAmount(int amountMined) throws GameActionException {
+        rc.writeSharedArray(LEAD_COUNT_OFFSET, (rc.readSharedArray(LEAD_COUNT_OFFSET) + amountMined) % LEAD_COUNT_MOD);
+    }
+
     public static void setPassive() throws GameActionException {
         int sharedArrayIndex = PASSIVE_UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
         rc.writeSharedArray(sharedArrayIndex, (rc.readSharedArray(sharedArrayIndex) + 1) % UNIT_COUNT_MOD);
+    }
+
+    public static int getLeadIncome() {
+        return currentLeadCount;
     }
 
     public static int getPassiveUnitCount(RobotType type) {
@@ -247,11 +260,14 @@ public class Communication {
                 int prevPassive = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
                 currentPassiveUnitCount[i] = ((prevPassive - prevPassiveUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
             }
+            int prevLeadCount = rc.readSharedArray(LEAD_COUNT_OFFSET);
+            currentLeadCount = (prevLeadCount - prevLeadCountValues + LEAD_COUNT_MOD) % LEAD_COUNT_MOD;
         }
         for (int i = NUM_UNIT_TYPES; --i >= 0;) {
             prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
             prevPassiveUnitCountValues[i] = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
         }
+        prevLeadCountValues = rc.readSharedArray(LEAD_COUNT_OFFSET);
         int unitCountSharedIndex = UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
         rc.writeSharedArray(unitCountSharedIndex, (rc.readSharedArray(unitCountSharedIndex) + 1) % UNIT_COUNT_MOD);
     }

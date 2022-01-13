@@ -148,6 +148,8 @@ public class Miner implements RunnableBot {
                 }
             }
         }
+        int amountMined = 0;
+        outerLoop:
         for (int i = ALL_DIRECTIONS.length; --i >= 0;) {
             MapLocation loc = current.add(ALL_DIRECTIONS[i]);
             if (rc.onTheMap(loc)) {
@@ -155,20 +157,27 @@ public class Miner implements RunnableBot {
                 switch (amount) {
                     default:
                         rc.mineLead(loc);
-                        if (!rc.isActionReady()) return;
+                        amountMined++;
+                        if (!rc.isActionReady()) break outerLoop;
                     case 4:
                         rc.mineLead(loc);
-                        if (!rc.isActionReady()) return;
+                        amountMined++;
+                        if (!rc.isActionReady()) break outerLoop;
                     case 3:
                         rc.mineLead(loc);
-                        if (!rc.isActionReady()) return;
+                        amountMined++;
+                        if (!rc.isActionReady()) break outerLoop;
                     case 2:
                         rc.mineLead(loc);
-                        if (!rc.isActionReady()) return;
+                        amountMined++;
+                        if (!rc.isActionReady()) break outerLoop;
                     case 1:
                     case 0:
                 }
             }
+        }
+        if (amountMined > 0) {
+            Communication.setMinedAmount(amountMined);
         }
     }
 
