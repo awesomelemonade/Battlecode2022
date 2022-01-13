@@ -86,7 +86,8 @@ public class Soldier implements RunnableBot {
                 Direction dir = rc.getLocation().directionTo(loc);
                 if (dir == Direction.CENTER || rc.canMove(dir)) {
                     int dist = loc.distanceSquaredTo(location);
-                    double distScore = dist <= range ? 0.5 + (dist / (2.0 * range)) : 0;
+                    double distScore = 0.5 + dist / (2.0 * range);
+                    if (dist > range) distScore = 0.75 - dist / (2.0 * range);
                     double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
                     double cdScore = 1.0 / cooldown;
                     double score = distScore + 10 * cdScore;
