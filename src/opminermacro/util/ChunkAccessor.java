@@ -2,6 +2,9 @@ package opminermacro.util;
 
 import battlecode.common.MapLocation;
 
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
 import static opminermacro.util.Constants.rc;
 
 class Node {
@@ -67,6 +70,10 @@ public class ChunkAccessor {
     }
 
     public MapLocation getNearestChunk(int threshold) {
+        return getNearestChunk(threshold, (x,y) -> true);
+    }
+
+    public MapLocation getNearestChunk(int threshold, BiPredicate<Integer, Integer> chunkFilter) {
         MapLocation ourLoc = rc.getLocation();
         MapLocation bestLoc = null;
         int bestDist = (int)1e9;
@@ -77,13 +84,14 @@ public class ChunkAccessor {
             int chunkJ = cur.val % Communication.NUM_CHUNKS_HEIGHT;
             int x = Communication.getChunkMidX(chunkI);
             int y = Communication.getChunkMidY(chunkJ);
-            MapLocation loc = new MapLocation(x, y);
-            int dist = ourLoc.distanceSquaredTo(loc);
-            if (dist < bestDist) {
-                bestDist = dist;
-                bestLoc = loc;
+            if (chunkFilter.test(chunkI, chunkJ)) {
+                MapLocation loc = new MapLocation(x, y);
+                int dist = ourLoc.distanceSquaredTo(loc);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestLoc = loc;
+                }
             }
-
             cur = cur.prev;
         }
         return bestLoc;

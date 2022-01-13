@@ -3,6 +3,9 @@ package opminermacro.util;
 import battlecode.common.*;
 import opminermacro.RobotPlayer;
 
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
 import static opminermacro.util.Constants.rc;
 
 public class Communication {
@@ -425,10 +428,13 @@ public class Communication {
     }
 
     public static void onChunkLeadChange(int oldValue, int value, int chunkX, int chunkY) {
-        if (value == CHUNK_INFO_LEAD) {
-            safeLeadTracker.addChunk(chunkX, chunkY);
-        } else {
-            safeLeadTracker.removeChunk(chunkX, chunkY);
+        int territory = getChunkTerritory(chunkX, chunkY);
+        if (territory != CHUNK_INFO_ENEMY_ARCHON && territory != CHUNK_INFO_ENEMY_GENERAL) {
+            if (value == CHUNK_INFO_LEAD) {
+                safeLeadTracker.addChunk(chunkX, chunkY);
+            } else {
+                safeLeadTracker.removeChunk(chunkX, chunkY);
+            }
         }
     }
 
@@ -458,6 +464,10 @@ public class Communication {
                 safeLeadTracker.addChunk(chunkX, chunkY);
             }
         }
+    }
+
+    public static MapLocation getClosestSafeLeadChunk(BiPredicate<Integer, Integer> chunkFilter) {
+        return safeLeadTracker.getNearestChunk(20, chunkFilter);
     }
 
     public static MapLocation getClosestEnemyChunk() {

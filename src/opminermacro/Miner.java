@@ -7,11 +7,13 @@ import static opminermacro.util.Cache.ALLY_ROBOTS;
 import static opminermacro.util.Constants.*;
 
 public class Miner implements RunnableBot {
-    int spawnRound;
+    static int spawnRound;
+    static boolean[][] visitedLeadChunks;
 
     @Override
     public void init() throws GameActionException {
         spawnRound = rc.getRoundNum();
+        visitedLeadChunks = new boolean[Communication.NUM_CHUNKS_WIDTH][Communication.NUM_CHUNKS_HEIGHT];
     }
 
     @Override
@@ -27,7 +29,7 @@ public class Miner implements RunnableBot {
             // If first turn, just move away from our Archon (saves bytecode)
             if (rc.getRoundNum() == spawnRound) {
                 for (Direction d : ORDINAL_DIRECTIONS) {
-                    MapLocation loc = rc.getLocation().add(d);
+                    MapLocation loc = Cache.MY_LOCATION.add(d);
                     if (rc.canSenseLocation(loc)) {
                         RobotInfo robot = rc.senseRobotAtLocation(loc);
                         if (robot != null && robot.team == ALLY_TEAM && robot.type == RobotType.ARCHON) {
@@ -41,7 +43,14 @@ public class Miner implements RunnableBot {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                 } else {
                     if (!tryMoveGoodMining()) {
-                        Util.tryExplore();
+                        visitedLeadChunks[Cache.MY_LOCATION.x / Communication.CHUNK_SIZE][Cache.MY_LOCATION.y / Communication.CHUNK_SIZE] = true;
+                        MapLocation loc = Communication.getClosestSafeLeadChunk((x,y) -> !visitedLeadChunks[x][y]);
+                        if (loc != null) {
+                            Debug.setIndicatorLine(Cache.MY_LOCATION, loc, 128, 128, 255);
+                            Util.tryMove(loc);
+                        } else {
+                            Util.tryExplore();
+                        }
                     }
                 }
             }

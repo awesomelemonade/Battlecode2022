@@ -4,7 +4,7 @@ import static opminermacro.util.Constants.rc;
 
 public enum Profile {
     ERROR_STATE(true),
-    CHUNK_INFO(false),
+    CHUNK_INFO(true),
     PATHFINDER(false),
     EXPLORER(false),
     MINING(false),
