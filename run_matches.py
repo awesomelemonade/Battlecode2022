@@ -9,12 +9,12 @@ emojiMap = {
     'Error': ':heavy_exclamation_mark:'
 }
 errors = []
-currentBot = 'bot'
-matches = {('examplefuncsplayer', 'Z'), ('smartie', 'maptestsmall')}
+currentBot = 'opminermicro'
+matches = {('newbuildorder2', 'maptestsmall'), ('newbuildorder2', 'eckleburg'), ('newbuildorder2', 'intersection')}
 
-bots = ['examplefuncsplayer', 'smartie']
+bots = ['newbuildorder2']
 botsSet = set(bots)
-maps = ['maptestsmall', 'Z', 'intersection']
+maps = ['maptestsmall', 'intersection', 'eckleburg']
 mapsSet = set(maps)
 
 numWinsMapping = {
