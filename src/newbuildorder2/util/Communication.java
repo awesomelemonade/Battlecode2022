@@ -30,20 +30,21 @@ public class Communication {
     private static final int[] prevUnitCountValues = new int[NUM_UNIT_TYPES];
     private static final int[] currentUnitCount = new int[NUM_UNIT_TYPES];
 
-    private static final int PASSIVE_SOLDIER_COUNT_OFFSET = 13;
-    private static int prevPassiveSoldierCountValue = 0;
-    private static int passiveSoldierCount = 0;
+    private static final int PASSIVE_UNIT_COUNT_OFFSET = 13;
+    private static final int[] prevPassiveUnitCountValues = new int[NUM_UNIT_TYPES];
+    private static final int[] currentPassiveUnitCount = new int[NUM_UNIT_TYPES];
 
-    public static void setPassiveSoldier() throws GameActionException {
-        rc.writeSharedArray(PASSIVE_SOLDIER_COUNT_OFFSET, (rc.readSharedArray(PASSIVE_SOLDIER_COUNT_OFFSET) + 1) % UNIT_COUNT_MOD);
+    public static void setPassive() throws GameActionException {
+        int sharedArrayIndex = PASSIVE_UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
+        rc.writeSharedArray(sharedArrayIndex, (rc.readSharedArray(sharedArrayIndex) + 1) % UNIT_COUNT_MOD);
     }
 
-    public static int getPassiveSoldierCount() {
-        return passiveSoldierCount;
+    public static int getPassiveUnitCount(RobotType type) {
+        return currentPassiveUnitCount[type.ordinal()];
     }
 
-    public static int getActiveSoldierCount() {
-        return getAliveRobotTypeCount(RobotType.SOLDIER) - passiveSoldierCount;
+    public static int getActiveUnitCount(RobotType type) {
+        return getAliveRobotTypeCount(type) - getPassiveUnitCount(type);
     }
 
     public static int getAliveRobotTypeCount(RobotType type) {
@@ -243,12 +244,13 @@ public class Communication {
             for (int i = NUM_UNIT_TYPES; --i >= 0;) {
                 int prev = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
                 currentUnitCount[i] = ((prev - prevUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
+                int prevPassive = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
+                currentPassiveUnitCount[i] = ((prevPassive - prevPassiveUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
             }
         }
-        passiveSoldierCount = ((rc.readSharedArray(PASSIVE_SOLDIER_COUNT_OFFSET) - prevPassiveSoldierCountValue) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
-        prevPassiveSoldierCountValue = rc.readSharedArray(PASSIVE_SOLDIER_COUNT_OFFSET);
         for (int i = NUM_UNIT_TYPES; --i >= 0;) {
             prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
+            prevPassiveUnitCountValues[i] = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
         }
         int unitCountSharedIndex = UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
         rc.writeSharedArray(unitCountSharedIndex, (rc.readSharedArray(unitCountSharedIndex) + 1) % UNIT_COUNT_MOD);
