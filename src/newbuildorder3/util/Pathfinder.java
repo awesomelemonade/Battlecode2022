@@ -13,6 +13,7 @@ public class Pathfinder {
     }
 
     public static boolean execute(MapLocation target) {
+        Debug.setIndicatorDot(Profile.PATHFINDER, Cache.MY_LOCATION, 0, 0, 255);
         Debug.setIndicatorLine(Profile.PATHFINDER, Cache.MY_LOCATION, target, 0, 0, 255);
         try {
             if (Constants.ROBOT_TYPE == RobotType.MINER) {
