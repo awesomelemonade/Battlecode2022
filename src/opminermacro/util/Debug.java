@@ -5,12 +5,18 @@ import battlecode.common.MapLocation;
 import static opminermacro.util.Constants.rc;
 
 public class Debug {
+    public static final int id = -1;
+
     public static void println(Object o) {
-        System.out.println(o);
+        if (id == -1 || rc.getID() == id) {
+            System.out.println(o);
+        }
     }
 
     public static void println(String line) {
-        System.out.println(line);
+        if (id == -1 || rc.getID() == id) {
+            System.out.println(line);
+        }
     }
 
     public static void setIndicatorString(String string) {
@@ -33,13 +39,17 @@ public class Debug {
 
     public static void setIndicatorString(Profile profile, String string) {
         if (profile.enabled()) {
-            rc.setIndicatorString(string);
+            if (id == -1 || rc.getID() == id) {
+                rc.setIndicatorString(string);
+            }
         }
     }
 
     public static void setIndicatorDot(Profile profile, MapLocation location, int red, int green, int blue) {
         if (profile.enabled()) {
-            rc.setIndicatorDot(location, red, green, blue);
+            if (id == -1 || rc.getID() == id) {
+                rc.setIndicatorDot(location, red, green, blue);
+            }
         }
     }
 

@@ -56,6 +56,7 @@ public class Communication {
 
     private static ChunkAccessor enemyGeneralChunkTracker;
     private static ChunkAccessor enemyArchonChunkTracker;
+    private static ChunkAccessor safeLeadTracker;
 
     public static void init() throws GameActionException {
         NUM_CHUNKS_WIDTH = (Constants.MAP_WIDTH + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
@@ -90,6 +91,7 @@ public class Communication {
         }
         enemyGeneralChunkTracker = new ChunkAccessor();
         enemyArchonChunkTracker = new ChunkAccessor();
+        safeLeadTracker = new ChunkAccessor();
     }
 
     private static final int ARCHON_PORTABLE_SET_BIT = 0;
@@ -303,7 +305,16 @@ public class Communication {
                         int chunkIndex = (i << 2) + j;
                         int chunkX = chunkIndex / NUM_CHUNKS_SIZE;
                         int chunkY = chunkIndex % NUM_CHUNKS_SIZE;
-                        onChunkChange(oldChunkValue, chunkValue, chunkX, chunkY);
+                        int oldChunkLead = oldChunkValue & CHUNK_INFO_LEAD;
+                        int chunkLead = chunkValue & CHUNK_INFO_LEAD;
+                        if (oldChunkLead != chunkLead) {
+                            onChunkLeadChange(oldChunkLead, chunkLead, chunkX, chunkY);
+                        }
+                        int oldChunkTerritory = oldChunkValue & 0b11;
+                        int chunkTerritory = chunkValue & 0b11;
+                        if (oldChunkTerritory != chunkTerritory) {
+                            onChunkTerritoryChange(oldChunkTerritory, chunkTerritory, chunkX, chunkY);
+                        }
                     }
                 }
                 buffer[i] = value;
@@ -351,15 +362,18 @@ public class Communication {
                         setChunkTerritory(chunkX, chunkY, CHUNK_INFO_ENEMY_ARCHON);
                     } else {
                         // general enemy chunk
-                        int old = getChunkTerritory(currentChunkX, currentChunkY);
+                        int old = getChunkTerritory(chunkX, chunkY);
                         if (old != CHUNK_INFO_ENEMY_ARCHON) {
-                            setChunkTerritory(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_GENERAL);
+                            setChunkTerritory(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
                         }
                     }
                 }
 
                 // Update current chunk lead
-                setChunkLead(currentChunkX, currentChunkY, rc.senseNearbyLocationsWithLead(chunkMid, 8).length > 0);
+                MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead();
+                if (leadLocs.length > 0) {
+                    setChunkLead(Util.random(leadLocs), true);
+                }
             }
 
             // Flush Chunk Info Communication
@@ -401,23 +415,48 @@ public class Communication {
                             Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 0, 0, 0); // black
                             break;
                     }
+                    boolean hasLead = chunkHasLead(i, j);
+                    if (hasLead) {
+                        Debug.setIndicatorDot(Profile.CHUNK_INFO, location.translate(0, -1), 50, 50, 50);
+                    }
                 }
             }
         }
     }
 
-    public static void onChunkChange(int oldChunkValue, int chunkValue, int chunkX, int chunkY) {
-        switch (oldChunkValue) {
+    public static void onChunkLeadChange(int oldValue, int value, int chunkX, int chunkY) {
+        if (value == CHUNK_INFO_LEAD) {
+            safeLeadTracker.addChunk(chunkX, chunkY);
+        } else {
+            safeLeadTracker.removeChunk(chunkX, chunkY);
+        }
+    }
+
+    public static void onChunkTerritoryChange(int oldTerritory, int territory, int chunkX, int chunkY) {
+        boolean fromEnemy = false;
+        boolean toEnemy = false;
+        switch (oldTerritory) {
             case CHUNK_INFO_ENEMY_ARCHON:
                 enemyArchonChunkTracker.removeChunk(chunkX, chunkY);
             case CHUNK_INFO_ENEMY_GENERAL:
                 enemyGeneralChunkTracker.removeChunk(chunkX, chunkY);
+                fromEnemy = true;
         }
-        switch (chunkValue) {
+        switch (territory) {
             case CHUNK_INFO_ENEMY_ARCHON:
                 enemyArchonChunkTracker.addChunk(chunkX, chunkY);
             case CHUNK_INFO_ENEMY_GENERAL:
                 enemyGeneralChunkTracker.addChunk(chunkX, chunkY);
+                toEnemy = true;
+        }
+        if (!fromEnemy && toEnemy) {
+            if (chunkHasLead(chunkX, chunkY)) {
+                safeLeadTracker.removeChunk(chunkX, chunkY);
+            }
+        } else if (fromEnemy && !toEnemy) {
+            if (chunkHasLead(chunkX, chunkY)) {
+                safeLeadTracker.addChunk(chunkX, chunkY);
+            }
         }
     }
 
@@ -476,8 +515,12 @@ public class Communication {
         }
         buffer[sharedArrayIndex] = value;
         if (old != leadBit) {
-            //onChunkChange(old, leadBit, chunkX, chunkY);
+            onChunkLeadChange(old, leadBit, chunkX, chunkY);
         }
+    }
+
+    public static void setChunkLead(MapLocation loc, boolean lead) {
+        setChunkLead(loc.x/CHUNK_SIZE, loc.y/CHUNK_SIZE, lead);
     }
 
     public static void setChunkTerritory(int chunkX, int chunkY, int territory) {
@@ -509,12 +552,30 @@ public class Communication {
         }
         buffer[sharedArrayIndex] = value;
         if (old != territory) {
-            onChunkChange(old, territory, chunkX, chunkY);
+            onChunkTerritoryChange(old, territory, chunkX, chunkY);
         }
     }
 
     public static void setChunkTerritory(MapLocation loc, int territory) {
         setChunkTerritory(loc.x/CHUNK_SIZE, loc.y/CHUNK_SIZE, territory);
+    }
+
+    private static boolean chunkHasLead(int chunkX, int chunkY) {
+        int chunkIndex = chunkX * NUM_CHUNKS_SIZE + chunkY; // [0-144]
+        // CHUNKS_PER_SHARED_INTEGER = 4
+        int value = buffer[chunkIndex >> 2]; // sharedArrayIndex - divide by 4
+        switch (chunkIndex & 0b11) { // sharedArrayOffset - mod 4
+            case 0:
+                return (value & 0b0000_0000_0000_0100) != 0;
+            case 1:
+                return (value & 0b0000_0000_0100_0000) != 0;
+            case 2:
+                return (value & 0b0000_0100_0000_0000) != 0;
+            case 3:
+                return (value & 0b0100_0000_0000_0000) != 0;
+            default:
+                throw new IllegalArgumentException("Unknown");
+        }
     }
 
     public static int getChunkTerritory(int chunkX, int chunkY) {

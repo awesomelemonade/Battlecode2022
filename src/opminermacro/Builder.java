@@ -126,7 +126,7 @@ public class Builder implements RunnableBot {
         for (int i = candidateSquares.length; --i >= 0;) {
             MapLocation loc = candidateSquares[i];
             if (!rc.onTheMap(loc)) continue;
-            if (rc.senseLead(loc) == 0 && Communication.getChunkInfo(loc) == Communication.CHUNK_INFO_ALLY && (loc.equals(rc.getLocation()) || !rc.isLocationOccupied(loc))) {
+            if (rc.senseLead(loc) == 0 && Communication.getChunkTerritory(loc) == Communication.CHUNK_INFO_ALLY && (loc.equals(rc.getLocation()) || !rc.isLocationOccupied(loc))) {
                 int distanceSquared = loc.distanceSquaredTo(spawnLoc);
                 if (distanceSquared < bestDistanceSquared) {
                     bestLoc = loc;
