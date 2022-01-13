@@ -40,7 +40,7 @@ public class Archon implements RunnableBot {
         double ratio = 1.0 / 80.0;
         averageIncome = ratio * Communication.getLeadIncome() + (1 - ratio) * averageIncome;
         Debug.setIndicatorString("A: " + numArchons + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", P: " + numPassiveSoldiers + ", Income: " + averageIncome + ", Income/Miner " + averageIncome/numMiners);
-        debug_updateAndPrint();
+        //debug_updateAndPrint();
         if (rc.getMode() == RobotMode.TURRET) {
             // TODO: build more miners based on lead communication
             if (!Communication.hasPortableArchon()) {
