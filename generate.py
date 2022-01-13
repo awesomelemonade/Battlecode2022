@@ -180,7 +180,11 @@ def generateBounded(minX, maxX, minY, maxY):
         print(', '.join(printedVars), end='')
         print(');')
     '''
+    print ("// END BOUNDED: minX={}, maxX={}, minY={}, maxY={}".format(minX, maxX, minY, maxY))
+    print("}") # End method
 
+def generateBoundedDirectionToTarget(minX, maxX, minY, maxY):
+    print("public static void directionToTargetBounded_{}_{}_{}_{}() throws GameActionException {{".format(minX, maxX, minY, maxY))
     # Retrieve best direction
     print("switch (target.x - {}) {{".format(ourLocationXVar))
     for x in range(squareLength):
@@ -215,9 +219,7 @@ def generateBounded(minX, maxX, minY, maxY):
             print("bestScore = {};".format(scoreVar))
             print("{} = {};".format(bestDirectionVar, dirVar))
             print("}")
-    print("return;")
-    print ("// END BOUNDED: minX={}, maxX={}, minY={}, maxY={}".format(minX, maxX, minY, maxY))
-    print("}") # End method
+    print("}")
 
 # switch on ourLocation.x, ourLocation.y, Constants.MAP_WIDTH - ourLocation.x, Constants.MAP_HEIGHT - ourLocation.y
 boundedFunctions = set()
@@ -236,6 +238,7 @@ for i in range(offsetX):
         maxY = squareLength - 1
         print("case {}:".format(j))
         print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
         print("return;");
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
@@ -245,11 +248,13 @@ for i in range(offsetX):
         maxY = offsetY + j - 1
         print("case {}:".format(j))
         print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
         print("return;")
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
     minY, maxY = 0, squareLength - 1
     print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
     print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
@@ -268,6 +273,7 @@ for i in range(1, offsetX + 1):
         maxY = squareLength - 1
         print("case {}:".format(j))
         print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
         print("return;")
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
@@ -277,11 +283,13 @@ for i in range(1, offsetX + 1):
         maxY = offsetY + j - 1
         print("case {}:".format(j))
         print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
         print("return;")
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
     minY, maxY = 0, squareLength - 1
     print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
     print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
@@ -296,6 +304,7 @@ for j in range(offsetY):
     maxY = squareLength - 1
     print("case {}:".format(j))
     print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
     print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
@@ -305,11 +314,13 @@ for j in range(1, offsetY + 1):
     maxY = offsetY + j - 1
     print("case {}:".format(j))
     print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
     print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
 minY, maxY = 0, squareLength - 1
 print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
 print("return;")
 boundedFunctions.add((minX, maxX, minY, maxY))
 
@@ -318,3 +329,4 @@ print("}")
 
 for a, b, c, d in boundedFunctions:
     generateBounded(a, b, c, d)
+    generateBoundedDirectionToTarget(a, b, c, d)
