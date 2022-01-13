@@ -3,6 +3,9 @@ package newbuildorder2;
 import battlecode.common.*;
 import newbuildorder2.util.*;
 
+import java.util.Comparator;
+import java.util.Optional;
+
 import static newbuildorder2.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
@@ -102,18 +105,7 @@ public class Soldier implements RunnableBot {
 
     public static boolean tryRetreat() throws GameActionException {
         RobotInfo[] allies = Cache.ALLY_ROBOTS;
-        int distanceToArchon = Integer.MAX_VALUE;
-        MapLocation bestArchonLocation = null;
-        for (int i = 0; i < allies.length; i++) {
-            if (allies[i].getType().equals(RobotType.ARCHON)) {
-                MapLocation archonLoc = allies[i].getLocation();
-                int squaredDistance = archonLoc.distanceSquaredTo(rc.getLocation());
-                if (distanceToArchon > squaredDistance) {
-                    distanceToArchon = squaredDistance;
-                    bestArchonLocation = archonLoc;
-                }
-            }
-        }
+        MapLocation bestArchonLocation = LambdaUtil.arraysStreamMin(allies, r -> r.getType() == RobotType.ARCHON, Comparator.comparingInt(r -> r.getLocation().distanceSquaredTo(rc.getLocation()))).map(r -> r.getLocation()).orElse(null);
         // No archon nearby
         if (bestArchonLocation == null) {
             return false;
