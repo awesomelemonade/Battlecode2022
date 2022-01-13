@@ -8,6 +8,7 @@ import static newbuildorder2.util.Constants.*;
 
 public class Miner implements RunnableBot {
     int spawnRound;
+    static int amountMined;
 
     @Override
     public void init() throws GameActionException {
@@ -16,6 +17,7 @@ public class Miner implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
+        amountMined = 0;
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         boolean inEnemyTerritory = LambdaUtil.arraysAnyMatch(Cache.ENEMY_ROBOTS, r -> r.type == RobotType.ARCHON) && !LambdaUtil.arraysAnyMatch(ALLY_ROBOTS, r -> r.type == RobotType.ARCHON);
         if (inEnemyTerritory) {
@@ -50,6 +52,9 @@ public class Miner implements RunnableBot {
             } else {
                 tryMine();
             }
+        }
+        if (amountMined > 0) {
+            Communication.setMinedAmount(amountMined);
         }
     }
 
@@ -148,8 +153,6 @@ public class Miner implements RunnableBot {
                 }
             }
         }
-        int amountMined = 0;
-        outerLoop:
         for (int i = ALL_DIRECTIONS.length; --i >= 0;) {
             MapLocation loc = current.add(ALL_DIRECTIONS[i]);
             if (rc.onTheMap(loc)) {
@@ -158,26 +161,23 @@ public class Miner implements RunnableBot {
                     default:
                         rc.mineLead(loc);
                         amountMined++;
-                        if (!rc.isActionReady()) break outerLoop;
+                        if (!rc.isActionReady()) return;
                     case 4:
                         rc.mineLead(loc);
                         amountMined++;
-                        if (!rc.isActionReady()) break outerLoop;
+                        if (!rc.isActionReady()) return;
                     case 3:
                         rc.mineLead(loc);
                         amountMined++;
-                        if (!rc.isActionReady()) break outerLoop;
+                        if (!rc.isActionReady()) return;
                     case 2:
                         rc.mineLead(loc);
                         amountMined++;
-                        if (!rc.isActionReady()) break outerLoop;
+                        if (!rc.isActionReady()) return;
                     case 1:
                     case 0:
                 }
             }
-        }
-        if (amountMined > 0) {
-            Communication.setMinedAmount(amountMined);
         }
     }
 
@@ -200,18 +200,23 @@ public class Miner implements RunnableBot {
             if (bestLoc == null) break;
             switch (bestAmount) {
                 default:
+                    amountMined++;
                     rc.mineLead(bestLoc);
                     if (!rc.isActionReady()) return;
                 case 4:
+                    amountMined++;
                     rc.mineLead(bestLoc);
                     if (!rc.isActionReady()) return;
                 case 3:
+                    amountMined++;
                     rc.mineLead(bestLoc);
                     if (!rc.isActionReady()) return;
                 case 2:
+                    amountMined++;
                     rc.mineLead(bestLoc);
                     if (!rc.isActionReady()) return;
                 case 1:
+                    amountMined++;
                     rc.mineLead(bestLoc);
                     if (!rc.isActionReady()) return;
                 case 0:

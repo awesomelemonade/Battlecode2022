@@ -10,8 +10,6 @@ public enum Profile {
     MINING(false),
     ATTACKING(false);
 
-    private static final int id = -1; // Filter by id
-
     private final boolean enabled;
 
     private Profile(boolean enabled) {
@@ -19,6 +17,6 @@ public enum Profile {
     }
 
     public boolean enabled() {
-        return enabled && (id == -1 || id == rc.getID());
+        return enabled;
     }
 }

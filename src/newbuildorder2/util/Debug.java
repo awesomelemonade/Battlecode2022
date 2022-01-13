@@ -5,7 +5,7 @@ import battlecode.common.MapLocation;
 import static newbuildorder2.util.Constants.rc;
 
 public class Debug {
-    public static final int id = 11207;
+    public static final int id = -1;
 
     public static void println(Object o) {
         if (id == -1 || rc.getID() == id) {

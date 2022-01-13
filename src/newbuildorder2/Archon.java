@@ -3,14 +3,31 @@ package newbuildorder2;
 import battlecode.common.*;
 import newbuildorder2.util.*;
 
+import java.util.ArrayList;
+
 import static newbuildorder2.util.Constants.*;
 
 public class Archon implements RunnableBot {
     private static MapLocation relocationTarget;
+    private static double averageIncome;
+    private static ArrayList<Double> incomes;
+    private static ArrayList<Double> incomePerMiners;
+
+    public static void debug_updateAndPrint() {
+        incomes.add(averageIncome);
+        incomePerMiners.add(averageIncome / Communication.getActiveUnitCount(RobotType.MINER));
+        if (rc.getRoundNum() % 200 == 0) {
+            Debug.println("incomes");
+            Debug.println(incomes);
+            Debug.println("incomesPerMiners");
+            Debug.println(incomePerMiners);
+        }
+    }
 
     @Override
     public void init() throws GameActionException {
-
+        incomes = new ArrayList<>();
+        incomePerMiners = new ArrayList<>();
     }
 
     @Override
@@ -20,7 +37,10 @@ public class Archon implements RunnableBot {
         int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
         int numWatchtowers = Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER);
         int numPassiveSoldiers = Communication.getPassiveUnitCount(RobotType.SOLDIER);
-        Debug.setIndicatorString("A: " + numArchons + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", P: " + numPassiveSoldiers);
+        double ratio = 1.0 / 80.0;
+        averageIncome = ratio * Communication.getLeadIncome() + (1 - ratio) * averageIncome;
+        Debug.setIndicatorString("A: " + numArchons + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", P: " + numPassiveSoldiers + ", Income: " + averageIncome + ", Income/Miner " + averageIncome/numMiners);
+        debug_updateAndPrint();
         if (rc.getMode() == RobotMode.TURRET) {
             // TODO: build more miners based on lead communication
             if (!Communication.hasPortableArchon()) {
