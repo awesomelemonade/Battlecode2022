@@ -47,7 +47,7 @@ public class Soldier implements RunnableBot {
         } else {
             RobotInfo closestEnemy = Util.getClosestEnemyRobot();
             if (closestEnemy != null) {
-                tryMoveAttackingSquare(closestEnemy.location, 10); // Don't want to lose track
+                tryMoveAttackingSquare(closestEnemy.location, 13);
             } else {
                 MapLocation loc = Communication.getClosestEnemyChunk();
                 if (loc == null) {
