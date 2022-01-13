@@ -5,14 +5,14 @@ emojiMode = True
 emojiMap = {
     'Won': ':heavy_check_mark:',
     'Lost': ':x:',
-    'Tied': ':warning:',
+    'Tied': ':grimacing:',
     'N/A': ':heavy_minus_sign:',
     'Error': ':heavy_exclamation_mark:'
 }
 errors = []
-currentBot = 'newbuildorder3'
+currentBot = 'newbuildorder4'
 
-bots = ['bot', 'newbuildorder2']
+bots = ['bot', 'newbuildorder3']
 botsSet = set(bots)
 # maps = ['maptestsmall', 'eckleburg', 'intersection', 'Barrier', 'BarrierWithLead', 'Circles', 'CloseArchons', 'colosseum', 'fortress', 'jellyfish', 'MoveYourArchons', 'MultiplePortableArchonsMoreLead', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley', 'Z']
 maps = ['maptestsmall', 'eckleburg', 'intersection', 'colosseum', 'fortress', 'jellyfish', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley']
