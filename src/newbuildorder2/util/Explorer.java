@@ -1,9 +1,6 @@
 package newbuildorder2.util;
 
-import battlecode.common.Direction;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotInfo;
-import battlecode.common.RobotType;
+import battlecode.common.*;
 
 import static newbuildorder2.util.Constants.rc;
 
@@ -11,58 +8,31 @@ public class Explorer {
     private static Direction previousDirection = Util.randomAdjacentDirection();
 
     private static ExploreDirection currentExploreDirection = null;
-    private static MapLocation currentExploreLocation;
 
     public static void init() {
-        if (!Constants.ROBOT_TYPE.isBuilding() && rc.getRoundNum() < 100) {
-            RobotInfo archon = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> r.type == RobotType.ARCHON);
-            if (archon != null) {
-                currentExploreDirection = getInitialExploreDirection();
-                currentExploreLocation = getExploreLocation();
-            }
+        if (!Constants.ROBOT_TYPE.isBuilding()) {
+            currentExploreDirection = getInitialExploreDirection();
         }
     }
 
     public static ExploreDirection getInitialExploreDirection() {
-        ExploreDirection[] allDirections = ExploreDirection.values();
-        double[] scores = new double[allDirections.length];
-        double sum = 0;
-        for (int i = allDirections.length; --i >= 0;) {
-            double score = getScore(allDirections[i]);
-            sum += score;
-            scores[i] = score;
-        }
-        double random = Math.random() * sum;
-        for (int i = allDirections.length; --i >= 0;) {
-            random -= scores[i];
-            if (random < 0) {
-                return allDirections[i];
+        int exploreX = (int)(Math.random() * Constants.MAP_WIDTH);
+        int exploreY = (int)(Math.random() * Constants.MAP_HEIGHT);
+        double dx = exploreX - Cache.MY_LOCATION.x;
+        double dy = exploreY - Cache.MY_LOCATION.y;
+        double angle = Math.atan2(dy, dx);
+        double bestDiff = 1e9;
+        ExploreDirection bestDir = null;
+        for (ExploreDirection dir : ExploreDirection.values()) {
+            double dirAngle = Math.atan2(dir.dy, dir.dx);
+            double z = Math.abs(angle - dirAngle);
+            double diff = Math.min(z, 2 * Math.PI - z);
+            if (diff < bestDiff) {
+                bestDiff = diff;
+                bestDir = dir;
             }
         }
-        // Should never happen
-        return Util.random(allDirections);
-    }
-
-    public static double getScore(ExploreDirection direction) {
-        double dx = direction.dx;
-        double dy = direction.dy;
-        double hypot = Math.hypot(dx, dy);
-        dx /= hypot;
-        dy /= hypot;
-        if (dx < 0) {
-            // Going towards left border
-            if (dy < 0) {
-                return -Math.max(Cache.MY_LOCATION.x / dx, Cache.MY_LOCATION.y / dy);
-            } else {
-                return Math.min(-Cache.MY_LOCATION.x / dx, (Constants.MAP_HEIGHT - 1 - Cache.MY_LOCATION.y) / dy);
-            }
-        } else {
-            if (dy < 0) {
-                return Math.min((Constants.MAP_WIDTH - 1 - Cache.MY_LOCATION.x) / dx, -Cache.MY_LOCATION.y / dy);
-            } else {
-                return Math.min((Constants.MAP_WIDTH - 1 - Cache.MY_LOCATION.x) / dx, (Constants.MAP_HEIGHT - 1 - Cache.MY_LOCATION.y) / dy);
-            }
-        }
+        return bestDir;
     }
 
     public static boolean randomExplore() {
@@ -103,7 +73,6 @@ public class Explorer {
                     continue;
                 }
                 currentExploreDirection = potentialDirection;
-                currentExploreLocation = getExploreLocation();
                 noNewDirection = false;
                 break;
             }
@@ -115,12 +84,12 @@ public class Explorer {
             return randomExplore();
         } else {
             Debug.setIndicatorLine(Profile.EXPLORER, Cache.MY_LOCATION, Cache.MY_LOCATION.translate(currentExploreDirection.dx, currentExploreDirection.dy), 255, 128, 0);
-            return Pathfinder.execute(currentExploreLocation);
+            return Pathfinder.execute(getExploreLocation());
         }
     }
 
     public static MapLocation getExploreLocation() {
-        return rc.getLocation().translate(currentExploreDirection.dx * Constants.MAP_WIDTH, currentExploreDirection.dy * Constants.MAP_HEIGHT);
+        return rc.getLocation().translate(currentExploreDirection.dx * 10, currentExploreDirection.dy * 10);
     }
 
     public static boolean goingTowardsAllyArchon(ExploreDirection direction) {
@@ -132,6 +101,6 @@ public class Explorer {
     }
 
     public static boolean reachedBorder(ExploreDirection direction) {
-        return !Util.onTheMap(rc.getLocation().translate(direction.sigDx * 3, direction.sigDy * 3));
+        return !Util.onTheMap(rc.getLocation().translate(direction.dx * 2, direction.dy * 2));
     }
 }

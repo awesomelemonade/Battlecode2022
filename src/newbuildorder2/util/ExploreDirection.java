@@ -22,14 +22,10 @@ public enum ExploreDirection {
 
     public final int dx;
     public final int dy;
-    public final int sigDx;
-    public final int sigDy;
 
     private ExploreDirection(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
-        this.sigDx = Integer.signum(dx);
-        this.sigDy = Integer.signum(dy);
     }
 
     public static boolean isOpposite(ExploreDirection a, ExploreDirection b) {

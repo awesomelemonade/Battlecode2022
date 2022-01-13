@@ -19,7 +19,7 @@ public class Archon implements RunnableBot {
         int numMiners = Communication.getAliveRobotTypeCount(RobotType.MINER);
         int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
         int numWatchtowers = Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER);
-        int numPassiveSoldiers = Communication.getPassiveSoldierCount();
+        int numPassiveSoldiers = Communication.getPassiveUnitCount(RobotType.SOLDIER);
         Debug.setIndicatorString("A: " + numArchons + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", P: " + numPassiveSoldiers);
         if (rc.getMode() == RobotMode.TURRET) {
             // TODO: build more miners based on lead communication
@@ -157,7 +157,7 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean weAreMakingUselessSoldiers() {
-        int numPassive = Communication.getPassiveSoldierCount();
+        int numPassive = Communication.getPassiveUnitCount(RobotType.SOLDIER);
         int totalSoldierCount = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
         if (totalSoldierCount <= 10) {
             return false;

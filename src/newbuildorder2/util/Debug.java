@@ -5,12 +5,18 @@ import battlecode.common.MapLocation;
 import static newbuildorder2.util.Constants.rc;
 
 public class Debug {
+    public static final int id = 11207;
+
     public static void println(Object o) {
-        System.out.println(o);
+        if (id == -1 || rc.getID() == id) {
+            System.out.println(o);
+        }
     }
 
     public static void println(String line) {
-        System.out.println(line);
+        if (id == -1 || rc.getID() == id) {
+            System.out.println(line);
+        }
     }
 
     public static void setIndicatorString(String string) {
@@ -27,7 +33,9 @@ public class Debug {
 
     public static void println(Profile profile, String line) {
         if (profile.enabled()) {
-            System.out.println(line);
+            if (id == -1 || rc.getID() == id) {
+                System.out.println(line);
+            }
         }
     }
 

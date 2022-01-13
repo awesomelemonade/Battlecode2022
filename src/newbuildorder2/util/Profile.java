@@ -6,7 +6,7 @@ public enum Profile {
     ERROR_STATE(true),
     CHUNK_INFO(false),
     PATHFINDER(false),
-    EXPLORER(false),
+    EXPLORER(true),
     MINING(false),
     ATTACKING(false);
 
