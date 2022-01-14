@@ -1,7 +1,6 @@
 package retreater.util;
 
 import battlecode.common.MapLocation;
-import newbuildorder4.util.LambdaUtil;
 
 public class MapInfo {
     // TODO: Predict symmetry - Horizontal, Vertical, Rotational
