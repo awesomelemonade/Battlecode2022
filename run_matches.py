@@ -10,9 +10,9 @@ emojiMap = {
     'Error': ':heavy_exclamation_mark:'
 }
 errors = []
-currentBot = 'attackpriority'
+currentBot = 'retreater'
 
-bots = ['bot', 'newbuildorder3', 'newbuildorder4']
+bots = ['bot', 'newbuildorder3', 'attackpriority']
 botsSet = set(bots)
 # maps = ['maptestsmall', 'eckleburg', 'intersection', 'Barrier', 'BarrierWithLead', 'Circles', 'CloseArchons', 'colosseum', 'fortress', 'jellyfish', 'MoveYourArchons', 'MultiplePortableArchonsMoreLead', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley', 'Z']
 maps = ['maptestsmall', 'eckleburg', 'intersection', 'colosseum', 'fortress', 'jellyfish', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley']
@@ -20,13 +20,22 @@ mapsSet = set(maps)
 
 matches = set(product(bots, maps))
 
-print(matches)
-
 numWinsMapping = {
     0: 'Lost',
     1: 'Tied',
     2: 'Won',
 }
+
+
+def retrieveGameLength(output):
+    startIndex = output.find('wins (round ')
+    if startIndex == -1:
+        return -1
+    endIndex = output.find(')', startIndex)
+    if endIndex == -1:
+        return -1
+    return output[startIndex + len('wins(round ') + 1:endIndex]
+
 def run_match(bot, map):
     print("Running {} vs {} on {}".format(currentBot, bot, map))
     try:
@@ -38,12 +47,17 @@ def run_match(bot, map):
     else:
         winAString = '{} (A) wins'.format(currentBot)
         winBString = '{} (B) wins'.format(currentBot)
+        
         numWins = 0
+        
+        gameLengthA = retrieveGameLength(outputA)
+        gameLengthB = retrieveGameLength(outputB)
+        
         if winAString in outputA:
             numWins += 1
         if winBString in outputB:
             numWins += 1
-        return numWinsMapping[numWins]
+        return numWinsMapping[numWins] + ' (' + ', '.join([gameLengthA, gameLengthB]) + ')'
 
 
 results = {}
@@ -59,8 +73,13 @@ for bot, map in matches:
 # Construct table
 table = [[results.get((bot, map), 'N/A') for bot in bots] for map in maps]
 
+def replaceWithDictionary(s, mapping):
+    for a, b in mapping.items():
+        s = s.replace(a, b)
+    return s
+
 if emojiMode:
-    table = [[emojiMap.get(item, item) for item in row] for row in table]
+    table = [[replaceWithDictionary(item, emojiMap) for item in row] for row in table]
 
 # Write to file
 with open('matches-summary.txt', 'w') as f:
