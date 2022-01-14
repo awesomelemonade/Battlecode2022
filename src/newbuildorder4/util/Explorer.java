@@ -92,14 +92,6 @@ public class Explorer {
         return rc.getLocation().translate(currentExploreDirection.dx * 10, currentExploreDirection.dy * 10);
     }
 
-    public static boolean goingTowardsAllyArchon(ExploreDirection direction) {
-        MapLocation currentLocation = rc.getLocation();
-        MapLocation exploreLocation = currentLocation.translate(direction.dx, direction.dy);
-        int futureDist = MapInfo.getClosestAllyArchonDistanceSquared(exploreLocation, 1024);
-        int curDist = MapInfo.getClosestAllyArchonDistanceSquared(currentLocation, 1024);
-        return futureDist <= curDist && futureDist <= 25;
-    }
-
     public static boolean reachedBorder(ExploreDirection direction) {
         return !Util.onTheMap(rc.getLocation().translate(direction.dx * 2, direction.dy * 2));
     }

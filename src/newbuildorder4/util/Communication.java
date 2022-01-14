@@ -29,6 +29,13 @@ public class Communication {
     private static ChunkAccessor enemyPredictedChunkTracker;
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
+    private static final int ARCHON_LOCATIONS_SET_BIT = 0;
+    private static final int ARCHON_LOCATIONS_ALIVE_BIT = 1;
+    private static final int ARCHON_LOCATIONS_HEARTBEAT_BIT = 2;
+    private static final int ARCHON_LOCATIONS_LOCATION_BIT = 3;
+    private static final int ARCHON_LOCATIONS_LOCATION_MASK = 0b111111_111111; // 12 bits, 6 bit per coordinate
+    private static int archonSharedIndex = -1;
+    private static int[] archonLocationHeartbeats;
     private static final int RESERVATION_OFFSET = 4;
     private static final int ARCHON_PORTABLE_OFFSET = 5;
 
@@ -82,25 +89,14 @@ public class Communication {
                 int sharedArrayIndex = ARCHON_LOCATIONS_OFFSET + i;
                 if (rc.readSharedArray(sharedArrayIndex) == 0) {
                     // Write
-                    rc.writeSharedArray(sharedArrayIndex, (pack(rc.getLocation()) << 1) | 1);
+                    rc.writeSharedArray(sharedArrayIndex,
+                            (pack(rc.getLocation()) << ARCHON_LOCATIONS_LOCATION_BIT) |
+                                    (1 << ARCHON_LOCATIONS_HEARTBEAT_BIT) |
+                                    (1 << ARCHON_LOCATIONS_ALIVE_BIT) |
+                                    (1 << ARCHON_LOCATIONS_SET_BIT));
+                    archonSharedIndex = sharedArrayIndex;
                     break;
                 }
-            }
-        } else {
-            // Read archon locations
-            boolean initialized = false;
-            for (int i = Constants.MAX_ARCHONS; --i >= 0;) {
-                int value = rc.readSharedArray(i);
-                if (value != 0) {
-                    if (!initialized) {
-                        MapInfo.INITIAL_ARCHON_LOCATIONS = new MapLocation[i + 1];
-                        initialized = true;
-                    }
-                    MapInfo.INITIAL_ARCHON_LOCATIONS[i] = unpack(value >> 1);
-                }
-            }
-            if (!initialized) {
-                throw new IllegalStateException("Cannot read any archon locations");
             }
         }
         enemyGeneralChunkTracker = new ChunkAccessor();
@@ -252,9 +248,58 @@ public class Communication {
         clearStaleReservation();
         clearStalePortableArchon();
         loadChunks();
-        if (chunksLoaded && !guessed && Constants.ROBOT_TYPE == RobotType.ARCHON) {
-            guessed = true;
-            guessEnemyArchonLocations();
+        if (Constants.ROBOT_TYPE == RobotType.ARCHON) {
+            if (Cache.TURN_COUNT > 1) {
+                // Broadcast our archon location
+                int heartbeat = (rc.readSharedArray(archonSharedIndex) >> ARCHON_LOCATIONS_HEARTBEAT_BIT) & 0b1;
+                rc.writeSharedArray(archonSharedIndex,
+                        (pack(Cache.MY_LOCATION) << ARCHON_LOCATIONS_LOCATION_BIT) |
+                                ((1 - heartbeat) << ARCHON_LOCATIONS_HEARTBEAT_BIT) |
+                                (1 << ARCHON_LOCATIONS_ALIVE_BIT) |
+                                (1 << ARCHON_PORTABLE_SET_BIT));
+            }
+            if (chunksLoaded && !guessed) {
+                guessed = true;
+                guessEnemyArchonLocations();
+            }
+        }
+        if (Constants.ROBOT_TYPE != RobotType.ARCHON || Cache.TURN_COUNT > 1) {
+            if (MapInfo.CURRENT_ARCHON_LOCATIONS == null) {
+                // Read archon locations
+                boolean initialized = false;
+                for (int i = Constants.MAX_ARCHONS; --i >= 0;) {
+                    int value = rc.readSharedArray(i);
+                    if (value != 0) {
+                        if (!initialized) {
+                            MapInfo.CURRENT_ARCHON_LOCATIONS = new MapLocation[i + 1];
+                            archonLocationHeartbeats = new int[i + 1];
+                            initialized = true;
+                        }
+                    }
+                }
+                if (!initialized) {
+                    throw new IllegalStateException("Cannot read any archon locations");
+                }
+            }
+            // Read archon locations
+            for (int i = MapInfo.CURRENT_ARCHON_LOCATIONS.length; --i >= 0;) {
+                int sharedArrayIndex = ARCHON_LOCATIONS_OFFSET + i;
+                int value = rc.readSharedArray(sharedArrayIndex);
+                if (((value >> ARCHON_LOCATIONS_ALIVE_BIT) & 0b1) == 0b1) { // if (alive)
+                    // check if heartbeat is correct
+                    int prevHeartbeat = archonLocationHeartbeats[i];
+                    int heartbeat = ((value >> ARCHON_LOCATIONS_HEARTBEAT_BIT) & 0b1);
+                    if (heartbeat == prevHeartbeat) {
+                        // pronounce it dead
+                        rc.writeSharedArray(sharedArrayIndex, value & (0b1111_1111_1111_1111 & (~(1 << ARCHON_LOCATIONS_ALIVE_BIT))));
+                        MapInfo.CURRENT_ARCHON_LOCATIONS[i] = null;
+                    } else {
+                        // fetch location
+                        MapInfo.CURRENT_ARCHON_LOCATIONS[i] = unpack((value >> ARCHON_LOCATIONS_LOCATION_BIT) & ARCHON_LOCATIONS_LOCATION_MASK);
+                        archonLocationHeartbeats[i] = heartbeat;
+                    }
+                }
+            }
         }
         if (Cache.TURN_COUNT > 1) {
             for (int i = NUM_UNIT_TYPES; --i >= 0;) {
