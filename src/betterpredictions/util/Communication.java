@@ -1,9 +1,9 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.*;
-import newbuildorder4.RobotPlayer;
+import betterpredictions.RobotPlayer;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Communication {
     private static final int CHUNK_INFO_OFFSET = 28; // 64 - 36 = 28

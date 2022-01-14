@@ -1,9 +1,9 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class LatticeUtil {
     // TODO: Change to builder vision radius

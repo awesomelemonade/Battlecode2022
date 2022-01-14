@@ -1,11 +1,11 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotType;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Pathfinder {
     public static int moveDistance(MapLocation a, MapLocation b) {

@@ -1,9 +1,9 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.MapLocation;
 import battlecode.common.RobotInfo;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Cache { // Cache variables that are constant throughout a turn
     public static RobotInfo[] ALLY_ROBOTS, ENEMY_ROBOTS;

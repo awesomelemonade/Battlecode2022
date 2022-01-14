@@ -1,8 +1,8 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.*;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Explorer {
     private static Direction previousDirection = Util.randomAdjacentDirection();

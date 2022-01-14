@@ -1,4 +1,4 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 public enum Profile {
     ERROR_STATE(true),

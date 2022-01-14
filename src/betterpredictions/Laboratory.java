@@ -1,10 +1,10 @@
-package newbuildorder4;
+package betterpredictions;
 
 import battlecode.common.GameActionException;
-import newbuildorder4.util.RunnableBot;
+import betterpredictions.util.RunnableBot;
 
-import static newbuildorder4.util.Constants.ALLY_TEAM;
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.ALLY_TEAM;
+import static betterpredictions.util.Constants.rc;
 
 public class Laboratory implements RunnableBot {
     @Override

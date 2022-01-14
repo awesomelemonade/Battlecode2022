@@ -1,8 +1,8 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.MapLocation;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Debug {
     public static final int id = -1;

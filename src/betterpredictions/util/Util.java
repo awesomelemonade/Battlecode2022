@@ -1,10 +1,10 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.*;
 
 import java.util.function.Predicate;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Util {
 

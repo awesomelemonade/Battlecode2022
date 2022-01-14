@@ -1,10 +1,10 @@
-package newbuildorder4;
+package betterpredictions;
 
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
-import newbuildorder4.util.*;
+import betterpredictions.util.*;
 
 public class RobotPlayer {
     public static int currentTurn;

@@ -1,11 +1,11 @@
-package newbuildorder4;
+package betterpredictions;
 
 import battlecode.common.*;
-import newbuildorder4.util.*;
+import betterpredictions.util.*;
 
 import java.util.ArrayList;
 
-import static newbuildorder4.util.Constants.*;
+import static betterpredictions.util.Constants.*;
 
 public class Archon implements RunnableBot {
     private static MapLocation relocationTarget;

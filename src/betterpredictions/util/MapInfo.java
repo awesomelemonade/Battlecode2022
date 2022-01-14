@@ -1,4 +1,4 @@
-package newbuildorder4.util;
+package betterpredictions.util;
 
 import battlecode.common.MapLocation;
 

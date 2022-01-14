@@ -1,12 +1,12 @@
-package newbuildorder4;
+package betterpredictions;
 
 import battlecode.common.*;
-import newbuildorder4.util.*;
+import betterpredictions.util.*;
 
 import java.util.Comparator;
 import java.util.Optional;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
     private static int lastTurnAttacked = 0;

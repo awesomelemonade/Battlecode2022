@@ -1,12 +1,12 @@
-package newbuildorder4;
+package betterpredictions;
 
 import battlecode.common.*;
-import newbuildorder4.util.Cache;
-import newbuildorder4.util.Communication;
-import newbuildorder4.util.RunnableBot;
-import newbuildorder4.util.Util;
+import betterpredictions.util.Cache;
+import betterpredictions.util.Communication;
+import betterpredictions.util.RunnableBot;
+import betterpredictions.util.Util;
 
-import static newbuildorder4.util.Constants.rc;
+import static betterpredictions.util.Constants.rc;
 
 public class Watchtower implements RunnableBot {
     private int turnsSinceUseful;
