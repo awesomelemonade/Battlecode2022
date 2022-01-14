@@ -19,6 +19,14 @@ public class Communication {
     public static final int CHUNK_INFO_ALLY = 1;
     public static final int CHUNK_INFO_ENEMY_GENERAL = 2;
     public static final int CHUNK_INFO_ENEMY_ARCHON = 3;
+    public static final int CHUNK_INFO_ENEMY_PREDICTED = 4;
+
+    private static boolean chunksLoaded = false;
+    private static boolean guessed = false;
+
+    private static ChunkAccessor enemyGeneralChunkTracker;
+    private static ChunkAccessor enemyArchonChunkTracker;
+    private static ChunkAccessor enemyPredictedChunkTracker;
 
     private static final int ARCHON_LOCATIONS_OFFSET = 0;
     private static final int RESERVATION_OFFSET = 4;
@@ -64,12 +72,6 @@ public class Communication {
         return currentUnitCount[type.ordinal()];
     }
 
-    private static boolean chunksLoaded = false;
-    private static boolean guessed = false;
-
-    private static ChunkAccessor enemyGeneralChunkTracker;
-    private static ChunkAccessor enemyArchonChunkTracker;
-
     public static void init() throws GameActionException {
         NUM_CHUNKS_WIDTH = (Constants.MAP_WIDTH + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
         NUM_CHUNKS_HEIGHT = (Constants.MAP_HEIGHT + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
@@ -103,6 +105,7 @@ public class Communication {
         }
         enemyGeneralChunkTracker = new ChunkAccessor();
         enemyArchonChunkTracker = new ChunkAccessor();
+        enemyPredictedChunkTracker = new ChunkAccessor();
     }
 
     private static final int ARCHON_PORTABLE_SET_BIT = 0;
@@ -275,9 +278,9 @@ public class Communication {
     public static void guessEnemyArchonLocations() {
         int symX = Constants.MAP_WIDTH - Cache.MY_LOCATION.x - 1;
         int symY = Constants.MAP_HEIGHT - Cache.MY_LOCATION.y - 1;
-        setChunkInfo(new MapLocation(Cache.MY_LOCATION.x, symY), CHUNK_INFO_ENEMY_GENERAL);
-        setChunkInfo(new MapLocation(symX, Cache.MY_LOCATION.y), CHUNK_INFO_ENEMY_GENERAL);
-        setChunkInfo(new MapLocation(symX, symY), CHUNK_INFO_ENEMY_GENERAL);
+        setChunkInfo(new MapLocation(Cache.MY_LOCATION.x, symY), CHUNK_INFO_ENEMY_PREDICTED);
+        setChunkInfo(new MapLocation(symX, Cache.MY_LOCATION.y), CHUNK_INFO_ENEMY_PREDICTED);
+        setChunkInfo(new MapLocation(symX, symY), CHUNK_INFO_ENEMY_PREDICTED);
     }
 
     public static void loadChunks() throws GameActionException {
@@ -344,23 +347,6 @@ public class Communication {
                 if (enemies.length == 0) {
                     // Label as ally
                     setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
-
-                    // Update chunk enemy is on
-                    RobotInfo closestEnemy = Util.getClosestEnemyRobot();
-                    if (closestEnemy != null) {
-                        MapLocation loc = closestEnemy.location;
-                        int chunkX = loc.x / CHUNK_SIZE;
-                        int chunkY = loc.y / CHUNK_SIZE;
-                        if (closestEnemy.type == RobotType.ARCHON) {
-                            setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_ARCHON);
-                        } else {
-                            // general enemy chunk
-                            int old = getChunkInfo(currentChunkX, currentChunkY);
-                            if (old != CHUNK_INFO_ENEMY_ARCHON) {
-                                setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_GENERAL);
-                            }
-                        }
-                    }
                 } else {
                     // Label as enemy
                     if (LambdaUtil.arraysAnyMatch(enemies, r -> r.type == RobotType.ARCHON)) {
@@ -373,6 +359,29 @@ public class Communication {
                             setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_GENERAL);
                         }
                     }
+                }
+
+                // Update chunk enemy is on
+                RobotInfo closestEnemy = Util.getClosestEnemyRobot();
+                if (closestEnemy != null) {
+                    MapLocation loc = closestEnemy.location;
+                    int chunkX = loc.x / CHUNK_SIZE;
+                    int chunkY = loc.y / CHUNK_SIZE;
+                    if (closestEnemy.type == RobotType.ARCHON) {
+                        setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_ARCHON);
+                    } else {
+                        // general enemy chunk
+                        int old = getChunkInfo(currentChunkX, currentChunkY);
+                        if (old != CHUNK_INFO_ENEMY_ARCHON) {
+                            setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
+                        }
+                    }
+                }
+
+                // Update any predicted archon locations
+                MapLocation closestPredictedArchon = enemyPredictedChunkTracker.getNearestChunk(12);
+                if (closestPredictedArchon != null && Cache.MY_LOCATION.isWithinDistanceSquared(closestPredictedArchon, 53)) {
+                    setChunkInfo(closestPredictedArchon, CHUNK_INFO_UNEXPLORED);
                 }
             }
 
@@ -411,6 +420,9 @@ public class Communication {
                         case CHUNK_INFO_ENEMY_ARCHON:
                             Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 255, 0, 0); // red
                             break;
+                        case CHUNK_INFO_ENEMY_PREDICTED:
+                            Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 139, 0, 0); // dark red
+                            break;
                         default:
                             Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 0, 0, 0); // black
                             break;
@@ -422,12 +434,18 @@ public class Communication {
 
     public static void onChunkChange(int oldChunkValue, int chunkValue, int chunkX, int chunkY) {
         switch (oldChunkValue) {
+            case CHUNK_INFO_ENEMY_PREDICTED:
+                enemyPredictedChunkTracker.removeChunk(chunkX, chunkY);
+                break;
             case CHUNK_INFO_ENEMY_ARCHON:
                 enemyArchonChunkTracker.removeChunk(chunkX, chunkY);
             case CHUNK_INFO_ENEMY_GENERAL:
                 enemyGeneralChunkTracker.removeChunk(chunkX, chunkY);
         }
         switch (chunkValue) {
+            case CHUNK_INFO_ENEMY_PREDICTED:
+                enemyPredictedChunkTracker.addChunk(chunkX, chunkY);
+                break;
             case CHUNK_INFO_ENEMY_ARCHON:
                 enemyArchonChunkTracker.addChunk(chunkX, chunkY);
             case CHUNK_INFO_ENEMY_GENERAL:
@@ -441,6 +459,10 @@ public class Communication {
 
     public static MapLocation getClosestEnemyArchonChunk() {
         return enemyArchonChunkTracker.getNearestChunk(20);
+    }
+
+    public static MapLocation getRandomPredictedArchonLocation() {
+        return enemyPredictedChunkTracker.getRandom(20);
     }
 
     public static int pack(MapLocation location) {

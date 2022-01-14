@@ -1,13 +1,11 @@
 package newbuildorder4.util;
 
-import static newbuildorder4.util.Constants.rc;
-
 public enum Profile {
     ERROR_STATE(true),
     CHUNK_INFO(false),
-    PATHFINDER(true),
-    EXPLORER(true),
-    MINING(true),
+    PATHFINDER(false),
+    EXPLORER(false),
+    MINING(false),
     ATTACKING(false);
 
     private final boolean enabled;

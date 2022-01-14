@@ -4,47 +4,6 @@ import battlecode.common.MapLocation;
 
 import static newbuildorder4.util.Constants.rc;
 
-class Node {
-    public int val;
-    public Node prev, next;
-
-    public Node(int val) {
-        this.val = val;
-    }
-}
-
-class LinkedList {
-    public Node front;
-    public int size;
-
-    public LinkedList() {
-        front = null;
-        size = 0;
-    }
-
-    Node add(int val) {
-        size++;
-        Node node = new Node(val);
-        if (front == null) {
-            front = node;
-        } else {
-            node.prev = front;
-            front.next = node;
-            front = node;
-        }
-        return node;
-    }
-
-    void remove(Node node) {
-        size--;
-        if (node == front) {
-            front = node.prev;
-        }
-        if (node.prev != null) node.prev.next = node.next;
-        if (node.next != null) node.next.prev = node.prev;
-    }
-}
-
 public class ChunkAccessor {
     Node[][] nodes;
     LinkedList ll;
@@ -66,6 +25,21 @@ public class ChunkAccessor {
         return ll.size;
     }
 
+    public MapLocation getRandom(int threshold) {
+        if (ll.size <= 0) {
+            return null;
+        }
+        Node cur = ll.front;
+        for (int i = (int) (Math.random() * Math.min(threshold, ll.size)); --i >= 0;) {
+            cur = cur.prev;
+        }
+        int chunkI = cur.val / Communication.NUM_CHUNKS_HEIGHT;
+        int chunkJ = cur.val % Communication.NUM_CHUNKS_HEIGHT;
+        int x = Communication.getChunkMidX(chunkI);
+        int y = Communication.getChunkMidY(chunkJ);
+        return new MapLocation(x, y);
+    }
+
     public MapLocation getNearestChunk(int threshold) {
         MapLocation ourLoc = rc.getLocation();
         MapLocation bestLoc = null;
@@ -83,9 +57,49 @@ public class ChunkAccessor {
                 bestDist = dist;
                 bestLoc = loc;
             }
-
             cur = cur.prev;
         }
         return bestLoc;
+    }
+
+    static class Node {
+        public int val;
+        public Node prev, next;
+
+        public Node(int val) {
+            this.val = val;
+        }
+    }
+
+    static class LinkedList {
+        public Node front;
+        public int size;
+
+        public LinkedList() {
+            front = null;
+            size = 0;
+        }
+
+        Node add(int val) {
+            size++;
+            Node node = new Node(val);
+            if (front == null) {
+                front = node;
+            } else {
+                node.prev = front;
+                front.next = node;
+                front = node;
+            }
+            return node;
+        }
+
+        void remove(Node node) {
+            size--;
+            if (node == front) {
+                front = node.prev;
+            }
+            if (node.prev != null) node.prev.next = node.next;
+            if (node.next != null) node.next.prev = node.prev;
+        }
     }
 }

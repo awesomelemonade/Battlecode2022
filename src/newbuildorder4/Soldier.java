@@ -33,6 +33,7 @@ public class Soldier implements RunnableBot {
     }
 
 
+    private static MapLocation predictedArchonLocation = null;
     public static void tryMove() throws GameActionException {
         RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> r.getType() == RobotType.SOLDIER || r.getType() == RobotType.SAGE || r.getType() == RobotType.WATCHTOWER);
         if (tryRetreat()) {
@@ -49,12 +50,21 @@ public class Soldier implements RunnableBot {
             if (closestEnemy != null) {
                 tryMoveAttackingSquare(closestEnemy.location, 13);
             } else {
-                MapLocation loc = Communication.getClosestEnemyChunk();
-                if (loc == null) {
+                MapLocation location = Communication.getClosestEnemyChunk();
+                if (location == null) {
+                    if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
+                        predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
+                    }
+                    location = predictedArchonLocation;
+                }
+                if (location == null) {
                     Util.tryExplore();
                 } else {
-                    Util.tryMove(loc);
+                    Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
+                    Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
+                    Util.tryMove(location);
                 }
+
             }
         }
     }
