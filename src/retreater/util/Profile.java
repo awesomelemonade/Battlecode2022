@@ -6,7 +6,7 @@ public enum Profile {
     PATHFINDER(false),
     EXPLORER(false),
     MINING(false),
-    ATTACKING(true);
+    ATTACKING(false);
 
     private final boolean enabled;
 
