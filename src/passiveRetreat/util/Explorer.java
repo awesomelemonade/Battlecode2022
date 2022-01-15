@@ -7,32 +7,22 @@ import static passiveRetreat.util.Constants.rc;
 public class Explorer {
     private static Direction previousDirection = Util.randomAdjacentDirection();
 
-    private static ExploreDirection currentExploreDirection = null;
+    public static double currentExploreDirection = -1.0;
 
     public static void init() {
         if (!Constants.ROBOT_TYPE.isBuilding()) {
-            currentExploreDirection = getInitialExploreDirection();
+            currentExploreDirection = getInitialExploreLocation();
         }
     }
 
-    public static ExploreDirection getInitialExploreDirection() {
-        int exploreX = (int)(Math.random() * Constants.MAP_WIDTH);
-        int exploreY = (int)(Math.random() * Constants.MAP_HEIGHT);
-        double dx = exploreX - Cache.MY_LOCATION.x;
-        double dy = exploreY - Cache.MY_LOCATION.y;
-        double angle = Math.atan2(dy, dx);
-        double bestDiff = 1e9;
-        ExploreDirection bestDir = null;
-        for (ExploreDirection dir : ExploreDirection.values()) {
-            double dirAngle = Math.atan2(dir.dy, dir.dx);
-            double z = Math.abs(angle - dirAngle);
-            double diff = Math.min(z, 2 * Math.PI - z);
-            if (diff < bestDiff) {
-                bestDiff = diff;
-                bestDir = dir;
-            }
-        }
-        return bestDir;
+    public static double getInitialExploreLocation() {
+        int x = (int) (Math.random() * Constants.MAP_WIDTH);
+        int y = (int) (Math.random() * Constants.MAP_HEIGHT);
+        return Math.atan2(y - Cache.MY_LOCATION.y, x - Cache.MY_LOCATION.x);
+    }
+
+    public static double getNewExploreDirection() {
+        return 2.0 * Math.PI * Math.random();
     }
 
     public static boolean randomExplore() {
@@ -61,13 +51,16 @@ public class Explorer {
 
     public static boolean smartExplore() {
         Debug.setIndicatorDot(Profile.EXPLORER, Cache.MY_LOCATION, 255, 128, 0); // orange
-        if (currentExploreDirection == null || reachedBorder(currentExploreDirection)) {
+        if (currentExploreDirection < 0 || reachedBorder(currentExploreDirection)) {
             boolean noNewDirection = true;
-            for (int i = 5; --i >= 0;) { // Only attempt 5 times
-                ExploreDirection potentialDirection = Util.random(ExploreDirection.values());
-                // checks that the potentialDirection is not in the same or opposite direction as exploreDirection
-                if (currentExploreDirection != null && (currentExploreDirection == potentialDirection || ExploreDirection.isOpposite(currentExploreDirection, potentialDirection))) {
-                    continue;
+            for (int i = 20; --i >= 0;) { // Only attempt 20 times
+                double potentialDirection = getNewExploreDirection();
+                if (currentExploreDirection >= 0) {
+                    double angleBetween = angleBetween(currentExploreDirection, potentialDirection);
+                    // checks that the potentialDirection is not in the opposite direction as exploreDirection
+                    if (angleBetween > Math.PI - Math.PI / 6.0) {
+                        continue;
+                    }
                 }
                 if (reachedBorder(potentialDirection)) {
                     continue;
@@ -77,22 +70,32 @@ public class Explorer {
                 break;
             }
             if (noNewDirection) {
-                currentExploreDirection = null;
+                currentExploreDirection = -1.0;
             }
         }
-        if (currentExploreDirection == null) {
+        if (currentExploreDirection < 0) {
             return randomExplore();
         } else {
-            Debug.setIndicatorLine(Profile.EXPLORER, Cache.MY_LOCATION, Cache.MY_LOCATION.translate(currentExploreDirection.dx, currentExploreDirection.dy), 255, 128, 0);
-            return Pathfinder.execute(getExploreLocation());
+            MapLocation target = getExploreLocation();
+            Debug.setIndicatorLine(Profile.EXPLORER, Cache.MY_LOCATION, target, 255, 128, 0);
+            return Pathfinder.execute(target);
         }
     }
 
     public static MapLocation getExploreLocation() {
-        return rc.getLocation().translate(currentExploreDirection.dx * 10, currentExploreDirection.dy * 10);
+        double cos = Math.cos(currentExploreDirection);
+        double sin = Math.sin(currentExploreDirection);
+        return rc.getLocation().translate((int) (cos * 20.0), (int) (sin * 20.0));
     }
 
-    public static boolean reachedBorder(ExploreDirection direction) {
-        return !Util.onTheMap(rc.getLocation().translate(direction.dx * 2, direction.dy * 2));
+    public static boolean reachedBorder(double direction) {
+        double x = Math.signum(Math.cos(direction)) * 4.0;
+        double y = Math.signum(Math.sin(direction)) * 4.0;
+        return !Util.onTheMap(rc.getLocation().translate((int) x, (int) y));
+    }
+
+    public static double angleBetween(double a, double b) {
+        double angle = Math.abs(b - a);
+        return Math.min(angle, 2 * Math.PI - angle);
     }
 }

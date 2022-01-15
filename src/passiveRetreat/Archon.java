@@ -167,7 +167,6 @@ public class Archon implements RunnableBot {
         return true;
     }
 
-
     public boolean tryBuild(RobotType type) throws GameActionException {
         int reservedLead = Communication.getReservedLead();
         int reservedGold = Communication.getReservedGold();

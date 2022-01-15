@@ -41,6 +41,7 @@ public class Miner implements RunnableBot {
             } else {
                 if (closestEnemyAttacker != null) {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
+                    Explorer.currentExploreDirection = -1.0;
                 } else {
                     if (!tryMoveGoodMining()) {
                         Util.tryExplore();
