@@ -10,9 +10,9 @@ emojiMap = {
     'Error': ':heavy_exclamation_mark:'
 }
 errors = []
-currentBot = 'retreater'
+currentBot = 'opexplore'
 
-bots = ['bot', 'newbuildorder3', 'attackpriority']
+bots = ['bot', 'newbuildorder3', 'retreater']
 botsSet = set(bots)
 # maps = ['maptestsmall', 'eckleburg', 'intersection', 'Barrier', 'BarrierWithLead', 'Circles', 'CloseArchons', 'colosseum', 'fortress', 'jellyfish', 'MoveYourArchons', 'MultiplePortableArchonsMoreLead', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley', 'Z']
 maps = ['maptestsmall', 'eckleburg', 'intersection', 'colosseum', 'fortress', 'jellyfish', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley']
