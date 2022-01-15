@@ -143,8 +143,10 @@ public class Soldier implements RunnableBot {
         int healthThreshold = 15;
         int dist = loc.distanceSquaredTo(Cache.MY_LOCATION);
         if (dist <= 10) {
+            Communication.setPassive();
             return false;
         } else if (rc.getHealth() <= healthThreshold || dist <= RobotType.ARCHON.actionRadiusSquared) {
+            Communication.setPassive();
             Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, loc, 128, 128, 255);
             Util.tryMove(loc);
             return true;

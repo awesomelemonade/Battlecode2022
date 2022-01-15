@@ -137,7 +137,7 @@ public class Archon implements RunnableBot {
         double prod = (builder <= 0 ? 1 : builder) * (miner <= 0 ? 1 : miner) * (attacker <= 0 ? 1 : attacker);
         double builderScore = builder <= 0 ? Integer.MAX_VALUE : Communication.getAliveRobotTypeCount(RobotType.BUILDER) * (prod/builder);
         double minerScore = miner <= 0 ? Integer.MAX_VALUE : Communication.getAliveRobotTypeCount(RobotType.MINER) * (prod/miner);
-        double attackerScore = attacker <= 0 ? Integer.MAX_VALUE : (Communication.getAliveRobotTypeCount(RobotType.SOLDIER) + Communication.getAliveRobotTypeCount(RobotType.SAGE) + Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER)) * (prod / attacker);
+        double attackerScore = attacker <= 0 ? Integer.MAX_VALUE : (Communication.getActiveUnitCount(RobotType.SOLDIER) + Communication.getActiveUnitCount(RobotType.SAGE) + Communication.getActiveUnitCount(RobotType.WATCHTOWER)) * (prod / attacker);
         if (minerScore < attackerScore && minerScore < builderScore && Communication.getAliveRobotTypeCount(RobotType.MINER) <= MAP_WIDTH * MAP_HEIGHT / 18) {
             tryBuild(RobotType.MINER);
         } else {
@@ -167,16 +167,6 @@ public class Archon implements RunnableBot {
         return true;
     }
 
-    public static boolean weAreMakingUselessSoldiers() {
-        int numPassive = Communication.getPassiveUnitCount(RobotType.SOLDIER);
-        int totalSoldierCount = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
-        if (totalSoldierCount <= 10) {
-            return false;
-        } else {
-            double passivePercentage = ((double) numPassive) / ((double) totalSoldierCount);
-            return passivePercentage > 0.45;
-        }
-    }
 
     public boolean tryBuild(RobotType type) throws GameActionException {
         int reservedLead = Communication.getReservedLead();
