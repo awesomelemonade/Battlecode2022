@@ -7,7 +7,7 @@ import static opminermicro2.util.Constants.rc;
 public class Explorer {
     private static Direction previousDirection = Util.randomAdjacentDirection();
 
-    private static ExploreDirection currentExploreDirection = null;
+    public static ExploreDirection currentExploreDirection = null;
 
     public static void init() {
         if (!Constants.ROBOT_TYPE.isBuilding()) {

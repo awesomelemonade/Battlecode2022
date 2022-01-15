@@ -4,9 +4,9 @@ public enum Profile {
     ERROR_STATE(true),
     CHUNK_INFO(false),
     PATHFINDER(false),
-    EXPLORER(false),
-    MINING(false),
-    ATTACKING(true);
+    EXPLORER(true),
+    MINING(true),
+    ATTACKING(false);
 
     private final boolean enabled;
 
