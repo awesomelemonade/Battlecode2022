@@ -15,7 +15,7 @@ public class Archon implements RunnableBot {
 
     @Override
     public void init() throws GameActionException {
-        wantedEarlygameMiners = Math.min(12, Math.max(6, MAP_WIDTH * MAP_HEIGHT / 200)) / rc.getArchonCount();
+        wantedEarlygameMiners = Math.min(12, Math.max(4, MAP_WIDTH * MAP_HEIGHT / 200)) / rc.getArchonCount();
     }
 
     @Override
