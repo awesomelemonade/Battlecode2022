@@ -3,8 +3,6 @@ package combinedsoldierhealth;
 import battlecode.common.*;
 import combinedsoldierhealth.util.*;
 
-import java.util.ArrayList;
-
 import static combinedsoldierhealth.util.Constants.*;
 
 public class Archon implements RunnableBot {
@@ -24,7 +22,7 @@ public class Archon implements RunnableBot {
         int numMiners = Communication.getAliveRobotTypeCount(RobotType.MINER);
         int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
         int numWatchtowers = Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER);
-        int numPassiveSoldiers = Communication.getPassiveUnitCount(RobotType.SOLDIER);
+        int combinedSoldierHealth = Communication.getSoldierCombinedHealth();
         if (numMiners == 0) {
             averageIncome = 0;
             averageIncomePerMiner = 0;
@@ -36,7 +34,7 @@ public class Archon implements RunnableBot {
             averageIncome = ratio * Communication.getLeadIncome() + (1 - ratio) * averageIncome;
             averageIncomePerMiner = averageIncome / numMiners;
         }
-        Debug.setIndicatorString("A: " + numArchons + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", P: " + numPassiveSoldiers + ", Income: " + averageIncome + ", Income/Miner " + averageIncome/numMiners);
+        Debug.setIndicatorString("A: " + numArchons + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", H: " + combinedSoldierHealth + ", I: " + averageIncome + ", I/M " + (averageIncome / numMiners));
         if (rc.getMode() == RobotMode.TURRET) {
             if (!Communication.hasPortableArchon()) {
                 MapLocation potentialRelocationTarget = getTargetMoveLocation();
@@ -137,7 +135,10 @@ public class Archon implements RunnableBot {
         double prod = (builder <= 0 ? 1 : builder) * (miner <= 0 ? 1 : miner) * (attacker <= 0 ? 1 : attacker);
         double builderScore = builder <= 0 ? Integer.MAX_VALUE : Communication.getAliveRobotTypeCount(RobotType.BUILDER) * (prod/builder);
         double minerScore = miner <= 0 ? Integer.MAX_VALUE : Communication.getAliveRobotTypeCount(RobotType.MINER) * (prod/miner);
-        double attackerScore = attacker <= 0 ? Integer.MAX_VALUE : (Communication.getActiveUnitCount(RobotType.SOLDIER) + Communication.getActiveUnitCount(RobotType.SAGE) + Communication.getActiveUnitCount(RobotType.WATCHTOWER)) * (prod / attacker);
+        double attackerScore = attacker <= 0 ? Integer.MAX_VALUE :
+                (Communication.getSoldierCombinedHealth() / 50.0 +
+                Communication.getAliveRobotTypeCount(RobotType.SAGE) +
+                Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER)) * (prod / attacker);
         if (minerScore < attackerScore && minerScore < builderScore && Communication.getAliveRobotTypeCount(RobotType.MINER) <= MAP_WIDTH * MAP_HEIGHT / 18) {
             tryBuild(RobotType.MINER);
         } else {

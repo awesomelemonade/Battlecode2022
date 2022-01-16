@@ -15,6 +15,7 @@ public class Soldier implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
+        Communication.setSoldierHealthInfo(rc.getHealth());
         if (rc.isActionReady()) {
             tryAttackLowHealth();
         }

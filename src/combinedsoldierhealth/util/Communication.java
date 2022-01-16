@@ -52,7 +52,7 @@ public class Communication {
 
     private static final int LEAD_COUNT_MOD = 65536;
     private static final int LEAD_COUNT_OFFSET = 20;
-    private static int prevLeadCountValues;
+    private static int prevLeadCountValue;
     private static int currentLeadCount;
 
     // Uses indices [21,24]
@@ -60,11 +60,26 @@ public class Communication {
 
     private static final int SOLDIER_COMBINED_HEALTH_OFFSET_A = 25;
     private static final int SOLDIER_COMBINED_HEALTH_OFFSET_B = 26;
+    private static final int SOLDIER_COMBINED_HEALTH_MOD = 1_048_576; // 2^20
+    private static int prevSoldierCombinedHealthValue;
+    private static int currentSoldierCombinedHealth;
+
+    public static void setSoldierHealthInfo(int health) throws GameActionException {
+        int currentCounter = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
+        int newCounter = (currentCounter + health) % SOLDIER_COMBINED_HEALTH_MOD;
+        rc.writeSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A, newCounter >>> 16);
+        rc.writeSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B, newCounter & 0b1111_1111_1111_1111);
+    }
+
+    public static int getSoldierCombinedHealth() throws GameActionException {
+        return currentSoldierCombinedHealth;
+    }
 
     public static void setMinedAmount(int amountMined) throws GameActionException {
         rc.writeSharedArray(LEAD_COUNT_OFFSET, (rc.readSharedArray(LEAD_COUNT_OFFSET) + amountMined) % LEAD_COUNT_MOD);
     }
 
+    @Deprecated
     public static void setPassive() throws GameActionException {
         int sharedArrayIndex = PASSIVE_UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
         rc.writeSharedArray(sharedArrayIndex, (rc.readSharedArray(sharedArrayIndex) + 1) % UNIT_COUNT_MOD);
@@ -74,10 +89,12 @@ public class Communication {
         return currentLeadCount;
     }
 
+    @Deprecated
     public static int getPassiveUnitCount(RobotType type) {
         return currentPassiveUnitCount[type.ordinal()];
     }
 
+    @Deprecated
     public static int getActiveUnitCount(RobotType type) {
         return getAliveRobotTypeCount(type) - getPassiveUnitCount(type);
     }
@@ -322,21 +339,33 @@ public class Communication {
                 }
             }
         }
-        if (Cache.TURN_COUNT > 1) {
+        if (Cache.TURN_COUNT == 1) {
             for (int i = NUM_UNIT_TYPES; --i >= 0;) {
-                int prev = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
-                currentUnitCount[i] = ((prev - prevUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
-                int prevPassive = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
-                currentPassiveUnitCount[i] = ((prevPassive - prevPassiveUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
+                prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
+                prevPassiveUnitCountValues[i] = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
             }
-            int prevLeadCount = rc.readSharedArray(LEAD_COUNT_OFFSET);
-            currentLeadCount = (prevLeadCount - prevLeadCountValues + LEAD_COUNT_MOD) % LEAD_COUNT_MOD;
+            prevLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
+            prevSoldierCombinedHealthValue = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
+        } else {
+            for (int i = NUM_UNIT_TYPES; --i >= 0;) {
+                // unit count
+                int current = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
+                currentUnitCount[i] = ((current - prevUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
+                prevUnitCountValues[i] = current;
+                // passive count
+                int currentPassive = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
+                currentPassiveUnitCount[i] = ((currentPassive - prevPassiveUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
+                prevPassiveUnitCountValues[i] = currentPassive;
+            }
+            // lead count
+            int currentLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
+            currentLeadCount = (currentLeadCountValue - prevLeadCountValue + LEAD_COUNT_MOD) % LEAD_COUNT_MOD;
+            prevLeadCountValue = currentLeadCountValue;
+            // soldier combined health
+            int currentSoldierCombinedHealthValue = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
+            currentSoldierCombinedHealth = (currentSoldierCombinedHealthValue - prevSoldierCombinedHealthValue + SOLDIER_COMBINED_HEALTH_MOD) % SOLDIER_COMBINED_HEALTH_MOD;
+            prevSoldierCombinedHealthValue = currentSoldierCombinedHealthValue;
         }
-        for (int i = NUM_UNIT_TYPES; --i >= 0;) {
-            prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
-            prevPassiveUnitCountValues[i] = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
-        }
-        prevLeadCountValues = rc.readSharedArray(LEAD_COUNT_OFFSET);
         int unitCountSharedIndex = UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
         rc.writeSharedArray(unitCountSharedIndex, (rc.readSharedArray(unitCountSharedIndex) + 1) % UNIT_COUNT_MOD);
     }
