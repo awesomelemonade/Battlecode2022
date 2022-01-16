@@ -323,15 +323,19 @@ public class Archon implements RunnableBot {
         double currentCooldownTurns = currentCooldown * 2.4; // turns
         double destinationCooldown = (1.0 + destinationRubble / 10.0);
         double destinationCooldownTurns = destinationCooldown * 2.4;
-        if (rc.getTeamLeadAmount(ALLY_TEAM) < 100 && destinationCooldown < currentCooldown * 2.0 / 3.0) {
-            return true;
-        }
         double averageCooldownTurns = (currentCooldownTurns + destinationCooldownTurns) / 2.0;
         double turnsToDestination = Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(location)) * averageCooldownTurns;
         double totalTurns = turnsToDestination + 10.0 * currentCooldown + 10.0 * destinationCooldown; // turns
         double unitsMissed = totalTurns / currentCooldown; // units
         double catchUpRate = 1.0 / destinationCooldown - 1.0 / currentCooldown; // number of more units per turn (units / turn)
-        double payoffTurns = unitsMissed / catchUpRate;
+        double payoffTurns = unitsMissed / catchUpRate + totalTurns;
+        MapLocation closestEnemyLocation = Communication.getClosestEnemyChunk();
+        if (closestEnemyLocation != null) {
+            double distance = Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(closestEnemyLocation));
+            if (2.0 * distance < totalTurns) {
+                return false;
+            }
+        }
         return 10.0 + 1.5 * payoffTurns < getNextVortexOrSingularity() - rc.getRoundNum();
     }
 

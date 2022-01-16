@@ -9,18 +9,12 @@ import java.util.Optional;
 import static realhealingcomms.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
-    private static int lastTurnAttacked = 0;
     @Override
     public void init() throws GameActionException {
     }
 
     @Override
     public void loop() throws GameActionException {
-        int threshold = rc.getRoundNum() > 1500 ? 100 : (rc.getRoundNum() > 1000 ? 250 : 500);
-        if (Cache.TURN_COUNT > 10 && rc.getRoundNum() - lastTurnAttacked >= threshold) {
-            Communication.setPassive();
-            // we're counted as a passive soldier - otherwise we're an active soldier
-        }
         if (rc.isActionReady()) {
             tryAttackLowHealth();
         }
@@ -83,7 +77,6 @@ public class Soldier implements RunnableBot {
         }
         if (bestRobot != null) {
             rc.attack(bestRobot.location);
-            lastTurnAttacked = rc.getRoundNum();
         }
     }
 
