@@ -10,7 +10,7 @@ emojiMap = {
     'Error': ':heavy_exclamation_mark:'
 }
 errors = []
-currentBot = 'passivetest'
+currentBot = 'realhealingcomms'
 
 bots = ['newbuildorder3', 'opexplore', 'passiveRetreat']
 botsSet = set(bots)
