@@ -3,8 +3,7 @@ package opsoldiermicro;
 import battlecode.common.*;
 import opsoldiermicro.util.*;
 
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.Arrays;
 
 import static opsoldiermicro.util.Constants.rc;
 
@@ -38,32 +37,26 @@ public class Soldier implements RunnableBot {
         if (tryRetreat()) {
             return;
         }
-        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
-        if (closestEnemyAttacker != null) {
-            if (rc.isActionReady()) {
-                tryMoveAttackingSquare(closestEnemyAttacker.location, 13);
-            } else {
-                Util.tryKiteFrom(closestEnemyAttacker.location);
-            }
+        if (tryAttackerMicro()) {
+            return;
+        }
+        RobotInfo closestEnemy = Util.getClosestEnemyRobot(); // Assumption is that there are only passive enemies left
+        if (closestEnemy != null) {
+            tryMoveToAttackPassive(closestEnemy.location);
         } else {
-            RobotInfo closestEnemy = Util.getClosestEnemyRobot();
-            if (closestEnemy != null) {
-                tryMoveAttackingSquare(closestEnemy.location, 13);
+            MapLocation location = Communication.getClosestEnemyChunk();
+            if (location == null) {
+                if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
+                    predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
+                }
+                location = predictedArchonLocation;
+            }
+            if (location == null) {
+                Util.tryExplore();
             } else {
-                MapLocation location = Communication.getClosestEnemyChunk();
-                if (location == null) {
-                    if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
-                        predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
-                    }
-                    location = predictedArchonLocation;
-                }
-                if (location == null) {
-                    Util.tryExplore();
-                } else {
-                    Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
-                    Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
-                    Util.tryMove(location);
-                }
+                Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
+                Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
+                Util.tryMove(location);
             }
         }
     }
@@ -107,24 +100,86 @@ public class Soldier implements RunnableBot {
         }
     }
 
-    public static void tryMoveAttackingSquare(MapLocation location, int range) throws GameActionException {
-        double bestScore = 0;
+    public static boolean tryAttackerMicro() throws GameActionException {
+        boolean useAttackerMicro = LambdaUtil.arraysAnyMatch(Cache.ENEMY_ROBOTS, r -> Util.isAttacker(r.type));
+        if (!useAttackerMicro) {
+            return false;
+        }
+        double bestScore = -Double.MAX_VALUE;
+        double bestScore2 = -Double.MAX_VALUE;
         Direction bestDir = null;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                MapLocation loc = rc.getLocation().translate(dx, dy);
-                Direction dir = rc.getLocation().directionTo(loc);
-                if (dir == Direction.CENTER || rc.canMove(dir)) {
-                    int dist = loc.distanceSquaredTo(location);
-                    double distScore = 0.5 + dist / (2.0 * range);
-                    if (dist > range) distScore = 0.75 - dist / (2.0 * range);
-                    double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
-                    double cdScore = 1.0 / cooldown;
-                    double score = distScore + 10 * cdScore;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestDir = dir;
+        //StringBuilder builder = new StringBuilder("Score " + Cache.MY_LOCATION + ": ");
+        // TODO: Penalize any enemies near enemy archons?
+        // TODO: Buff ourselves near our own archon?
+        for (Direction dir : Constants.ALL_DIRECTIONS) {
+            MapLocation loc = Cache.MY_LOCATION.add(dir);
+            if (!rc.canMove(dir) && dir != Direction.CENTER) continue;
+            double ourFrequency = 1.0 / (1.0 + rc.senseRubble(loc) / 10.0);
+            double totalEnemyFrequency = 0;
+            double closestDistance = 1e9;
+            boolean ableToAttackEnemy = false;
+            for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
+                if (Util.isAttacker(robot.type)) {
+                    boolean withinAttackRadius = robot.location.isWithinDistanceSquared(loc, robot.type.actionRadiusSquared);
+                    if (withinAttackRadius) {
+                        ableToAttackEnemy = true;
                     }
+                    if (withinAttackRadius ||
+                            (rc.senseRubble(robot.location) <= rc.senseRubble(loc) &&
+                                    robot.location.isWithinDistanceSquared(loc, 25))) {
+                        totalEnemyFrequency += 1.0 / (1.0 + rc.senseRubble(robot.location) / 10.0);
+                    }
+                    double dist = robot.location.distanceSquaredTo(loc);
+                    if (dist < closestDistance) {
+                        closestDistance = dist;
+                    }
+                }
+            }
+            // TODO: score2 should minimize distance to border
+            double score2 = closestDistance; // Minimize our distance to enemy (don't want to move out of attacking range)
+            double score;
+            if (!ableToAttackEnemy) {
+                score = ourFrequency; // Minimize rubble
+            } else {
+                if (ourFrequency >= totalEnemyFrequency) {
+                    score = 100000.0 * (ourFrequency / totalEnemyFrequency);
+                } else {
+                    score = -100000.0 * (totalEnemyFrequency / ourFrequency);
+                }
+            }
+            //builder.append(dir + "=" + score + " - " + ourFrequency + " - " + totalEnemyFrequency + ", ");
+            if (score > bestScore || score == bestScore && score2 > bestScore2) {
+                bestScore = score;
+                bestScore2 = score2;
+                bestDir = dir;
+            }
+        }
+        //Debug.println(builder.toString());
+        //Debug.println(bestScore + " - " + bestScore2 + " - " + bestDir);
+        //Debug.println(Arrays.toString(Arrays.stream(Cache.ENEMY_ROBOTS).filter(x -> Util.isAttacker(x.type)).map(x -> x.location).toArray()));
+        if (bestDir == null) {
+            // wtf?
+            throw new IllegalStateException("are all scores -infinity???");
+        } else {
+            Debug.setIndicatorLine(Cache.MY_LOCATION, Cache.MY_LOCATION.add(bestDir), 255, 0, 0);
+            Util.tryMove(bestDir);
+            return true;
+        }
+    }
+
+    public static void tryMoveToAttackPassive(MapLocation location) throws GameActionException {
+        // prioritize being able to attack the location, then prioritize low rubble
+        double bestScore = -Double.MAX_VALUE;
+        Direction bestDir = null;
+        for (Direction direction : Constants.ALL_DIRECTIONS) {
+            MapLocation loc = Cache.MY_LOCATION.add(direction);
+            if (direction == Direction.CENTER || rc.canMove(direction)) {
+                boolean isAbleToAttack = loc.isWithinDistanceSquared(location, RobotType.SOLDIER.actionRadiusSquared);
+                int rubble = rc.senseRubble(loc);
+                double score = (isAbleToAttack ? 100000 : 0) - rubble;
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestDir = direction;
                 }
             }
         }
