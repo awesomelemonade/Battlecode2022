@@ -10,9 +10,9 @@ emojiMap = {
     'Error': ':heavy_exclamation_mark:'
 }
 errors = []
-currentBot = 'realhealingcomms'
+currentBot = 'combinedsoldierhealth'
 
-bots = ['newbuildorder3', 'opexplore', 'passiveRetreat']
+bots = ['newbuildorder3', 'opexplore', 'realhealingcomms']
 botsSet = set(bots)
 # maps = ['maptestsmall', 'eckleburg', 'intersection', 'Barrier', 'BarrierWithLead', 'Circles', 'CloseArchons', 'colosseum', 'fortress', 'jellyfish', 'MoveYourArchons', 'MultiplePortableArchonsMoreLead', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley', 'Z']
 maps = ['maptestsmall', 'eckleburg', 'intersection', 'colosseum', 'fortress', 'jellyfish', 'nottestsmall', 'progress', 'rivers', 'sandwich', 'squer', 'uncomfortable', 'underground', 'valley']
@@ -47,6 +47,8 @@ def run_match(bot, map):
     else:
         winAString = '{} (A) wins'.format(currentBot)
         winBString = '{} (B) wins'.format(currentBot)
+        loseAString = '{} (B) wins'.format(bot)
+        loseBString = '{} (A) wins'.format(bot)
         
         numWins = 0
         
@@ -55,8 +57,14 @@ def run_match(bot, map):
         
         if winAString in outputA:
             numWins += 1
+        else:
+            if not loseAString in outputA:
+                return 'Error'
         if winBString in outputB:
             numWins += 1
+        else:
+            if not loseBString in outputB:
+                return 'Error'
         return numWinsMapping[numWins] + ' (' + ', '.join([gameLengthA, gameLengthB]) + ')'
 
 
