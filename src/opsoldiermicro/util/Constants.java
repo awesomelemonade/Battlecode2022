@@ -53,7 +53,17 @@ public class Constants {
             Direction.NORTHWEST,
     };
 
-    public static final Direction[] ALL_DIRECTIONS = Direction.allDirections();
+    public static final Direction[] ALL_DIRECTIONS = {
+            Direction.CENTER,
+            Direction.NORTH,
+            Direction.NORTHWEST,
+            Direction.NORTHEAST,
+            Direction.WEST,
+            Direction.EAST,
+            Direction.SOUTHWEST,
+            Direction.SOUTHEAST,
+            Direction.SOUTH
+    };
 
     private static final Direction[][] ATTEMPT_ORDER = new Direction[][] {
             // NORTH

@@ -3,22 +3,25 @@ package opsoldiermicro;
 import battlecode.common.*;
 import opsoldiermicro.util.*;
 
-import java.util.Arrays;
-
 import static opsoldiermicro.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
-    private static int lastTurnAttacked = 0;
+    private static final int RETREATING_HEALTH_THRESHOLD = 15;
+    private static boolean retreating = false;
+
     @Override
     public void init() throws GameActionException {
     }
 
     @Override
     public void loop() throws GameActionException {
-        int threshold = rc.getRoundNum() > 1500 ? 100 : (rc.getRoundNum() > 1000 ? 250 : 500);
-        if (Cache.TURN_COUNT > 10 && rc.getRoundNum() - lastTurnAttacked >= threshold) {
+        if (rc.getHealth() <= RETREATING_HEALTH_THRESHOLD) {
+            retreating = true;
+        } else if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) {
+            retreating = false;
+        }
+        if (retreating) {
             Communication.setPassive();
-            // we're counted as a passive soldier - otherwise we're an active soldier
         }
         if (rc.isActionReady()) {
             tryAttackLowHealth();
@@ -76,7 +79,6 @@ public class Soldier implements RunnableBot {
         }
         if (bestRobot != null) {
             rc.attack(bestRobot.location);
-            lastTurnAttacked = rc.getRoundNum();
         }
     }
 
@@ -105,8 +107,8 @@ public class Soldier implements RunnableBot {
         if (!useAttackerMicro) {
             return false;
         }
+        boolean canCurrentlyAttack = rc.isActionReady();
         double bestScore = -Double.MAX_VALUE;
-        double bestScore2 = -Double.MAX_VALUE;
         Direction bestDir = null;
         //StringBuilder builder = new StringBuilder("Score " + Cache.MY_LOCATION + ": ");
         // TODO: Penalize any enemies near enemy archons?
@@ -118,15 +120,21 @@ public class Soldier implements RunnableBot {
             double totalEnemyFrequency = 0;
             double closestDistance = 1e9;
             boolean ableToAttackEnemy = false;
+            // if we can't currently attack - go away from the enemy if there is less rubble, otherwise stand still
+            //      only consider squares where totalEnemyFrequency < center square totalEnemyFrequency
+            //      then tiebreak by going to the square with the least rubble (maximize ourFrequency)
+            //      then tiebreak by minimizing distance to closestEnemy
+            // if we can currently attack - step into to attack (presumably, there wasn't a valid attack premove)
+            //      maximize ourFrequency / totalEnemyFrequency, given that we are withinAttackRadius and ratio >= 1
+            //      maximize ourFrequency / totalEnemyFrequency, given that we are not withinAttackRadius
+            //      ^ this second one is always possible because center is guaranteed to be not within attack radius (or else isActionReady() would return false)
             for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
                 if (Util.isAttacker(robot.type)) {
                     boolean withinAttackRadius = robot.location.isWithinDistanceSquared(loc, robot.type.actionRadiusSquared);
                     if (withinAttackRadius) {
                         ableToAttackEnemy = true;
                     }
-                    if (withinAttackRadius ||
-                            (rc.senseRubble(robot.location) <= rc.senseRubble(loc) &&
-                                    robot.location.isWithinDistanceSquared(loc, 25))) {
+                    if (withinAttackRadius) {
                         totalEnemyFrequency += 1.0 / (1.0 + rc.senseRubble(robot.location) / 10.0);
                     }
                     double dist = robot.location.distanceSquaredTo(loc);
@@ -135,27 +143,29 @@ public class Soldier implements RunnableBot {
                     }
                 }
             }
-            // TODO: score2 should minimize distance to border
-            double score2 = closestDistance; // Minimize our distance to enemy (don't want to move out of attacking range)
             double score;
-            if (!ableToAttackEnemy) {
-                score = ourFrequency; // Minimize rubble
-            } else {
-                if (ourFrequency >= totalEnemyFrequency) {
-                    score = 100000.0 * (ourFrequency / totalEnemyFrequency);
+            if (canCurrentlyAttack) {
+                double ratio = ourFrequency / totalEnemyFrequency;
+                // TODO: Change 0.75 ratio?
+                if (ableToAttackEnemy && ratio >= 1.0) {
+                    score = ratio + 1000;
+                } else if (!ableToAttackEnemy) {
+                    score = ourFrequency;
                 } else {
-                    score = -100000.0 * (totalEnemyFrequency / ourFrequency);
+                    // this should never be the best score
+                    score = ourFrequency - 1000;
                 }
+            } else {
+                score = -1000000.0 * totalEnemyFrequency + 10000 * ourFrequency + closestDistance;
             }
             //builder.append(dir + "=" + score + " - " + ourFrequency + " - " + totalEnemyFrequency + ", ");
-            if (score > bestScore || score == bestScore && score2 > bestScore2) {
+            if (score > bestScore) {
                 bestScore = score;
-                bestScore2 = score2;
                 bestDir = dir;
             }
         }
         //Debug.println(builder.toString());
-        //Debug.println(bestScore + " - " + bestScore2 + " - " + bestDir);
+        //Debug.println(bestScore + " - " + bestDir);
         //Debug.println(Arrays.toString(Arrays.stream(Cache.ENEMY_ROBOTS).filter(x -> Util.isAttacker(x.type)).map(x -> x.location).toArray()));
         if (bestDir == null) {
             // wtf?
@@ -168,44 +178,26 @@ public class Soldier implements RunnableBot {
     }
 
     public static void tryMoveToAttackPassive(MapLocation location) throws GameActionException {
-        // prioritize being able to attack the location, then prioritize low rubble
-        double bestScore = -Double.MAX_VALUE;
-        Direction bestDir = null;
-        for (Direction direction : Constants.ALL_DIRECTIONS) {
-            MapLocation loc = Cache.MY_LOCATION.add(direction);
-            if (direction == Direction.CENTER || rc.canMove(direction)) {
-                boolean isAbleToAttack = loc.isWithinDistanceSquared(location, RobotType.SOLDIER.actionRadiusSquared);
-                int rubble = rc.senseRubble(loc);
-                double score = (isAbleToAttack ? 100000 : 0) - rubble;
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestDir = direction;
-                }
-            }
-        }
-        if (bestDir != null && bestDir != Direction.CENTER) {
-            Util.tryMove(bestDir);
+        if (!Cache.MY_LOCATION.isWithinDistanceSquared(location, rc.getType().actionRadiusSquared)) {
+            Util.tryMove(location);
         }
     }
 
 
     public static boolean tryRetreat() throws GameActionException {
-        if (rc.getHealth() == rc.getType().getMaxHealth(rc.getLevel())) return false;
-
+        if (!retreating) {
+            return false;
+        }
         MapLocation loc = MapInfo.getClosestAllyArchonLocation();
         if (loc == null) return false;
 
-        int healthThreshold = 15;
         int dist = loc.distanceSquaredTo(Cache.MY_LOCATION);
         if (dist <= 10) {
-            Communication.setPassive();
             return false;
-        } else if (rc.getHealth() <= healthThreshold || dist <= RobotType.ARCHON.actionRadiusSquared) {
-            Communication.setPassive();
+        } else {
             Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, loc, 128, 128, 255);
             Util.tryMove(loc);
             return true;
         }
-        return false;
     }
 }
