@@ -121,14 +121,14 @@ public class Archon implements RunnableBot {
         if (rc.getRoundNum() < 1900) return false;
         if (rc.getTeamLeadAmount(ALLY_TEAM) < 500) {
             if (averageIncome >= 5) {
-                if (Communication.getAliveRobotTypeCount(RobotType.BUILDER) < 4) {
+                if (Communication.getAliveRobotTypeCount(RobotType.BUILDER) < 2) {
                     tryBuild(RobotType.BUILDER);
                 }
             } else {
                 tryBuildAttacker();
             }
         } else {
-            if (Communication.getAliveRobotTypeCount(RobotType.BUILDER) < 4) {
+            if (Communication.getAliveRobotTypeCount(RobotType.BUILDER) < 2) {
                 tryBuild(RobotType.BUILDER);
             }
         }
