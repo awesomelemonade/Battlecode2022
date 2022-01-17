@@ -126,22 +126,38 @@ public class Soldier implements RunnableBot {
 
 
     public static boolean tryRetreat() throws GameActionException {
-        if (rc.getHealth() == rc.getType().getMaxHealth(rc.getLevel())) return false;
-
+        if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) return false;
         MapLocation bestLoc = null;
         double bestScore = 1e9;
-        for (int i = Communication.archonLocations.length; --i >= 0; ) {
-            MapLocation loc = Communication.archonLocations[i];
-            if (loc == null) continue;
-            if (Communication.archonPortable[i]) continue;
-            double health = Communication.archonRepairAmounts[i];
-            double score = health/3 + 2*Math.sqrt(loc.distanceSquaredTo(Cache.MY_LOCATION));
-            if (score < bestScore) {
-                bestScore = score;
-                bestLoc = loc;
+        if (Communication.archonLocations != null) {
+            for (int i = Communication.archonLocations.length; --i >= 0; ) {
+                MapLocation loc = Communication.archonLocations[i];
+                if (loc == null) continue;
+                if (Communication.archonPortable[i]) continue;
+                double health = Communication.archonRepairAmounts[i];
+                double score = health/3 + 2*Math.sqrt(loc.distanceSquaredTo(Cache.MY_LOCATION));
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestLoc = loc;
+                }
             }
         }
-        if (bestLoc == null) return false;
+        if (bestLoc == null) {
+            for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+                RobotInfo robot = Cache.ALLY_ROBOTS[i];
+                if (robot.type == RobotType.ARCHON) {
+                    MapLocation location = robot.location;
+                    int distanceSquared = location.distanceSquaredTo(Cache.MY_LOCATION);
+                    if (distanceSquared < bestScore) {
+                        bestScore = distanceSquared;
+                        bestLoc = location;
+                    }
+                }
+            }
+        }
+        if (bestLoc == null) {
+            return false;
+        }
 
         int healthThreshold = 15;
         int dist = bestLoc.distanceSquaredTo(Cache.MY_LOCATION);

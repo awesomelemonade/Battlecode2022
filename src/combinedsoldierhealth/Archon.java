@@ -10,6 +10,7 @@ public class Archon implements RunnableBot {
     private static double averageIncome;
     private static double averageIncomePerMiner;
     private static int wantedEarlygameMiners;
+    private static int turnsStuck = 0;
 
     @Override
     public void init() throws GameActionException {
@@ -43,6 +44,7 @@ public class Archon implements RunnableBot {
                     if (rc.canTransform()) {
                         rc.transform();
                         Communication.setPortableArchon();
+                        turnsStuck = 0;
                     }
                 }
             }
@@ -63,12 +65,15 @@ public class Archon implements RunnableBot {
                 Debug.println("No relocation target??");
                 relocationTarget = Cache.MY_LOCATION;
             }
-            if (Cache.MY_LOCATION.equals(relocationTarget)) {
+            if (Cache.MY_LOCATION.equals(relocationTarget) || turnsStuck >= 20) {
                 if (rc.canTransform()) {
                     rc.transform();
                 }
             } else {
                 Util.tryMove(relocationTarget);
+                if (rc.isMovementReady()) {
+                    turnsStuck++;
+                }
             }
         }
     }
@@ -302,12 +307,16 @@ public class Archon implements RunnableBot {
         for (int i = locations.length; --i >= 0;) {
             MapLocation location = locations[i];
             if (rc.onTheMap(location)) {
-                int rubble = rc.senseRubble(location);
-                int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
-                if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
-                    bestLocation = location;
-                    bestRubble = rubble;
-                    bestDistanceSquared = distanceSquared;
+                RobotInfo robot = rc.senseRobotAtLocation(location);
+                boolean enemyOnLocation = robot != null && robot.team == ENEMY_TEAM;
+                if (!enemyOnLocation) {
+                    int rubble = rc.senseRubble(location);
+                    int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
+                    if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
+                        bestLocation = location;
+                        bestRubble = rubble;
+                        bestDistanceSquared = distanceSquared;
+                    }
                 }
             }
         }
@@ -330,13 +339,6 @@ public class Archon implements RunnableBot {
         double unitsMissed = totalTurns / currentCooldown; // units
         double catchUpRate = 1.0 / destinationCooldown - 1.0 / currentCooldown; // number of more units per turn (units / turn)
         double payoffTurns = unitsMissed / catchUpRate + totalTurns;
-        MapLocation closestEnemyLocation = Communication.getClosestEnemyChunk();
-        if (closestEnemyLocation != null) {
-            double distance = Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(closestEnemyLocation));
-            if (2.0 * distance < totalTurns) {
-                return false;
-            }
-        }
         return 10.0 + 1.5 * payoffTurns < getNextVortexOrSingularity() - rc.getRoundNum();
     }
 
