@@ -2,6 +2,8 @@ package opsoldiermacro.util;
 
 import battlecode.common.MapLocation;
 
+import java.util.function.ToDoubleFunction;
+
 import static opsoldiermacro.util.Constants.rc;
 
 public class ChunkAccessor {
@@ -40,8 +42,30 @@ public class ChunkAccessor {
         return new MapLocation(x, y);
     }
 
+    public MapLocation getBestChunk(int threshold, ToDoubleFunction<MapLocation> scorer) {
+        MapLocation ourLoc = Cache.MY_LOCATION;
+        MapLocation bestLoc = null;
+        double bestScore = -Double.MAX_VALUE;
+        Node cur = ll.front;
+        int cnt = Math.min(threshold, ll.size);
+        for (int i = cnt; --i >= 0;) {
+            int chunkI = cur.val / Communication.NUM_CHUNKS_HEIGHT;
+            int chunkJ = cur.val % Communication.NUM_CHUNKS_HEIGHT;
+            int x = Communication.getChunkMidX(chunkI);
+            int y = Communication.getChunkMidY(chunkJ);
+            MapLocation loc = new MapLocation(x, y);
+            double score = scorer.applyAsDouble(loc);
+            if (score > bestScore) {
+                bestScore = score;
+                bestLoc = loc;
+            }
+            cur = cur.prev;
+        }
+        return bestLoc;
+    }
+
     public MapLocation getNearestChunk(int threshold) {
-        MapLocation ourLoc = rc.getLocation();
+        MapLocation ourLoc = Cache.MY_LOCATION;
         MapLocation bestLoc = null;
         int bestDist = (int)1e9;
         Node cur = ll.front;

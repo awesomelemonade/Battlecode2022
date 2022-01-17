@@ -9,8 +9,15 @@ import java.util.Optional;
 import static opsoldiermacro.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
+    private static boolean isExplorer;
+
     @Override
     public void init() throws GameActionException {
+        if (Math.random() < 0.25) {
+            isExplorer = true;
+        } else {
+            isExplorer = false;
+        }
     }
 
     @Override
@@ -44,6 +51,10 @@ public class Soldier implements RunnableBot {
             if (closestEnemy != null) {
                 tryMoveAttackingSquare(closestEnemy.location, 13);
             } else {
+                if (isExplorer) {
+                    Util.tryExplore();
+                    return;
+                }
                 MapLocation location = Communication.getClosestEnemyChunk();
                 if (location == null) {
                     if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {

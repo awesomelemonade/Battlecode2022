@@ -3,6 +3,8 @@ package opsoldiermacro.util;
 import battlecode.common.*;
 import opsoldiermacro.RobotPlayer;
 
+import java.util.function.ToDoubleFunction;
+
 import static opsoldiermacro.util.Constants.ALLY_TEAM;
 import static opsoldiermacro.util.Constants.rc;
 
@@ -514,6 +516,24 @@ public class Communication {
             case CHUNK_INFO_ENEMY_GENERAL:
                 enemyGeneralChunkTracker.addChunk(chunkX, chunkY);
         }
+    }
+
+    public static MapLocation getBestEnemyChunk() {
+        return enemyGeneralChunkTracker.getBestChunk(20, loc -> {
+            double bestDist = 1e9;
+            for (int i = MapInfo.CURRENT_ARCHON_LOCATIONS.length - 1; --i >= 0; ) {
+                MapLocation archonLoc = MapInfo.CURRENT_ARCHON_LOCATIONS[i];
+                if (archonLoc != null) {
+                    int dist = loc.distanceSquaredTo(archonLoc);
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                    }
+                }
+            }
+            bestDist = 2 * Math.sqrt(bestDist);
+            bestDist += Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(loc));
+            return -(bestDist * 10000 + 64 * loc.x + loc.y);
+        });
     }
 
     public static MapLocation getClosestEnemyChunk() {
