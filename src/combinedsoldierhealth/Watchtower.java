@@ -52,7 +52,7 @@ public class Watchtower implements RunnableBot {
         } else if (rc.getMode() == RobotMode.PORTABLE) {
             RobotInfo closestEnemy = Util.getClosestEnemyRobot();
             if (closestEnemy == null) {
-                MapLocation loc = Communication.getClosestEnemyChunk();
+                MapLocation loc = Communication.getClosestEnemyChunkButNotAdjacentToChunkCenter();
                 if (loc == null) {
                     Util.tryExplore();
                 } else {

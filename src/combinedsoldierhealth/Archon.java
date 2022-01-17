@@ -193,7 +193,7 @@ public class Archon implements RunnableBot {
             }
         } else {
             // Build if we can, otherwise reserve
-            Direction idealDirection = type == RobotType.MINER ? getIdealBuildDirectionForMining() : Util.randomAdjacentDirection();
+            Direction idealDirection = Util.randomAdjacentDirection();
             for (Direction d: Constants.getAttemptOrder(idealDirection)) {
                 if (rc.canBuildRobot(type, d)) {
                     rc.buildRobot(type, d);

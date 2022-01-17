@@ -3,15 +3,18 @@ package combinedsoldierhealth;
 import battlecode.common.*;
 import combinedsoldierhealth.util.*;
 
+import static combinedsoldierhealth.util.Constants.ALL_DIRECTIONS;
 import static combinedsoldierhealth.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
+    private static RobotInfo closestEnemyAttacker;
     @Override
     public void init() throws GameActionException {
     }
 
     @Override
     public void loop() throws GameActionException {
+        closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         Communication.setSoldierHealthInfo(rc.getHealth());
         if (rc.isActionReady()) {
             tryAttackLowHealth();
@@ -30,19 +33,22 @@ public class Soldier implements RunnableBot {
         if (tryRetreat()) {
             return;
         }
-        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         if (closestEnemyAttacker != null) {
             if (rc.isActionReady()) {
                 tryMoveAttackingSquare(closestEnemyAttacker.location, 13);
             } else {
+                Debug.setIndicatorLine(Cache.MY_LOCATION, closestEnemyAttacker.location, 0, 0, 0);
                 Util.tryKiteFrom(closestEnemyAttacker.location);
             }
         } else {
             RobotInfo closestEnemy = Util.getClosestEnemyRobot();
+            Debug.setIndicatorDot(Cache.MY_LOCATION, 255, 128, 0);
+            Debug.setIndicatorString(closestEnemy == null ? "null" : closestEnemy.toString());
             if (closestEnemy != null) {
+                Debug.setIndicatorLine(Cache.MY_LOCATION, closestEnemy.location, 255, 128, 0);
                 tryMoveAttackingSquare(closestEnemy.location, 13);
             } else {
-                MapLocation location = Communication.getClosestEnemyChunk();
+                MapLocation location = Communication.getClosestEnemyChunkButNotAdjacentToChunkCenter();
                 if (location == null) {
                     if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
                         predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
@@ -50,8 +56,10 @@ public class Soldier implements RunnableBot {
                     location = predictedArchonLocation;
                 }
                 if (location == null) {
+                    Debug.setIndicatorDot(Cache.MY_LOCATION, 255, 255, 255);
                     Util.tryExplore();
                 } else {
+                    Debug.setIndicatorLine(Cache.MY_LOCATION, location, 255, 255, 0);
                     Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
                     Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
                     Util.tryMove(location);
@@ -99,6 +107,7 @@ public class Soldier implements RunnableBot {
     }
 
     public static void tryMoveAttackingSquare(MapLocation location, int range) throws GameActionException {
+        Debug.setIndicatorLine(Cache.MY_LOCATION, location, 255, 0, 0);
         double bestScore = 0;
         Direction bestDir = null;
         for (int dx = -1; dx <= 1; dx++) {
@@ -111,7 +120,7 @@ public class Soldier implements RunnableBot {
                     if (dist > range) distScore = 0.75 - dist / (2.0 * range);
                     double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
                     double cdScore = 1.0 / cooldown;
-                    double score = distScore + 10 * cdScore;
+                    double score = distScore + 5 * cdScore;
                     if (score > bestScore) {
                         bestScore = score;
                         bestDir = dir;
@@ -124,6 +133,64 @@ public class Soldier implements RunnableBot {
         }
     }
 
+    public static void tryMoveRetreatingSquare(MapLocation archonLocation, MapLocation closestEnemy) throws GameActionException {
+        Debug.setIndicatorLine(Cache.MY_LOCATION, closestEnemy, 0, 0, 255);
+        Debug.setIndicatorLine(Cache.MY_LOCATION, archonLocation, 0, 255, 255);
+        // Pick a direction that gets us closer to archon, but further from attacker
+        double bestScore = -Double.MAX_VALUE;
+        double bestScore2 = -Double.MAX_VALUE;
+        Direction bestDir = null;
+        int currentDistanceToArchon = Cache.MY_LOCATION.distanceSquaredTo(archonLocation);
+        for (Direction direction : Constants.ORDINAL_DIRECTIONS) {
+            MapLocation loc = Cache.MY_LOCATION.add(direction);
+            if (rc.onTheMap(loc) && (loc.distanceSquaredTo(archonLocation) < Math.max(currentDistanceToArchon, RobotType.ARCHON.actionRadiusSquared + 1))) {
+                int distanceToEnemy = loc.distanceSquaredTo(closestEnemy);
+                double distScore = distanceToEnemy / 20.0;
+                double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
+                double cdScore = 1.0 / cooldown;
+                double score = distScore + 5 * cdScore;
+                double score2 = rc.canMove(direction) ? 1 : 0;
+                if (score > bestScore || (score == bestScore && score2 > bestScore2)) {
+                    bestScore = score;
+                    bestDir = direction;
+                    bestScore2 = score2;
+                }
+            }
+        }
+        if (bestDir != null) {
+            Debug.setIndicatorLine(Cache.MY_LOCATION, Cache.MY_LOCATION.add(bestDir), 0, 255, 0);
+        }
+        if (bestDir != null && rc.canMove(bestDir)) {
+            Util.tryMove(bestDir);
+        } else {
+            tryMoveRetreatingSquare2(archonLocation, closestEnemy);
+        }
+    }
+
+    public static void tryMoveRetreatingSquare2(MapLocation archonLocation, MapLocation closestEnemy) throws GameActionException {
+        Debug.setIndicatorDot(Cache.MY_LOCATION, 0, 255, 255);
+        // Pick a direction that gets us closer to archon, but further from attacker
+        double bestScore = -Double.MAX_VALUE;
+        Direction bestDir = null;
+        int currentDistanceToArchon = Cache.MY_LOCATION.distanceSquaredTo(archonLocation);
+        for (Direction direction : ALL_DIRECTIONS) {
+            MapLocation loc = Cache.MY_LOCATION.add(direction);
+            if (direction == Direction.CENTER || (rc.canMove(direction) && loc.distanceSquaredTo(archonLocation) < Math.max(currentDistanceToArchon, RobotType.ARCHON.actionRadiusSquared + 1))) {
+                int distanceToEnemy = loc.distanceSquaredTo(closestEnemy);
+                double distScore = distanceToEnemy / 20.0;
+                double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
+                double cdScore = 1.0 / cooldown;
+                double score = distScore + 5 * cdScore;
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestDir = direction;
+                }
+            }
+        }
+        if (bestDir != null && bestDir != Direction.CENTER) {
+            Util.tryMove(bestDir);
+        }
+    }
 
     public static boolean tryRetreat() throws GameActionException {
         if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) return false;
@@ -159,11 +226,19 @@ public class Soldier implements RunnableBot {
             return false;
         }
 
-        int healthThreshold = 15;
+        // f(2 soldiers) = 30, f(5 soldiers) = 15
+        int healthThreshold = (int) Math.round(Math.max(15.0, Math.min(30.0, 40.0 - 0.1 * Communication.getSoldierCombinedHealth())));
         int dist = bestLoc.distanceSquaredTo(Cache.MY_LOCATION);
         if (dist <= 10) {
-            return false;
+            if (closestEnemyAttacker != null) {
+                tryMoveRetreatingSquare(bestLoc, closestEnemyAttacker.location);
+            }
+            return true;
         } else if (rc.getHealth() <= healthThreshold || dist <= RobotType.ARCHON.actionRadiusSquared) {
+            if (closestEnemyAttacker != null) {
+                tryMoveRetreatingSquare(bestLoc, closestEnemyAttacker.location);
+                return true;
+            }
             Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, bestLoc, 128, 128, 255);
             Util.tryMove(bestLoc);
             return true;

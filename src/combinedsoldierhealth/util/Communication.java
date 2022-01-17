@@ -566,8 +566,8 @@ public class Communication {
         }
     }
 
-    public static MapLocation getClosestEnemyChunk() {
-        return enemyGeneralChunkTracker.getNearestChunk(20);
+    public static MapLocation getClosestEnemyChunkButNotAdjacentToChunkCenter() {
+        return enemyGeneralChunkTracker.getNearestChunkButNotAdjacentToChunkCenter(20);
     }
 
     public static MapLocation getClosestEnemyArchonChunk() {

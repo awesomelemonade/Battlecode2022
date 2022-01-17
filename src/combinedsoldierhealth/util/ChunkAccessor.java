@@ -62,6 +62,28 @@ public class ChunkAccessor {
         return bestLoc;
     }
 
+    public MapLocation getNearestChunkButNotAdjacentToChunkCenter(int threshold) {
+        MapLocation ourLoc = rc.getLocation();
+        MapLocation bestLoc = null;
+        int bestDist = (int)1e9;
+        Node cur = ll.front;
+        int cnt = Math.min(threshold, ll.size);
+        for (int i = cnt; --i >= 0;) {
+            int chunkI = cur.val / Communication.NUM_CHUNKS_HEIGHT;
+            int chunkJ = cur.val % Communication.NUM_CHUNKS_HEIGHT;
+            int x = Communication.getChunkMidX(chunkI);
+            int y = Communication.getChunkMidY(chunkJ);
+            MapLocation loc = new MapLocation(x, y);
+            int dist = ourLoc.distanceSquaredTo(loc);
+            if (dist > 2 && dist < bestDist) {
+                bestDist = dist;
+                bestLoc = loc;
+            }
+            cur = cur.prev;
+        }
+        return bestLoc;
+    }
+
     static class Node {
         public int val;
         public Node prev, next;
