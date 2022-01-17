@@ -33,9 +33,13 @@ public class Communication {
     private static final int ARCHON_LOCATIONS_SET_BIT = 0;
     private static final int ARCHON_LOCATIONS_ALIVE_BIT = 1;
     private static final int ARCHON_LOCATIONS_HEARTBEAT_BIT = 2;
-    private static final int ARCHON_LOCATIONS_LOCATION_BIT = 3;
+    private static final int ARCHON_LOCATIONS_PORTABLE_BIT = 3;
+    private static final int ARCHON_LOCATIONS_LOCATION_BIT = 4;
     private static final int ARCHON_LOCATIONS_LOCATION_MASK = 0b111111_111111; // 12 bits, 6 bit per coordinate
     private static int archonSharedIndex = -1;
+    public static MapLocation[] archonLocations;
+    public static int[] archonRepairAmounts;
+    public static boolean[] archonPortable;
     private static int[] archonLocationHeartbeats;
     private static int lastUpdatedArchonLocationHeartbeats = -1;
     private static final int RESERVATION_OFFSET = 4;
@@ -269,16 +273,17 @@ public class Communication {
         loadChunks();
         if (Constants.ROBOT_TYPE != RobotType.ARCHON || Cache.TURN_COUNT > 1) {
             // Initialize Arrays
-            if (MapInfo.CURRENT_ARCHON_LOCATIONS == null) {
+            if (archonLocations == null) {
                 // Read archon locations
                 boolean initialized = false;
                 for (int i = Constants.MAX_ARCHONS; --i >= 0; ) {
                     int value = rc.readSharedArray(i);
                     if (value != 0) {
                         if (!initialized) {
-                            MapInfo.CURRENT_ARCHON_LOCATIONS = new MapLocation[i + 1];
-                            MapInfo.ARCHON_REPAIR_AMOUNTS = new int[i + 1];
+                            archonLocations = new MapLocation[i + 1];
+                            archonRepairAmounts = new int[i + 1];
                             archonLocationHeartbeats = new int[i + 1];
+                            archonPortable = new boolean[i + 1];
                             initialized = true;
                         }
                         archonLocationHeartbeats[i] = -1;
@@ -289,7 +294,7 @@ public class Communication {
                 }
             }
             // Read archon locations
-            for (int i = MapInfo.CURRENT_ARCHON_LOCATIONS.length; --i >= 0;) {
+            for (int i = archonLocations.length; --i >= 0;) {
                 int sharedArrayIndex = ARCHON_LOCATIONS_OFFSET + i;
                 if (sharedArrayIndex == archonSharedIndex) {
                     continue;
@@ -305,12 +310,14 @@ public class Communication {
                         // pronounce it dead
                         rc.writeSharedArray(sharedArrayIndex, value & (0b1111_1111_1111_1111 & (~(1 << ARCHON_LOCATIONS_ALIVE_BIT))));
                     }
-                    MapInfo.CURRENT_ARCHON_LOCATIONS[i] = null;
-                    MapInfo.ARCHON_REPAIR_AMOUNTS[i] = 0;
+                    archonLocations[i] = null;
+                    archonRepairAmounts[i] = 0;
+                    archonPortable[i] = false;
                 } else {
                     // fetch location
-                    MapInfo.CURRENT_ARCHON_LOCATIONS[i] = unpack((value >> ARCHON_LOCATIONS_LOCATION_BIT) & ARCHON_LOCATIONS_LOCATION_MASK);
-                    MapInfo.ARCHON_REPAIR_AMOUNTS[i] = rc.readSharedArray(ARCHON_REPAIRING_OFFSET + i);
+                    archonLocations[i] = unpack((value >> ARCHON_LOCATIONS_LOCATION_BIT) & ARCHON_LOCATIONS_LOCATION_MASK);
+                    archonRepairAmounts[i] = rc.readSharedArray(ARCHON_REPAIRING_OFFSET + i);
+                    archonPortable[i] = ((value >> ARCHON_LOCATIONS_PORTABLE_BIT) & 0b1) == 0b1;
                 }
                 archonLocationHeartbeats[i] = heartbeat;
             }
@@ -318,14 +325,16 @@ public class Communication {
         }
         if (Constants.ROBOT_TYPE == RobotType.ARCHON) {
             // Broadcast our archon location
+            boolean currentlyPortable = rc.getMode() == RobotMode.PORTABLE;
             int heartbeat = (rc.readSharedArray(archonSharedIndex) >> ARCHON_LOCATIONS_HEARTBEAT_BIT) & 0b1;
             rc.writeSharedArray(archonSharedIndex,
                     (pack(Cache.MY_LOCATION) << ARCHON_LOCATIONS_LOCATION_BIT) |
+                            ((currentlyPortable ? 1 : 0) << ARCHON_LOCATIONS_PORTABLE_BIT) |
                             ((1 - heartbeat) << ARCHON_LOCATIONS_HEARTBEAT_BIT) |
                             (1 << ARCHON_LOCATIONS_ALIVE_BIT) |
                             (1 << ARCHON_LOCATIONS_SET_BIT));
-            if (MapInfo.CURRENT_ARCHON_LOCATIONS != null) {
-                MapInfo.CURRENT_ARCHON_LOCATIONS[archonSharedIndex] = Cache.MY_LOCATION;
+            if (archonLocations != null) {
+                archonLocations[archonSharedIndex] = Cache.MY_LOCATION;
             }
             // Broadcast how much hp we need to heal
             RobotInfo[] robots = rc.senseNearbyRobots(RobotType.ARCHON.actionRadiusSquared, ALLY_TEAM);
@@ -336,8 +345,11 @@ public class Communication {
                 }
             }
             rc.writeSharedArray(archonSharedIndex - ARCHON_LOCATIONS_OFFSET + ARCHON_REPAIRING_OFFSET, amount);
-            if (MapInfo.ARCHON_REPAIR_AMOUNTS != null) {
-                MapInfo.ARCHON_REPAIR_AMOUNTS[archonSharedIndex] = amount;
+            if (archonRepairAmounts != null) {
+                archonRepairAmounts[archonSharedIndex] = amount;
+            }
+            if (archonPortable != null) {
+                archonPortable[archonSharedIndex] = currentlyPortable;
             }
             // Guess enemy archon locations
             if (chunksLoaded && !guessed) {

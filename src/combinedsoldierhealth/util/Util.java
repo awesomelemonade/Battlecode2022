@@ -12,7 +12,6 @@ public class Util {
         Constants.init(controller);
         Cache.init();
         Communication.init();
-        MapInfo.init();
         Explorer.init();
     }
 

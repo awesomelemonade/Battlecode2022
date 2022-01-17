@@ -3,9 +3,6 @@ package combinedsoldierhealth;
 import battlecode.common.*;
 import combinedsoldierhealth.util.*;
 
-import java.util.Comparator;
-import java.util.Optional;
-
 import static combinedsoldierhealth.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
@@ -133,10 +130,11 @@ public class Soldier implements RunnableBot {
 
         MapLocation bestLoc = null;
         double bestScore = 1e9;
-        for (int i = MapInfo.CURRENT_ARCHON_LOCATIONS.length; --i >= 0; ) {
-            MapLocation loc = MapInfo.CURRENT_ARCHON_LOCATIONS[i];
+        for (int i = Communication.archonLocations.length; --i >= 0; ) {
+            MapLocation loc = Communication.archonLocations[i];
             if (loc == null) continue;
-            double health = MapInfo.ARCHON_REPAIR_AMOUNTS[i];
+            if (Communication.archonPortable[i]) continue;
+            double health = Communication.archonRepairAmounts[i];
             double score = health/3 + 2*Math.sqrt(loc.distanceSquaredTo(Cache.MY_LOCATION));
             if (score < bestScore) {
                 bestScore = score;
