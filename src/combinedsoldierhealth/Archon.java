@@ -6,7 +6,6 @@ import combinedsoldierhealth.util.*;
 import static combinedsoldierhealth.util.Constants.*;
 
 public class Archon implements RunnableBot {
-    private static MapLocation relocationTarget;
     private static double averageIncome;
     private static double averageIncomePerMiner;
     private static int wantedEarlygameMiners;
@@ -39,8 +38,7 @@ public class Archon implements RunnableBot {
         if (rc.getMode() == RobotMode.TURRET) {
             if (!Communication.hasPortableArchon()) {
                 MapLocation potentialRelocationTarget = getTargetMoveLocation();
-                if (potentialRelocationTarget != null && isWorthToMove(potentialRelocationTarget)) {
-                    relocationTarget = potentialRelocationTarget;
+                if (potentialRelocationTarget != null && !Cache.MY_LOCATION.equals(potentialRelocationTarget) && isWorthToMove(potentialRelocationTarget)) {
                     if (rc.canTransform()) {
                         rc.transform();
                         Communication.setPortableArchon();
@@ -60,6 +58,7 @@ public class Archon implements RunnableBot {
         } else {
             // Portable
             Communication.setPortableArchon();
+            MapLocation relocationTarget = getTargetMoveLocation();
             if (relocationTarget == null) {
                 // wtf???
                 Debug.println("No relocation target??");
@@ -70,10 +69,10 @@ public class Archon implements RunnableBot {
                     rc.transform();
                 }
             } else {
-                Util.tryMove(relocationTarget);
                 if (rc.isMovementReady()) {
                     turnsStuck++;
                 }
+                Util.tryMove(relocationTarget);
             }
         }
     }
@@ -302,14 +301,12 @@ public class Archon implements RunnableBot {
     public static MapLocation getTargetMoveLocation() throws GameActionException {
         MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, RobotType.ARCHON.visionRadiusSquared);
         MapLocation bestLocation = null;
-        int bestRubble = rc.senseRubble(Cache.MY_LOCATION);
+        int bestRubble = Integer.MAX_VALUE;
         int bestDistanceSquared = 0;
         for (int i = locations.length; --i >= 0;) {
             MapLocation location = locations[i];
             if (rc.onTheMap(location)) {
-                RobotInfo robot = rc.senseRobotAtLocation(location);
-                boolean enemyOnLocation = robot != null && robot.team == ENEMY_TEAM;
-                if (!enemyOnLocation) {
+                if (location.equals(Cache.MY_LOCATION) || !rc.isLocationOccupied(location)) {
                     int rubble = rc.senseRubble(location);
                     int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
                     if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
@@ -324,7 +321,7 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean isWorthToMove(MapLocation location) throws GameActionException {
-        if (rc.getRoundNum() < 20 || rc.getArchonCount() <= 1) {
+        if (rc.getRoundNum() < 20) {
             return false;
         }
         int currentRubble = rc.senseRubble(Cache.MY_LOCATION);

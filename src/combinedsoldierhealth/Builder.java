@@ -56,15 +56,17 @@ public class Builder implements RunnableBot {
         }
         int lead = rc.getTeamLeadAmount(ALLY_TEAM);
         if ((lead >= 5000 && Math.random() < 0.5) ||
-                (lead >= 800 && rc.getRoundNum() > 1900)) {
+                (lead >= 250 && rc.getRoundNum() > 1900)) {
             if (tryBuild(RobotType.LABORATORY)) {
                 movesSinceAction = 0;
                 return;
             }
         }
-        if (tryBuild(RobotType.WATCHTOWER)) {
-            movesSinceAction = 0;
-            return;
+        if (rc.getRoundNum() <= 1900) {
+            if (tryBuild(RobotType.WATCHTOWER)) {
+                movesSinceAction = 0;
+                return;
+            }
         }
     }
 
