@@ -4,7 +4,8 @@ concurrency:
   group: pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 jobs:
-  test_private_action_job:
+  run_matches:
+    if: !github.event.pull_request.draft
     name: Run Matches
     runs-on: ubuntu-latest
     steps:
@@ -36,8 +37,6 @@ jobs:
         run: ./gradlew update
       - name: Build with Gradle
         run: ./gradlew build
-      - name: List Tasks
-        run: ./gradlew tasks
       - name: Run Match
         run: python run_matches.py
       # upload match files as artifact
