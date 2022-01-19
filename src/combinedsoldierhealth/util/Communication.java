@@ -344,6 +344,7 @@ public class Communication {
                     amount += robot.type.health - robot.health;
                 }
             }
+            amount = Math.min(65535, amount);
             rc.writeSharedArray(archonSharedIndex - ARCHON_LOCATIONS_OFFSET + ARCHON_REPAIRING_OFFSET, amount);
             if (archonRepairAmounts != null) {
                 archonRepairAmounts[archonSharedIndex] = amount;
