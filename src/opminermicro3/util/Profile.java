@@ -5,7 +5,7 @@ public enum Profile {
     CHUNK_INFO(false),
     PATHFINDER(false),
     EXPLORER(false),
-    MINING(false),
+    MINING(true),
     ATTACKING(false);
 
     private final boolean enabled;

@@ -7,8 +7,8 @@ import static opminermicro3.util.Cache.ALLY_ROBOTS;
 import static opminermicro3.util.Constants.*;
 
 public class Miner implements RunnableBot {
-    int spawnRound;
-    static int amountMined;
+    private static int spawnRound;
+    private static int amountMined;
 
     @Override
     public void init() throws GameActionException {
@@ -43,7 +43,15 @@ public class Miner implements RunnableBot {
                     Util.tryKiteFrom(closestEnemyAttacker.location);
                     Explorer.currentExploreDirection = -1.0;
                 } else {
-                    if (!tryMoveGoodMining()) {
+                    /*debug_tryMoveGoodMining(1, 5, 2);
+                    if (!tryMoveGoodMiningRet) {
+                        debug_tryMoveGoodMining(3, 9, 2);
+                    }
+                    if (!tryMoveGoodMiningRet) {
+                        debug_tryMoveGoodMining(30, 30, RobotType.MINER.visionRadiusSquared);
+                    }*/
+                    debug_tryMoveGoodMining(30, 30, RobotType.MINER.visionRadiusSquared);
+                    if (!tryMoveGoodMiningRet) {
                         Util.tryExplore();
                     }
                 }
@@ -59,71 +67,75 @@ public class Miner implements RunnableBot {
         }
     }
 
-    public static boolean tryMoveGoodMining() throws GameActionException {
-        if (!rc.isMovementReady()) return false;
+    private static double miningScore = -1;
 
-        MapLocation ourLoc = rc.getLocation();
-        int ourX = ourLoc.x;
-        int ourY = ourLoc.y;
-        int totalLead = 0;
-        double leadForceX = 0, leadForceY = 0;
-        MapLocation[] leadLocs = rc.senseNearbyLocationsWithLead(RobotType.MINER.visionRadiusSquared);
-        if (leadLocs.length < 20) {
-            for (int i = leadLocs.length; --i >= 0;) {
-                MapLocation loc = leadLocs[i];
-                if (loc.equals(rc.getLocation())) continue;
-                double dx = loc.x - ourX;
-                double dy = loc.y - ourY;
-                double dis2 = loc.distanceSquaredTo(ourLoc);
-                double dis = Math.sqrt(dis2);
-                int leadAmount = rc.senseLead(loc) - 1;
-                totalLead += leadAmount;
-
-                leadForceX += dx/dis * leadAmount/dis2;
-                leadForceY += dy/dis * leadAmount/dis2;
-            }
-        } else {
-            for (int i = leadLocs.length; --i >= 0;) {
-                totalLead += rc.senseLead(leadLocs[i]);
+    // Returns the number of lead over k turns
+    public static void debug_getMiningScore(MapLocation target, int k) throws GameActionException {
+        double cooldown = 1.0 + rc.senseRubble(target) / 10.0;
+        double leadPerTurn = 5.0 / cooldown; // lead / turn
+        int numLeadSquares = 0;
+        double totalLead = 0;
+        for (int i = ALL_DIRECTIONS.length; --i >= 0;) {
+            MapLocation loc = target.add(ALL_DIRECTIONS[i]);
+            if (rc.canSenseLocation(loc) && rc.onTheMap(loc)) {
+                int amount = rc.senseLead(loc);
+                if (amount > 0) {
+                    totalLead += amount - 1;
+                    numLeadSquares++;
+                }
             }
         }
+        int curDist2 = Cache.MY_LOCATION.distanceSquaredTo(target);
+        double thresholdDist = Math.sqrt(curDist2) + 2;
+        int thresholdDist2 = (int) Math.ceil(thresholdDist * thresholdDist);
+        double numMiners = LambdaUtil.arraysStreamSum(ALLY_ROBOTS, r -> r.type == RobotType.MINER && r.location.isWithinDistanceSquared(target, thresholdDist2)) + 1;
+        double leadAmount = totalLead / numMiners; // lead
 
-        int totalMiners = 0;
-        double minerForceX = 0, minerForceY = 0;
-        for (int i = ALLY_ROBOTS.length; --i >= 0;) {
-            RobotInfo robot = ALLY_ROBOTS[i];
-            if (robot.type == RobotType.MINER) {
-                MapLocation loc = robot.location;
-                double dx = loc.x - ourX;
-                double dy = loc.y - ourY;
-                double dis2 = loc.distanceSquaredTo(ourLoc);
-                double dis = Math.sqrt(dis2);
-                totalMiners++;
+        // Maximize lead in k turns
+        int numRegenRounds = k / 20 + (((rc.getRoundNum() - 1) % 20 + (k % 20) >= 20) ? 1 : 0);
+        leadAmount += numRegenRounds * numLeadSquares * 5.0 / numMiners;
+        miningScore = Math.min(leadAmount, k * leadPerTurn);
+    }
 
-                minerForceX -= dx / dis * 1.0 / dis2;
-                minerForceY -= dy / dis * 1.0 / dis2;
-            }
+    private static boolean tryMoveGoodMiningRet;
+
+    public static void debug_tryMoveGoodMining(int k, int threshold, int vision) throws GameActionException {
+        if (!rc.isMovementReady()) {
+            tryMoveGoodMiningRet = false;
+            return;
         }
 
-        // No good mining nearby, so we failed.
-        if (totalLead - 10*totalMiners <= 0) return false;
-
-        double forceX = leadForceX + 10 * minerForceX;
-        double forceY = leadForceY + 10 * minerForceY;
-        double forceMag = Math.hypot(forceX, forceY);
-
-        // Force is nearly 0, so we're already at a good spot.
-        if (forceMag <= 1e-8) return true;
-
-        forceX = forceX / forceMag * 5;
-        forceY = forceY / forceMag * 5;
-
-        int targetX = (int) Math.round(ourX + forceX);
-        int targetY = (int) Math.round(ourY + forceY);
-        Debug.setIndicatorLine(Profile.MINING, ourLoc, new MapLocation(targetX, targetY), 0, 0, 0);
-
-        Util.tryMove(new MapLocation(targetX, targetY));
-        return true;
+        MapLocation[] locs = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, vision);
+        MapLocation bestLoc = null;
+        double bestScore = 0;
+        int bestDist2 = Integer.MAX_VALUE;
+        double cnt = 0;
+        for (int i = locs.length; --i >= 0;) {
+            MapLocation loc = locs[i];
+            if (rc.isLocationOccupied(loc)) continue;
+            debug_getMiningScore(loc, k);
+            int dist2 = Cache.MY_LOCATION.distanceSquaredTo(loc);
+            if (miningScore > bestScore || miningScore == bestScore && dist2 > bestDist2) {
+                cnt = 1;
+                bestScore = miningScore;
+                bestLoc = loc;
+                bestDist2 = dist2;
+            } else if (miningScore == bestScore && dist2 == bestDist2) {
+                cnt++;
+                if (Math.random() < 1.0 / cnt) { // Maybe add random() to score instead of streaming random?
+                    bestScore = miningScore;
+                    bestLoc = loc;
+                }
+            }
+        }
+        if (bestScore < threshold) {
+            tryMoveGoodMiningRet = false;
+            return;
+        }
+        Debug.setIndicatorLine(Profile.MINING, Cache.MY_LOCATION, bestLoc, 0, 0, 0);
+        Util.tryMove(bestLoc);
+        tryMoveGoodMiningRet = true;
+        return;
     }
 
     public static void tryMine() throws GameActionException {
