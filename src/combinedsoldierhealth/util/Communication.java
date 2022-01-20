@@ -271,6 +271,7 @@ public class Communication {
         clearStaleReservation();
         clearStalePortableArchon();
         loadChunks();
+        updateChunkInfo();
         if (Constants.ROBOT_TYPE != RobotType.ARCHON || Cache.TURN_COUNT > 1) {
             // Initialize Arrays
             if (archonLocations == null) {
@@ -449,6 +450,22 @@ public class Communication {
     public static void postLoop() throws GameActionException {
         prevReservationHeartbeatBit = (rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_HEARTBEAT_BIT) & 0b1;
         prevArchonPortableHeartbeatBit = (rc.readSharedArray(ARCHON_PORTABLE_OFFSET) >> ARCHON_PORTABLE_HEARTBEAT_BIT) & 0b1;
+        updateChunkInfo();
+        if (chunksLoaded) {
+            // Flush Chunk Info Communication
+            for (int i = BUFFER_SIZE; --i >= 0; ) {
+                int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
+                if (rc.readSharedArray(sharedArrayIndex) != buffer[i]) {
+                    rc.writeSharedArray(sharedArrayIndex, buffer[i]);
+                }
+            }
+        }
+        if (Profile.CHUNK_INFO.enabled()) {
+            debug_drawChunks();
+        }
+    }
+
+    public static void updateChunkInfo() {
         if (chunksLoaded) {
             MapLocation currentLocation = rc.getLocation();
             int currentChunkX = currentLocation.x / CHUNK_SIZE;
@@ -498,18 +515,6 @@ public class Communication {
                     setChunkInfo(closestPredictedArchon, CHUNK_INFO_UNEXPLORED);
                 }
             }
-
-            // Flush Chunk Info Communication
-            for (int i = BUFFER_SIZE; --i >= 0; ) {
-                int sharedArrayIndex = CHUNK_INFO_OFFSET + i;
-                if (rc.readSharedArray(sharedArrayIndex) != buffer[i]) {
-                    rc.writeSharedArray(sharedArrayIndex, buffer[i]);
-                }
-            }
-        }
-
-        if (Profile.CHUNK_INFO.enabled()) {
-            debug_drawChunks();
         }
     }
 
