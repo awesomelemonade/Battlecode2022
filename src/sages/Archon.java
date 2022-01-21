@@ -110,11 +110,20 @@ public class Archon implements RunnableBot {
     }
 
     public boolean tryBuildEarlygame() throws GameActionException {
-        if (wantedEarlygameMiners <= 0) return false;
-        if (tryBuild(RobotType.MINER)) {
-            --wantedEarlygameMiners;
+        if (wantedEarlygameMiners > 0) {
+            if (tryBuild(RobotType.MINER)) {
+                --wantedEarlygameMiners;
+            }
+            return true;
+        } else {
+            int numBuilder = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
+            if (numBuilder < 1) {
+                tryBuild(RobotType.BUILDER);
+                return true;
+            } else {
+                return false;
+            }
         }
-        return true;
     }
 
     public boolean tryBuildLategame() throws GameActionException {
