@@ -1,10 +1,7 @@
 package sages;
 
 import battlecode.common.*;
-import sages.util.Cache;
-import sages.util.Communication;
-import sages.util.RunnableBot;
-import sages.util.Util;
+import sages.util.*;
 
 import static sages.util.Constants.*;
 
@@ -23,7 +20,6 @@ public class Builder implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        //canBuildLaboratory = LambdaUtil.arraysStreamSum(Cache.ALLY_ROBOTS, r -> r.type == RobotType.WATCHTOWER) >= 5;
         RobotInfo closestRepairable = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> r.health < r.type.getMaxHealth(r.level) && rc.getType().canRepair(r.type));
         if (closestRepairable == null) {
             closestRepairableLocation = null;
@@ -54,16 +50,23 @@ public class Builder implements RunnableBot {
             movesSinceAction = 0;
             return;
         }
+        int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
+        if (numLaboratories < 1) {
+            if (tryBuildWithReservations(RobotType.LABORATORY)) {
+                movesSinceAction = 0;
+                return;
+            }
+        }
         int lead = rc.getTeamLeadAmount(ALLY_TEAM);
         if ((lead >= 5000 && Math.random() < 0.5) ||
-                (lead >= 250 && rc.getRoundNum() > 1900)) {
-            if (tryBuild(RobotType.LABORATORY)) {
+                (lead >= 180 && rc.getRoundNum() > 1900)) {
+            if (tryBuildWithReservations(RobotType.LABORATORY)) {
                 movesSinceAction = 0;
                 return;
             }
         }
         if (rc.getRoundNum() <= 1900) {
-            if (tryBuild(RobotType.WATCHTOWER)) {
+            if (tryBuildWithReservations(RobotType.WATCHTOWER)) {
                 movesSinceAction = 0;
                 return;
             }
@@ -107,9 +110,33 @@ public class Builder implements RunnableBot {
         return true;
     }
 
-    public static boolean tryBuild(RobotType type) throws GameActionException {
-        for (Direction d: ORDINAL_DIRECTIONS) {
-            MapLocation loc = rc.getLocation().add(d);
+    public static boolean tryBuildWithReservations(RobotType type) throws GameActionException {
+        int reservedLead = Communication.getReservedLead();
+        int reservedGold = Communication.getReservedGold();
+
+        if (reservedLead != 0 || reservedGold != 0) {
+            // There already exists a reservation
+            int remainingLead = rc.getTeamLeadAmount(ALLY_TEAM) - type.buildCostLead;
+            int remainingGold = rc.getTeamGoldAmount(ALLY_TEAM) - type.buildCostGold;
+            if (remainingLead < reservedLead || remainingGold < reservedGold) {
+                return false;
+            } else {
+                return tryBuild(type, Util.randomAdjacentDirection());
+            }
+        } else {
+            // Build if we can, otherwise reserve
+            if (tryBuild(type, Util.randomAdjacentDirection())) {
+                return true;
+            } else {
+                Communication.reserve(type.buildCostGold, type.buildCostLead);
+                return false;
+            }
+        }
+    }
+
+    public static boolean tryBuild(RobotType type, Direction idealDirection) throws GameActionException {
+        for (Direction d: Constants.getAttemptOrder(idealDirection)) {
+            MapLocation loc = Cache.MY_LOCATION.add(d);
             if ((loc.x + loc.y) % 2 == 0 && loc.x % 2 == 0) {
                 if (rc.canBuildRobot(type, d)) {
                     rc.buildRobot(type, d);
