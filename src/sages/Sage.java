@@ -32,7 +32,8 @@ public class Sage implements RunnableBot {
         for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
             if (rc.canAttack(robot.location)) {
                 int damage = Math.min(robot.health, RobotType.SAGE.getDamage(1));
-                double econScore = (double)damage / robot.type.health * (robot.type.buildCostLead + 5 * robot.type.buildCostGold);
+                double econScore = (double) damage / robot.type.health * (robot.type.buildCostLead + 5 * robot.type.buildCostGold);
+                if (damage == robot.health) econScore *= 1.5;
                 if (econScore > bestEcon) {
                     bestEcon = econScore;
                     bestRobot = robot;

@@ -584,6 +584,23 @@ public class Communication {
         return enemyPredictedChunkTracker.getRandom(20);
     }
 
+    public static MapLocation getClosestCommunicatedAllyArchonLocation() {
+        MapLocation bestLocation = null;
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        if (archonLocations == null) return null;
+        for (int i = archonLocations.length; --i >= 0;) {
+            MapLocation location = archonLocations[i];
+            if (location != null) {
+                int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
+                if (distanceSquared < bestDistanceSquared) {
+                    bestDistanceSquared = distanceSquared;
+                    bestLocation = location;
+                }
+            }
+        }
+        return bestLocation;
+    }
+
     public static int pack(MapLocation location) {
         return (location.x << 6) | location.y;
     }
