@@ -26,37 +26,20 @@ public class Soldier implements RunnableBot {
 
 
     private static MapLocation predictedArchonLocation = null;
-    public static void tryMove() throws GameActionException {
-        if (tryRetreat()) {
-            return;
+    public static void tryMoveTowardsEnemyChunkOrExplore() throws GameActionException {
+        MapLocation location = Communication.getClosestEnemyChunk();
+        if (location == null) {
+            if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
+                predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
+            }
+            location = predictedArchonLocation;
         }
-        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
-        if (closestEnemyAttacker != null) {
-            if (rc.isActionReady()) {
-                tryMoveAttackingSquare(closestEnemyAttacker.location, 13);
-            } else {
-                Util.tryKiteFrom(closestEnemyAttacker.location);
-            }
+        if (location == null) {
+            Util.tryExplore();
         } else {
-            RobotInfo closestEnemy = Util.getClosestEnemyRobot();
-            if (closestEnemy != null) {
-                tryMoveAttackingSquare(closestEnemy.location, 13);
-            } else {
-                MapLocation location = Communication.getClosestEnemyChunk();
-                if (location == null) {
-                    if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
-                        predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
-                    }
-                    location = predictedArchonLocation;
-                }
-                if (location == null) {
-                    Util.tryExplore();
-                } else {
-                    Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
-                    Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
-                    Util.tryMove(location);
-                }
-            }
+            Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
+            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
+            Util.tryMove(location);
         }
     }
 
@@ -98,76 +81,226 @@ public class Soldier implements RunnableBot {
         }
     }
 
-    public static void tryMoveAttackingSquare(MapLocation location, int range) throws GameActionException {
-        double bestScore = 0;
-        Direction bestDir = null;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                MapLocation loc = rc.getLocation().translate(dx, dy);
-                Direction dir = rc.getLocation().directionTo(loc);
-                if (dir == Direction.CENTER || rc.canMove(dir)) {
-                    int dist = loc.distanceSquaredTo(location);
-                    double distScore = 0.5 + dist / (2.0 * range);
-                    if (dist > range) distScore = 0.75 - dist / (2.0 * range);
-                    double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
-                    double cdScore = 1.0 / cooldown;
-                    double score = distScore + 10 * cdScore;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestDir = dir;
+    public static void tryMove() throws GameActionException {
+        boolean hasEnemyAttackers = LambdaUtil.arraysAnyMatch(Cache.ENEMY_ROBOTS, r -> Util.isAttacker(r.type));
+        MapLocation retreatLocation = getRetreatLocation();
+        if (retreatLocation != null) {
+            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, retreatLocation, 128, 128, 255);
+        }
+        if (hasEnemyAttackers) {
+            if (retreatLocation == null) {
+                if (rc.isActionReady()) {
+                    tryMoveAttackingSquare();
+                } else {
+                    RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
+                    if (closestEnemyAttacker != null) {
+                        Util.tryKiteFrom(closestEnemyAttacker.location);
                     }
+                }
+            } else {
+                tryMoveRetreatingSquare(retreatLocation);
+            }
+        } else {
+            if (retreatLocation == null) {
+                // Check for passive enemies
+                RobotInfo closestPassiveEnemy = Util.getClosestEnemyRobot();
+                if (closestPassiveEnemy == null) {
+                    // Go to nearest enemy chunk
+                    tryMoveTowardsEnemyChunkOrExplore();
+                } else {
+                    MapLocation location = closestPassiveEnemy.location;
+                    if (!Cache.MY_LOCATION.isWithinDistanceSquared(location, Constants.ROBOT_TYPE.actionRadiusSquared)) {
+                        Util.tryMove(closestPassiveEnemy.location);
+                    }
+                }
+            } else {
+                // Retreat to retreatLocation
+                if (Cache.MY_LOCATION.isWithinDistanceSquared(retreatLocation, 20)) {
+                    // do nothing
+                } else {
+                    Util.tryMove(retreatLocation);
                 }
             }
         }
-        if (bestDir != null && bestDir != Direction.CENTER) {
+    }
+
+    public static void tryMoveRetreatingSquare(MapLocation archonLocation) throws GameActionException {
+        double bestScore = -Double.MAX_VALUE;
+        Direction bestDirection = null;
+        // Loop through all neighboring squares that are closer to the archonLocation
+        // Maximize ourFrequency / enemyFrequency, given that enemyFrequency > min turns we spend there
+        int currentDist2 = Cache.MY_LOCATION.distanceSquaredTo(archonLocation);
+        double cooldown = 1.0 + rc.senseRubble(Cache.MY_LOCATION) / 10.0;
+        double cooldownAfterMove = (rc.getMovementCooldownTurns() - Constants.ROBOT_TYPE.movementCooldown * cooldown);
+        int turnsStuck = (int) Math.ceil((cooldownAfterMove - 9.999999) / 10.0);
+        Generated13.debug_execute(archonLocation);
+        for (Direction direction : Constants.ALL_DIRECTIONS) {
+            MapLocation location = Cache.MY_LOCATION.add(direction);
+            if (rc.onTheMap(location)) {
+                int distance2 = location.distanceSquaredTo(archonLocation);
+                if (distance2 > currentDist2) {
+                    continue;
+                }
+                double ourFrequency = 3.0 / (1.0 + rc.senseRubble(location) / 10.0);
+                if (!rc.canMove(direction) && direction != Direction.CENTER) {
+                    ourFrequency /= 3; // Penalize 3 turns
+                }
+                double totalEnemyDamageFrequency = 0; // amount of damage per turn
+                // if we can't currently attack - go away from the enemy if there is less rubble, otherwise stand still
+                //      only consider squares where totalEnemyFrequency < center square totalEnemyFrequency
+                //      then tiebreak by going to the square with the least rubble (maximize ourFrequency)
+                //      then tiebreak by minimizing distance to closestEnemy
+                // if we can currently attack - step into to attack (presumably, there wasn't a valid attack premove)
+                //      maximize ourFrequency / totalEnemyFrequency, given that we are withinAttackRadius and ratio >= 1
+                //      maximize ourFrequency / totalEnemyFrequency, given that we are not withinAttackRadius
+                //      ^ this second one is always possible because center is guaranteed to be not within attack radius (or else isActionReady() would return false)
+                for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
+                    if (Util.isAttacker(robot.type)) {
+                        if (robot.location.isWithinDistanceSquared(location, 25)) {
+                            totalEnemyDamageFrequency += robot.type.getDamage(robot.level) / (1.0 + rc.senseRubble(robot.location) / 10.0);
+                        }
+                    }
+                }
+                double amountOfDamageSustained = totalEnemyDamageFrequency * turnsStuck;
+                double score;
+                if (amountOfDamageSustained <= 0.05) {
+                    // No enemies
+                    score = 10000.0 + Generated13.;
+                } else {
+                    if (amountOfDamageSustained >= rc.getHealth()) {
+                        // Terrible score - it's going to die
+                        score = ourFrequency / totalEnemyDamageFrequency - 10000.0;
+                    } else {
+                        // it's not going to die - let's just treat it normally
+                        score = ourFrequency / totalEnemyDamageFrequency;
+                    }
+                }
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestDirection = direction;
+                }
+            }
+        }
+        if (bestDirection != null && rc.canMove(bestDirection)) {
+            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, Cache.MY_LOCATION.add(bestDirection), 128, 0, 255);
+            Util.tryMove(bestDirection);
+        }
+    }
+
+    public static void tryMoveAttackingSquare() throws GameActionException {
+        double bestScore = -Double.MAX_VALUE;
+        Direction bestDir = null;
+        //StringBuilder builder = new StringBuilder("Score " + Cache.MY_LOCATION + ": ");
+        for (Direction dir : Constants.ALL_DIRECTIONS) {
+            MapLocation loc = Cache.MY_LOCATION.add(dir);
+            if (rc.onTheMap(loc)) {
+                double ourFrequency = 1.0 / (1.0 + rc.senseRubble(loc) / 10.0);
+                if (!rc.canMove(dir) && dir != Direction.CENTER) {
+                    ourFrequency /= 3; // Penalize 3 turns
+                }
+                double totalEnemyFrequency = 0; // TODO: Instead - shouldn't it be damage per turn instead of attacks per turn
+                double closestDistance = 1e9;
+                // if we can't currently attack - go away from the enemy if there is less rubble, otherwise stand still
+                //      only consider squares where totalEnemyFrequency < center square totalEnemyFrequency
+                //      then tiebreak by going to the square with the least rubble (maximize ourFrequency)
+                //      then tiebreak by minimizing distance to closestEnemy
+                // if we can currently attack - step into to attack (presumably, there wasn't a valid attack premove)
+                //      maximize ourFrequency / totalEnemyFrequency, given that we are withinAttackRadius and ratio >= 1
+                //      maximize ourFrequency / totalEnemyFrequency, given that we are not withinAttackRadius
+                //      ^ this second one is always possible because center is guaranteed to be not within attack radius (or else isActionReady() would return false)
+                for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
+                    if (Util.isAttacker(robot.type)) {
+                        if (robot.location.isWithinDistanceSquared(loc, robot.type.actionRadiusSquared)) {
+                            totalEnemyFrequency += 1.0 / (1.0 + rc.senseRubble(robot.location) / 10.0);
+                        }
+                        double dist = robot.location.distanceSquaredTo(loc);
+                        if (dist < closestDistance) {
+                            closestDistance = dist;
+                        }
+                    }
+                }
+                double score;
+                double ratio = ourFrequency / totalEnemyFrequency;
+                if (totalEnemyFrequency != 0 && ratio >= 1.0) {
+                    score = ratio + 1000;
+                } else if (totalEnemyFrequency == 0) {
+                    score = ourFrequency;
+                } else {
+                    // this should never be the best score
+                    score = ourFrequency - 1000;
+                }
+                //builder.append(dir + "=" + score + " - " + ourFrequency + " - " + totalEnemyFrequency + ", ");
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestDir = dir;
+                }
+            }
+        }
+        //Debug.println(builder.toString());
+        //Debug.println(bestScore + " - " + bestDir);
+        //Debug.println(Arrays.toString(Arrays.stream(Cache.ENEMY_ROBOTS).filter(x -> Util.isAttacker(x.type)).map(x -> x.location).toArray()));
+        if (bestDir == null) {
+            // wtf?
+            throw new IllegalStateException("are all scores -infinity???");
+        } else {
+            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, Cache.MY_LOCATION.add(bestDir), 255, 0, 0);
             Util.tryMove(bestDir);
         }
     }
 
+    public static MapLocation getRetreatLocation() throws GameActionException {
+        if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) {
+            return null;
+        }
+        int healthThreshold = (int) Math.round(Math.max(15.0, Math.min(30.0, 40.0 - 0.1 * Communication.getSoldierCombinedHealth())));
+        if (rc.getHealth() <= healthThreshold) {
+            return idealThenNearestVisible();
+        }
+        MapLocation location = nearestVisibleThenIdeal();
+        return location != null && Cache.MY_LOCATION.isWithinDistanceSquared(location, 34) ? location : null;
+    }
 
-    public static boolean tryRetreat() throws GameActionException {
-        if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) return false;
-        MapLocation bestLoc = null;
-        double bestScore = 1e9;
-        if (Communication.archonLocations != null) {
-            for (int i = Communication.archonLocations.length; --i >= 0; ) {
-                MapLocation loc = Communication.archonLocations[i];
-                if (loc == null) continue;
-                if (Communication.archonPortable[i]) continue;
-                double health = Communication.archonRepairAmounts[i];
-                double score = health/3 + 2*Math.sqrt(loc.distanceSquaredTo(Cache.MY_LOCATION));
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestLoc = loc;
+    private static MapLocation idealThenNearestVisible() {
+        MapLocation location = getIdealAllyArchonForHeal();
+        return location == null ? getNearestVisibleAllyArchonForHeal() : location;
+    }
+
+    private static MapLocation nearestVisibleThenIdeal() {
+        MapLocation location = getNearestVisibleAllyArchonForHeal();
+        return location == null ? getIdealAllyArchonForHeal() : location;
+    }
+
+    private static MapLocation getIdealAllyArchonForHeal() {
+        double bestScore = Double.MAX_VALUE;
+        MapLocation bestLocation = null;
+        for (int i = Communication.archonLocations.length; --i >= 0; ) {
+            MapLocation loc = Communication.archonLocations[i];
+            if (loc == null) continue;
+            if (Communication.archonPortable[i]) continue;
+            double health = Communication.archonRepairAmounts[i];
+            double score = health / 3.0 + 2.0 * Math.sqrt(loc.distanceSquaredTo(Cache.MY_LOCATION));
+            if (score < bestScore) {
+                bestScore = score;
+                bestLocation = loc;
+            }
+        }
+        return bestLocation;
+    }
+
+    public static MapLocation getNearestVisibleAllyArchonForHeal() {
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        MapLocation bestMapLocation = null;
+        for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+            RobotInfo robot = Cache.ALLY_ROBOTS[i];
+            if (robot.type == RobotType.ARCHON && robot.mode == RobotMode.TURRET) {
+                MapLocation location = robot.location;
+                int distanceSquared = location.distanceSquaredTo(Cache.MY_LOCATION);
+                if (distanceSquared < bestDistanceSquared) {
+                    bestDistanceSquared = distanceSquared;
+                    bestMapLocation = location;
                 }
             }
         }
-        if (bestLoc == null) {
-            for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
-                RobotInfo robot = Cache.ALLY_ROBOTS[i];
-                if (robot.type == RobotType.ARCHON) {
-                    MapLocation location = robot.location;
-                    int distanceSquared = location.distanceSquaredTo(Cache.MY_LOCATION);
-                    if (distanceSquared < bestScore) {
-                        bestScore = distanceSquared;
-                        bestLoc = location;
-                    }
-                }
-            }
-        }
-        if (bestLoc == null) {
-            return false;
-        }
-
-        int healthThreshold = 15;
-        int dist = bestLoc.distanceSquaredTo(Cache.MY_LOCATION);
-        if (dist <= 10) {
-            return false;
-        } else if (rc.getHealth() <= healthThreshold || dist <= RobotType.ARCHON.actionRadiusSquared) {
-            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, bestLoc, 128, 128, 255);
-            Util.tryMove(bestLoc);
-            return true;
-        }
-        return false;
+        return bestMapLocation;
     }
 }

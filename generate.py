@@ -2,15 +2,15 @@ import math
 from itertools import product
 
 # Generated9
-squareLength = 7
-scanRadiusSquared = 9
-edgeThreshold = 4
-useIsLocationOccupied = False
-# Generated13
 # squareLength = 7
-# scanRadiusSquared = 13
-# edgeThreshold = 8
+# scanRadiusSquared = 9
+# edgeThreshold = 4
 # useIsLocationOccupied = False
+# Generated13
+squareLength = 7
+scanRadiusSquared = 13
+edgeThreshold = 8
+useIsLocationOccupied = False
 # Generated34
 # squareLength = 11
 # scanRadiusSquared = 34
@@ -20,6 +20,8 @@ useIsLocationOccupied = False
 ourLocationVar = "ourLocation"
 ourLocationXVar = "ourLocationX"
 ourLocationYVar = "ourLocationY"
+
+bestDirectionVar = "bestDirection"
 
 def genVars(prefix):
     return [[prefix + str(x) + "_" + str(y) for x in range(squareLength)] for y in range(squareLength)]
@@ -55,24 +57,26 @@ for x, y in allVisionCoords:
     print("public static MapLocation {};".format(locationVar))
     print("public static double {};".format(scoreVar))
     print("public static double {};".format(nextVar))
-print("public static Direction bestDir;")
+print("public static Direction {};".format(bestDirectionVar))
 print("public static double bestScore;")
 print("public static int {};".format(ourLocationXVar))
 print("public static int {};".format(ourLocationYVar))
 print("public static MapLocation target;")
 
 # Define method
-print("public static Direction execute(MapLocation t) throws GameActionException {")
+print("public static void execute(MapLocation t) throws GameActionException {")
 # Initial setup
 print("{} = rc.getLocation();".format(ourLocationVar))
 print("if({}.equals(t)) {{".format(ourLocationVar))
-print("return Direction.CENTER;")
+print("{} = Direction.CENTER;".format(bestDirectionVar))
+print("return;")
 print("}")
 print("target = t;")
 print("{} = {}.x;".format(ourLocationXVar, ourLocationVar))
 print("{} = {}.y;".format(ourLocationYVar, ourLocationVar))
 
 def generateBounded(minX, maxX, minY, maxY):
+    print("public static void executeBounded_{}_{}_{}_{}() throws GameActionException {{".format(minX, maxX, minY, maxY))
     # Initialize Location Variables
     print ("// START BOUNDED: minX={}, maxX={}, minY={}, maxY={}".format(minX, maxX, minY, maxY))
 
@@ -176,7 +180,12 @@ def generateBounded(minX, maxX, minY, maxY):
         print(', '.join(printedVars), end='')
         print(');')
     '''
+    print ("// END BOUNDED: minX={}, maxX={}, minY={}, maxY={}".format(minX, maxX, minY, maxY))
+    print("}") # End method
 
+def generateBoundedDirectionToTarget(minX, maxX, minY, maxY):
+    visionCoords = [(x, y) for x, y in allVisionCoords if x >= minX and x <= maxX and y >= minY and y <= maxY]
+    print("public static void directionToTargetBounded_{}_{}_{}_{}() throws GameActionException {{".format(minX, maxX, minY, maxY))
     # Retrieve best direction
     print("switch (target.x - {}) {{".format(ourLocationXVar))
     for x in range(squareLength):
@@ -191,11 +200,12 @@ def generateBounded(minX, maxX, minY, maxY):
             dy = y - offsetY
             if dx * dx + dy * dy <= scanRadiusSquared:
                 print("case {}:".format(dy))
-                print("return {};".format(dirVariables[x][y]))
+                print("{} = {};".format(bestDirectionVar, dirVariables[x][y]));
+                print("return;")
         print("}")
         print("break;")
     print("}")
-    print("bestDir = null;")
+    print("{} = null;".format(bestDirectionVar))
     print("bestScore = Double.MAX_VALUE;")
     for x, y in visionCoords:
         dx, dy = x - offsetX, y - offsetY
@@ -208,10 +218,9 @@ def generateBounded(minX, maxX, minY, maxY):
             print("{} = {} + {} + Math.sqrt({}.distanceSquaredTo(target)) * 8.0;".format(scoreVar, dpVar, rubbleVar, locationVar))
             print("if ({} < bestScore) {{".format(scoreVar))
             print("bestScore = {};".format(scoreVar))
-            print("bestDir = {};".format(dirVar))
+            print("{} = {};".format(bestDirectionVar, dirVar))
             print("}")
-    print("return bestDir;")
-    print ("// END BOUNDED: minX={}, maxX={}, minY={}, maxY={}".format(minX, maxX, minY, maxY))
+    print("}")
 
 # switch on ourLocation.x, ourLocation.y, Constants.MAP_WIDTH - ourLocation.x, Constants.MAP_HEIGHT - ourLocation.y
 boundedFunctions = set()
@@ -229,7 +238,9 @@ for i in range(offsetX):
         minY = offsetY - j
         maxY = squareLength - 1
         print("case {}:".format(j))
-        print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("return;");
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
     print("switch (Constants.MAP_HEIGHT - {}) {{".format(ourLocationYVar))
@@ -237,11 +248,15 @@ for i in range(offsetX):
         minY = 0
         maxY = offsetY + j - 1
         print("case {}:".format(j))
-        print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("return;")
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
     minY, maxY = 0, squareLength - 1
-    print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
 
@@ -258,7 +273,9 @@ for i in range(1, offsetX + 1):
         minY = offsetY - j
         maxY = squareLength - 1
         print("case {}:".format(j))
-        print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("return;")
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
     print("switch (Constants.MAP_HEIGHT - {}) {{".format(ourLocationYVar))
@@ -266,11 +283,15 @@ for i in range(1, offsetX + 1):
         minY = 0
         maxY = offsetY + j - 1
         print("case {}:".format(j))
-        print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+        print("return;")
         boundedFunctions.add((minX, maxX, minY, maxY))
     print("}")
     minY, maxY = 0, squareLength - 1
-    print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
 
@@ -283,7 +304,9 @@ for j in range(offsetY):
     minY = offsetY - j
     maxY = squareLength - 1
     print("case {}:".format(j))
-    print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
 print("switch (Constants.MAP_HEIGHT - {}) {{".format(ourLocationYVar))
@@ -291,17 +314,31 @@ for j in range(1, offsetY + 1):
     minY = 0
     maxY = offsetY + j - 1
     print("case {}:".format(j))
-    print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+    print("return;")
     boundedFunctions.add((minX, maxX, minY, maxY))
 print("}")
 minY, maxY = 0, squareLength - 1
-print("return executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+print("executeBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+print("directionToTargetBounded_{}_{}_{}_{}();".format(minX, maxX, minY, maxY))
+print("return;")
 boundedFunctions.add((minX, maxX, minY, maxY))
 
 # End method
 print("}")
 
+# getDP Function
+print("public static void execute(MapLocation location) {")
+print("switch (location.x - Cache.MY_LOCATION.x) {")
+# TODO
+print("switch (location.y - Cache.MY_LOCATION.y) {")
+print("}")
+
+
+print("}")
+print("}")
+
 for a, b, c, d in boundedFunctions:
-    print("public static Direction executeBounded_{}_{}_{}_{}() throws GameActionException {{".format(a, b, c, d))
     generateBounded(a, b, c, d)
-    print("}")
+    generateBoundedDirectionToTarget(a, b, c, d)

@@ -10,7 +10,8 @@ public class Generated13 {
     public static Direction ret;
 
     public static void debug_execute(MapLocation target) throws GameActionException {
-        ret = execute(target);
+        execute(target);
+        ret = bestDirection;
     }
     public static double dp_2_0;
     public static Direction dir_2_0;
@@ -281,15 +282,16 @@ public class Generated13 {
     public static MapLocation loc_3_2;
     public static double score_3_2;
     public static double next_3_2;
-    public static Direction bestDir;
+    public static Direction bestDirection;
     public static double bestScore;
     public static int ourLocationX;
     public static int ourLocationY;
     public static MapLocation target;
-    public static Direction execute(MapLocation t) throws GameActionException {
+    public static void execute(MapLocation t) throws GameActionException {
         ourLocation = rc.getLocation();
         if(ourLocation.equals(t)) {
-            return Direction.CENTER;
+            bestDirection = Direction.CENTER;
+            return;
         }
         target = t;
         ourLocationX = ourLocation.x;
@@ -298,133 +300,231 @@ public class Generated13 {
             case 0:
                 switch (ourLocationY) {
                     case 0:
-                        return executeBounded_3_6_3_6();
+                        executeBounded_3_6_3_6();
+                        directionToTargetBounded_3_6_3_6();
+                        return;
                     case 1:
-                        return executeBounded_3_6_2_6();
+                        executeBounded_3_6_2_6();
+                        directionToTargetBounded_3_6_2_6();
+                        return;
                     case 2:
-                        return executeBounded_3_6_1_6();
+                        executeBounded_3_6_1_6();
+                        directionToTargetBounded_3_6_1_6();
+                        return;
                 }
                 switch (Constants.MAP_HEIGHT - ourLocationY) {
                     case 1:
-                        return executeBounded_3_6_0_3();
+                        executeBounded_3_6_0_3();
+                        directionToTargetBounded_3_6_0_3();
+                        return;
                     case 2:
-                        return executeBounded_3_6_0_4();
+                        executeBounded_3_6_0_4();
+                        directionToTargetBounded_3_6_0_4();
+                        return;
                     case 3:
-                        return executeBounded_3_6_0_5();
+                        executeBounded_3_6_0_5();
+                        directionToTargetBounded_3_6_0_5();
+                        return;
                 }
-                return executeBounded_3_6_0_6();
+                executeBounded_3_6_0_6();
+                directionToTargetBounded_3_6_0_6();
+                return;
             case 1:
                 switch (ourLocationY) {
                     case 0:
-                        return executeBounded_2_6_3_6();
+                        executeBounded_2_6_3_6();
+                        directionToTargetBounded_2_6_3_6();
+                        return;
                     case 1:
-                        return executeBounded_2_6_2_6();
+                        executeBounded_2_6_2_6();
+                        directionToTargetBounded_2_6_2_6();
+                        return;
                     case 2:
-                        return executeBounded_2_6_1_6();
+                        executeBounded_2_6_1_6();
+                        directionToTargetBounded_2_6_1_6();
+                        return;
                 }
                 switch (Constants.MAP_HEIGHT - ourLocationY) {
                     case 1:
-                        return executeBounded_2_6_0_3();
+                        executeBounded_2_6_0_3();
+                        directionToTargetBounded_2_6_0_3();
+                        return;
                     case 2:
-                        return executeBounded_2_6_0_4();
+                        executeBounded_2_6_0_4();
+                        directionToTargetBounded_2_6_0_4();
+                        return;
                     case 3:
-                        return executeBounded_2_6_0_5();
+                        executeBounded_2_6_0_5();
+                        directionToTargetBounded_2_6_0_5();
+                        return;
                 }
-                return executeBounded_2_6_0_6();
+                executeBounded_2_6_0_6();
+                directionToTargetBounded_2_6_0_6();
+                return;
             case 2:
                 switch (ourLocationY) {
                     case 0:
-                        return executeBounded_1_6_3_6();
+                        executeBounded_1_6_3_6();
+                        directionToTargetBounded_1_6_3_6();
+                        return;
                     case 1:
-                        return executeBounded_1_6_2_6();
+                        executeBounded_1_6_2_6();
+                        directionToTargetBounded_1_6_2_6();
+                        return;
                     case 2:
-                        return executeBounded_1_6_1_6();
+                        executeBounded_1_6_1_6();
+                        directionToTargetBounded_1_6_1_6();
+                        return;
                 }
                 switch (Constants.MAP_HEIGHT - ourLocationY) {
                     case 1:
-                        return executeBounded_1_6_0_3();
+                        executeBounded_1_6_0_3();
+                        directionToTargetBounded_1_6_0_3();
+                        return;
                     case 2:
-                        return executeBounded_1_6_0_4();
+                        executeBounded_1_6_0_4();
+                        directionToTargetBounded_1_6_0_4();
+                        return;
                     case 3:
-                        return executeBounded_1_6_0_5();
+                        executeBounded_1_6_0_5();
+                        directionToTargetBounded_1_6_0_5();
+                        return;
                 }
-                return executeBounded_1_6_0_6();
+                executeBounded_1_6_0_6();
+                directionToTargetBounded_1_6_0_6();
+                return;
         }
         switch (Constants.MAP_WIDTH - ourLocationX) {
             case 1:
                 switch (ourLocationY) {
                     case 0:
-                        return executeBounded_0_3_3_6();
+                        executeBounded_0_3_3_6();
+                        directionToTargetBounded_0_3_3_6();
+                        return;
                     case 1:
-                        return executeBounded_0_3_2_6();
+                        executeBounded_0_3_2_6();
+                        directionToTargetBounded_0_3_2_6();
+                        return;
                     case 2:
-                        return executeBounded_0_3_1_6();
+                        executeBounded_0_3_1_6();
+                        directionToTargetBounded_0_3_1_6();
+                        return;
                 }
                 switch (Constants.MAP_HEIGHT - ourLocationY) {
                     case 1:
-                        return executeBounded_0_3_0_3();
+                        executeBounded_0_3_0_3();
+                        directionToTargetBounded_0_3_0_3();
+                        return;
                     case 2:
-                        return executeBounded_0_3_0_4();
+                        executeBounded_0_3_0_4();
+                        directionToTargetBounded_0_3_0_4();
+                        return;
                     case 3:
-                        return executeBounded_0_3_0_5();
+                        executeBounded_0_3_0_5();
+                        directionToTargetBounded_0_3_0_5();
+                        return;
                 }
-                return executeBounded_0_3_0_6();
+                executeBounded_0_3_0_6();
+                directionToTargetBounded_0_3_0_6();
+                return;
             case 2:
                 switch (ourLocationY) {
                     case 0:
-                        return executeBounded_0_4_3_6();
+                        executeBounded_0_4_3_6();
+                        directionToTargetBounded_0_4_3_6();
+                        return;
                     case 1:
-                        return executeBounded_0_4_2_6();
+                        executeBounded_0_4_2_6();
+                        directionToTargetBounded_0_4_2_6();
+                        return;
                     case 2:
-                        return executeBounded_0_4_1_6();
+                        executeBounded_0_4_1_6();
+                        directionToTargetBounded_0_4_1_6();
+                        return;
                 }
                 switch (Constants.MAP_HEIGHT - ourLocationY) {
                     case 1:
-                        return executeBounded_0_4_0_3();
+                        executeBounded_0_4_0_3();
+                        directionToTargetBounded_0_4_0_3();
+                        return;
                     case 2:
-                        return executeBounded_0_4_0_4();
+                        executeBounded_0_4_0_4();
+                        directionToTargetBounded_0_4_0_4();
+                        return;
                     case 3:
-                        return executeBounded_0_4_0_5();
+                        executeBounded_0_4_0_5();
+                        directionToTargetBounded_0_4_0_5();
+                        return;
                 }
-                return executeBounded_0_4_0_6();
+                executeBounded_0_4_0_6();
+                directionToTargetBounded_0_4_0_6();
+                return;
             case 3:
                 switch (ourLocationY) {
                     case 0:
-                        return executeBounded_0_5_3_6();
+                        executeBounded_0_5_3_6();
+                        directionToTargetBounded_0_5_3_6();
+                        return;
                     case 1:
-                        return executeBounded_0_5_2_6();
+                        executeBounded_0_5_2_6();
+                        directionToTargetBounded_0_5_2_6();
+                        return;
                     case 2:
-                        return executeBounded_0_5_1_6();
+                        executeBounded_0_5_1_6();
+                        directionToTargetBounded_0_5_1_6();
+                        return;
                 }
                 switch (Constants.MAP_HEIGHT - ourLocationY) {
                     case 1:
-                        return executeBounded_0_5_0_3();
+                        executeBounded_0_5_0_3();
+                        directionToTargetBounded_0_5_0_3();
+                        return;
                     case 2:
-                        return executeBounded_0_5_0_4();
+                        executeBounded_0_5_0_4();
+                        directionToTargetBounded_0_5_0_4();
+                        return;
                     case 3:
-                        return executeBounded_0_5_0_5();
+                        executeBounded_0_5_0_5();
+                        directionToTargetBounded_0_5_0_5();
+                        return;
                 }
-                return executeBounded_0_5_0_6();
+                executeBounded_0_5_0_6();
+                directionToTargetBounded_0_5_0_6();
+                return;
         }
         switch (ourLocationY) {
             case 0:
-                return executeBounded_0_6_3_6();
+                executeBounded_0_6_3_6();
+                directionToTargetBounded_0_6_3_6();
+                return;
             case 1:
-                return executeBounded_0_6_2_6();
+                executeBounded_0_6_2_6();
+                directionToTargetBounded_0_6_2_6();
+                return;
             case 2:
-                return executeBounded_0_6_1_6();
+                executeBounded_0_6_1_6();
+                directionToTargetBounded_0_6_1_6();
+                return;
         }
         switch (Constants.MAP_HEIGHT - ourLocationY) {
             case 1:
-                return executeBounded_0_6_0_3();
+                executeBounded_0_6_0_3();
+                directionToTargetBounded_0_6_0_3();
+                return;
             case 2:
-                return executeBounded_0_6_0_4();
+                executeBounded_0_6_0_4();
+                directionToTargetBounded_0_6_0_4();
+                return;
             case 3:
-                return executeBounded_0_6_0_5();
+                executeBounded_0_6_0_5();
+                directionToTargetBounded_0_6_0_5();
+                return;
         }
-        return executeBounded_0_6_0_6();
+        executeBounded_0_6_0_6();
+        directionToTargetBounded_0_6_0_6();
+        return;
     }
-    public static Direction executeBounded_0_4_0_4() throws GameActionException {
+    public static void executeBounded_0_4_0_4() throws GameActionException {
 // START BOUNDED: minX=0, maxX=4, minY=0, maxY=4
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -702,127 +802,152 @@ public class Generated13 {
             dp_0_1 = next_0_2;
             dir_0_1 = dir_0_2;
         }
+// END BOUNDED: minX=0, maxX=4, minY=0, maxY=4
+    }
+    public static void directionToTargetBounded_0_4_0_4() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=4, minY=0, maxY=4
     }
-    public static Direction executeBounded_1_6_0_5() throws GameActionException {
+    public static void executeBounded_1_6_0_5() throws GameActionException {
 // START BOUNDED: minX=1, maxX=6, minY=0, maxY=5
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -1264,178 +1389,214 @@ public class Generated13 {
             dp_5_6 = next_4_6;
             dir_5_6 = dir_4_6;
         }
+// END BOUNDED: minX=1, maxX=6, minY=0, maxY=5
+    }
+    public static void directionToTargetBounded_1_6_0_5() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
-        return bestDir;
-// END BOUNDED: minX=1, maxX=6, minY=0, maxY=5
     }
-    public static Direction executeBounded_0_6_1_6() throws GameActionException {
+    public static void executeBounded_0_6_1_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=6, minY=1, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -1954,217 +2115,258 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=6, minY=1, maxY=6
+    }
+    public static void directionToTargetBounded_0_6_1_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=6, minY=1, maxY=6
     }
-    public static Direction executeBounded_0_4_3_6() throws GameActionException {
+    public static void executeBounded_0_4_3_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=4, minY=3, maxY=6
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
@@ -2385,112 +2587,132 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=4, minY=3, maxY=6
+    }
+    public static void directionToTargetBounded_0_4_3_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=4, minY=3, maxY=6
     }
-    public static Direction executeBounded_3_6_2_6() throws GameActionException {
+    public static void executeBounded_3_6_2_6() throws GameActionException {
 // START BOUNDED: minX=3, maxX=6, minY=2, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -2711,108 +2933,128 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=3, maxX=6, minY=2, maxY=6
+    }
+    public static void directionToTargetBounded_3_6_2_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case 0:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
-        return bestDir;
-// END BOUNDED: minX=3, maxX=6, minY=2, maxY=6
     }
-    public static Direction executeBounded_0_3_0_5() throws GameActionException {
+    public static void executeBounded_0_3_0_5() throws GameActionException {
 // START BOUNDED: minX=0, maxX=3, minY=0, maxY=5
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -3090,126 +3332,150 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=3, minY=0, maxY=5
+    }
+    public static void directionToTargetBounded_0_3_0_5() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=3, minY=0, maxY=5
     }
-    public static Direction executeBounded_2_6_1_6() throws GameActionException {
+    public static void executeBounded_2_6_1_6() throws GameActionException {
 // START BOUNDED: minX=2, maxX=6, minY=1, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -3562,147 +3828,177 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=2, maxX=6, minY=1, maxY=6
+    }
+    public static void directionToTargetBounded_2_6_1_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
-        return bestDir;
-// END BOUNDED: minX=2, maxX=6, minY=1, maxY=6
     }
-    public static Direction executeBounded_0_6_0_4() throws GameActionException {
+    public static void executeBounded_0_6_0_4() throws GameActionException {
 // START BOUNDED: minX=0, maxX=6, minY=0, maxY=4
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -4114,183 +4410,217 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=0, maxX=6, minY=0, maxY=4
+    }
+    public static void directionToTargetBounded_0_6_0_4() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=6, minY=0, maxY=4
     }
-    public static Direction executeBounded_2_6_3_6() throws GameActionException {
+    public static void executeBounded_2_6_3_6() throws GameActionException {
 // START BOUNDED: minX=2, maxX=6, minY=3, maxY=6
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
@@ -4511,112 +4841,132 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=2, maxX=6, minY=3, maxY=6
+    }
+    public static void directionToTargetBounded_2_6_3_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
-        return bestDir;
-// END BOUNDED: minX=2, maxX=6, minY=3, maxY=6
     }
-    public static Direction executeBounded_3_6_0_5() throws GameActionException {
+    public static void executeBounded_3_6_0_5() throws GameActionException {
 // START BOUNDED: minX=3, maxX=6, minY=0, maxY=5
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -4894,126 +5244,150 @@ public class Generated13 {
             dp_5_6 = next_4_6;
             dir_5_6 = dir_4_6;
         }
+// END BOUNDED: minX=3, maxX=6, minY=0, maxY=5
+    }
+    public static void directionToTargetBounded_3_6_0_5() throws GameActionException {
         switch (target.x - ourLocationX) {
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
-        return bestDir;
-// END BOUNDED: minX=3, maxX=6, minY=0, maxY=5
     }
-    public static Direction executeBounded_0_6_3_6() throws GameActionException {
+    public static void executeBounded_0_6_3_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=6, minY=3, maxY=6
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
@@ -5332,159 +5706,186 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=6, minY=3, maxY=6
+    }
+    public static void directionToTargetBounded_0_6_3_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=6, minY=3, maxY=6
     }
-    public static Direction executeBounded_0_5_0_3() throws GameActionException {
+    public static void executeBounded_0_5_0_3() throws GameActionException {
 // START BOUNDED: minX=0, maxX=5, minY=0, maxY=3
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
@@ -5762,134 +6163,158 @@ public class Generated13 {
             dp_0_5 = next_0_4;
             dir_0_5 = dir_0_4;
         }
+// END BOUNDED: minX=0, maxX=5, minY=0, maxY=3
+    }
+    public static void directionToTargetBounded_0_5_0_3() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=5, minY=0, maxY=3
     }
-    public static Direction executeBounded_1_6_1_6() throws GameActionException {
+    public static void executeBounded_1_6_1_6() throws GameActionException {
 // START BOUNDED: minX=1, maxX=6, minY=1, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -6331,178 +6756,214 @@ public class Generated13 {
             dp_6_1 = next_6_2;
             dir_6_1 = dir_6_2;
         }
+// END BOUNDED: minX=1, maxX=6, minY=1, maxY=6
+    }
+    public static void directionToTargetBounded_1_6_1_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
-        return bestDir;
-// END BOUNDED: minX=1, maxX=6, minY=1, maxY=6
     }
-    public static Direction executeBounded_0_5_0_6() throws GameActionException {
+    public static void executeBounded_0_5_0_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=5, minY=0, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -7021,213 +7482,254 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=5, minY=0, maxY=6
+    }
+    public static void directionToTargetBounded_0_5_0_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=5, minY=0, maxY=6
     }
-    public static Direction executeBounded_0_3_3_6() throws GameActionException {
+    public static void executeBounded_0_3_3_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=3, minY=3, maxY=6
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
@@ -7398,95 +7900,111 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=3, minY=3, maxY=6
+    }
+    public static void directionToTargetBounded_0_3_3_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=3, minY=3, maxY=6
     }
-    public static Direction executeBounded_2_6_0_4() throws GameActionException {
+    public static void executeBounded_2_6_0_4() throws GameActionException {
 // START BOUNDED: minX=2, maxX=6, minY=0, maxY=4
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -7764,127 +8282,152 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=2, maxX=6, minY=0, maxY=4
+    }
+    public static void directionToTargetBounded_2_6_0_4() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
-        return bestDir;
-// END BOUNDED: minX=2, maxX=6, minY=0, maxY=4
     }
-    public static Direction executeBounded_1_6_3_6() throws GameActionException {
+    public static void executeBounded_1_6_3_6() throws GameActionException {
 // START BOUNDED: minX=1, maxX=6, minY=3, maxY=6
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
@@ -8162,134 +8705,158 @@ public class Generated13 {
             dp_6_1 = next_6_2;
             dir_6_1 = dir_6_2;
         }
+// END BOUNDED: minX=1, maxX=6, minY=3, maxY=6
+    }
+    public static void directionToTargetBounded_1_6_3_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
-        return bestDir;
-// END BOUNDED: minX=1, maxX=6, minY=3, maxY=6
     }
-    public static Direction executeBounded_0_3_1_6() throws GameActionException {
+    public static void executeBounded_0_3_1_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=3, minY=1, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -8567,126 +9134,150 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=3, minY=1, maxY=6
+    }
+    public static void directionToTargetBounded_0_3_1_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=3, minY=1, maxY=6
     }
-    public static Direction executeBounded_0_4_0_3() throws GameActionException {
+    public static void executeBounded_0_4_0_3() throws GameActionException {
 // START BOUNDED: minX=0, maxX=4, minY=0, maxY=3
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
@@ -8907,112 +9498,132 @@ public class Generated13 {
             dp_0_1 = next_0_2;
             dir_0_1 = dir_0_2;
         }
+// END BOUNDED: minX=0, maxX=4, minY=0, maxY=3
+    }
+    public static void directionToTargetBounded_0_4_0_3() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=4, minY=0, maxY=3
     }
-    public static Direction executeBounded_0_4_0_6() throws GameActionException {
+    public static void executeBounded_0_4_0_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=4, minY=0, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -9424,175 +10035,209 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=4, minY=0, maxY=6
+    }
+    public static void directionToTargetBounded_0_4_0_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=4, minY=0, maxY=6
     }
-    public static Direction executeBounded_0_3_0_4() throws GameActionException {
+    public static void executeBounded_0_3_0_4() throws GameActionException {
 // START BOUNDED: minX=0, maxX=3, minY=0, maxY=4
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -9813,108 +10458,128 @@ public class Generated13 {
             dp_0_1 = next_0_2;
             dir_0_1 = dir_0_2;
         }
+// END BOUNDED: minX=0, maxX=3, minY=0, maxY=4
+    }
+    public static void directionToTargetBounded_0_3_0_4() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=3, minY=0, maxY=4
     }
-    public static Direction executeBounded_1_6_0_4() throws GameActionException {
+    public static void executeBounded_1_6_0_4() throws GameActionException {
 // START BOUNDED: minX=1, maxX=6, minY=0, maxY=4
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -10267,151 +10932,181 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=1, maxX=6, minY=0, maxY=4
+    }
+    public static void directionToTargetBounded_1_6_0_4() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
-        return bestDir;
-// END BOUNDED: minX=1, maxX=6, minY=0, maxY=4
     }
-    public static Direction executeBounded_0_5_1_6() throws GameActionException {
+    public static void executeBounded_0_5_1_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=5, minY=1, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -10853,178 +11548,214 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=5, minY=1, maxY=6
+    }
+    public static void directionToTargetBounded_0_5_1_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=5, minY=1, maxY=6
     }
-    public static Direction executeBounded_0_5_2_6() throws GameActionException {
+    public static void executeBounded_0_5_2_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=5, minY=2, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -11377,151 +12108,181 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=5, minY=2, maxY=6
+    }
+    public static void directionToTargetBounded_0_5_2_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=5, minY=2, maxY=6
     }
-    public static Direction executeBounded_0_6_0_3() throws GameActionException {
+    public static void executeBounded_0_6_0_3() throws GameActionException {
 // START BOUNDED: minX=0, maxX=6, minY=0, maxY=3
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
@@ -11840,159 +12601,186 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=0, maxX=6, minY=0, maxY=3
+    }
+    public static void directionToTargetBounded_0_6_0_3() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=6, minY=0, maxY=3
     }
-    public static Direction executeBounded_0_6_0_6() throws GameActionException {
+    public static void executeBounded_0_6_0_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=6, minY=0, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -12587,252 +13375,298 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=6, minY=0, maxY=6
+    }
+    public static void directionToTargetBounded_0_6_0_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=6, minY=0, maxY=6
     }
-    public static Direction executeBounded_0_4_2_6() throws GameActionException {
+    public static void executeBounded_0_4_2_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=4, minY=2, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -13110,127 +13944,152 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=4, minY=2, maxY=6
+    }
+    public static void directionToTargetBounded_0_4_2_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=4, minY=2, maxY=6
     }
-    public static Direction executeBounded_3_6_1_6() throws GameActionException {
+    public static void executeBounded_3_6_1_6() throws GameActionException {
 // START BOUNDED: minX=3, maxX=6, minY=1, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -13508,126 +14367,150 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=3, maxX=6, minY=1, maxY=6
+    }
+    public static void directionToTargetBounded_3_6_1_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case 0:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
-        return bestDir;
-// END BOUNDED: minX=3, maxX=6, minY=1, maxY=6
     }
-    public static Direction executeBounded_3_6_0_4() throws GameActionException {
+    public static void executeBounded_3_6_0_4() throws GameActionException {
 // START BOUNDED: minX=3, maxX=6, minY=0, maxY=4
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -13848,108 +14731,128 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=3, maxX=6, minY=0, maxY=4
+    }
+    public static void directionToTargetBounded_3_6_0_4() throws GameActionException {
         switch (target.x - ourLocationX) {
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
-        return bestDir;
-// END BOUNDED: minX=3, maxX=6, minY=0, maxY=4
     }
-    public static Direction executeBounded_3_6_3_6() throws GameActionException {
+    public static void executeBounded_3_6_3_6() throws GameActionException {
 // START BOUNDED: minX=3, maxX=6, minY=3, maxY=6
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
@@ -14120,95 +15023,111 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=3, maxX=6, minY=3, maxY=6
+    }
+    public static void directionToTargetBounded_3_6_3_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case 0:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
-        return bestDir;
-// END BOUNDED: minX=3, maxX=6, minY=3, maxY=6
     }
-    public static Direction executeBounded_2_6_0_3() throws GameActionException {
+    public static void executeBounded_2_6_0_3() throws GameActionException {
 // START BOUNDED: minX=2, maxX=6, minY=0, maxY=3
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
@@ -14429,112 +15348,132 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=2, maxX=6, minY=0, maxY=3
+    }
+    public static void directionToTargetBounded_2_6_0_3() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
-        return bestDir;
-// END BOUNDED: minX=2, maxX=6, minY=0, maxY=3
     }
-    public static Direction executeBounded_2_6_0_6() throws GameActionException {
+    public static void executeBounded_2_6_0_6() throws GameActionException {
 // START BOUNDED: minX=2, maxX=6, minY=0, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -14946,175 +15885,209 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=2, maxX=6, minY=0, maxY=6
+    }
+    public static void directionToTargetBounded_2_6_0_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
-        return bestDir;
-// END BOUNDED: minX=2, maxX=6, minY=0, maxY=6
     }
-    public static Direction executeBounded_0_5_0_5() throws GameActionException {
+    public static void executeBounded_0_5_0_5() throws GameActionException {
 // START BOUNDED: minX=0, maxX=5, minY=0, maxY=5
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -15556,178 +16529,214 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=5, minY=0, maxY=5
+    }
+    public static void directionToTargetBounded_0_5_0_5() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=5, minY=0, maxY=5
     }
-    public static Direction executeBounded_0_6_2_6() throws GameActionException {
+    public static void executeBounded_0_6_2_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=6, minY=2, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -16139,183 +17148,217 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=6, minY=2, maxY=6
+    }
+    public static void directionToTargetBounded_0_6_2_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=6, minY=2, maxY=6
     }
-    public static Direction executeBounded_1_6_0_3() throws GameActionException {
+    public static void executeBounded_1_6_0_3() throws GameActionException {
 // START BOUNDED: minX=1, maxX=6, minY=0, maxY=3
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
@@ -16593,134 +17636,158 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=1, maxX=6, minY=0, maxY=3
+    }
+    public static void directionToTargetBounded_1_6_0_3() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
-        return bestDir;
-// END BOUNDED: minX=1, maxX=6, minY=0, maxY=3
     }
-    public static Direction executeBounded_0_4_0_5() throws GameActionException {
+    public static void executeBounded_0_4_0_5() throws GameActionException {
 // START BOUNDED: minX=0, maxX=4, minY=0, maxY=5
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -17073,147 +18140,177 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=4, minY=0, maxY=5
+    }
+    public static void directionToTargetBounded_0_4_0_5() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=4, minY=0, maxY=5
     }
-    public static Direction executeBounded_1_6_0_6() throws GameActionException {
+    public static void executeBounded_1_6_0_6() throws GameActionException {
 // START BOUNDED: minX=1, maxX=6, minY=0, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -17732,213 +18829,254 @@ public class Generated13 {
             dp_6_1 = next_6_2;
             dir_6_1 = dir_6_2;
         }
+// END BOUNDED: minX=1, maxX=6, minY=0, maxY=6
+    }
+    public static void directionToTargetBounded_1_6_0_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
-        return bestDir;
-// END BOUNDED: minX=1, maxX=6, minY=0, maxY=6
     }
-    public static Direction executeBounded_0_3_0_3() throws GameActionException {
+    public static void executeBounded_0_3_0_3() throws GameActionException {
 // START BOUNDED: minX=0, maxX=3, minY=0, maxY=3
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
@@ -18109,95 +19247,111 @@ public class Generated13 {
             dp_0_1 = next_0_2;
             dir_0_1 = dir_0_2;
         }
+// END BOUNDED: minX=0, maxX=3, minY=0, maxY=3
+    }
+    public static void directionToTargetBounded_0_3_0_3() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=3, minY=0, maxY=3
     }
-    public static Direction executeBounded_0_3_0_6() throws GameActionException {
+    public static void executeBounded_0_3_0_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=3, minY=0, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -18516,147 +19670,174 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=3, minY=0, maxY=6
+    }
+    public static void directionToTargetBounded_0_3_0_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=3, minY=0, maxY=6
     }
-    public static Direction executeBounded_2_6_2_6() throws GameActionException {
+    public static void executeBounded_2_6_2_6() throws GameActionException {
 // START BOUNDED: minX=2, maxX=6, minY=2, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -18934,127 +20115,152 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=2, maxX=6, minY=2, maxY=6
+    }
+    public static void directionToTargetBounded_2_6_2_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
-        return bestDir;
-// END BOUNDED: minX=2, maxX=6, minY=2, maxY=6
     }
-    public static Direction executeBounded_0_6_0_5() throws GameActionException {
+    public static void executeBounded_0_6_0_5() throws GameActionException {
 // START BOUNDED: minX=0, maxX=6, minY=0, maxY=5
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -19573,217 +20779,258 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=6, minY=0, maxY=5
+    }
+    public static void directionToTargetBounded_0_6_0_5() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=6, minY=0, maxY=5
     }
-    public static Direction executeBounded_0_3_2_6() throws GameActionException {
+    public static void executeBounded_0_3_2_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=3, minY=2, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -20004,108 +21251,128 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=3, minY=2, maxY=6
+    }
+    public static void directionToTargetBounded_0_3_2_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=3, minY=2, maxY=6
     }
-    public static Direction executeBounded_3_6_0_3() throws GameActionException {
+    public static void executeBounded_3_6_0_3() throws GameActionException {
 // START BOUNDED: minX=3, maxX=6, minY=0, maxY=3
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_1_3 = loc_2_3.add(Direction.SOUTH);
@@ -20276,95 +21543,111 @@ public class Generated13 {
             dp_1_6 = next_2_6;
             dir_1_6 = dir_2_6;
         }
+// END BOUNDED: minX=3, maxX=6, minY=0, maxY=3
+    }
+    public static void directionToTargetBounded_3_6_0_3() throws GameActionException {
         switch (target.x - ourLocationX) {
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
-        return bestDir;
-// END BOUNDED: minX=3, maxX=6, minY=0, maxY=3
     }
-    public static Direction executeBounded_0_4_1_6() throws GameActionException {
+    public static void executeBounded_0_4_1_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=4, minY=1, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -20717,147 +22000,177 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=4, minY=1, maxY=6
+    }
+    public static void directionToTargetBounded_0_4_1_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=4, minY=1, maxY=6
     }
-    public static Direction executeBounded_3_6_0_6() throws GameActionException {
+    public static void executeBounded_3_6_0_6() throws GameActionException {
 // START BOUNDED: minX=3, maxX=6, minY=0, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -21176,147 +22489,174 @@ public class Generated13 {
             dp_6_5 = next_6_4;
             dir_6_5 = dir_6_4;
         }
+// END BOUNDED: minX=3, maxX=6, minY=0, maxY=6
+    }
+    public static void directionToTargetBounded_3_6_0_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
-        return bestDir;
-// END BOUNDED: minX=3, maxX=6, minY=0, maxY=6
     }
-    public static Direction executeBounded_1_6_2_6() throws GameActionException {
+    public static void executeBounded_1_6_2_6() throws GameActionException {
 // START BOUNDED: minX=1, maxX=6, minY=2, maxY=6
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -21669,151 +23009,181 @@ public class Generated13 {
             dp_6_1 = next_6_2;
             dir_6_1 = dir_6_2;
         }
+// END BOUNDED: minX=1, maxX=6, minY=2, maxY=6
+    }
+    public static void directionToTargetBounded_1_6_2_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
-        return bestDir;
-// END BOUNDED: minX=1, maxX=6, minY=2, maxY=6
     }
-    public static Direction executeBounded_2_6_0_5() throws GameActionException {
+    public static void executeBounded_2_6_0_5() throws GameActionException {
 // START BOUNDED: minX=2, maxX=6, minY=0, maxY=5
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -22166,147 +23536,177 @@ public class Generated13 {
             dp_5_6 = next_4_6;
             dir_5_6 = dir_4_6;
         }
+// END BOUNDED: minX=2, maxX=6, minY=0, maxY=5
+    }
+    public static void directionToTargetBounded_2_6_0_5() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                 }
                 break;
             case 3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_6;
+                        bestDirection = dir_1_6;
+                        return;
                     case -1:
-                        return dir_2_6;
+                        bestDirection = dir_2_6;
+                        return;
                     case 0:
-                        return dir_3_6;
+                        bestDirection = dir_3_6;
+                        return;
                     case 1:
-                        return dir_4_6;
+                        bestDirection = dir_4_6;
+                        return;
                     case 2:
-                        return dir_5_6;
+                        bestDirection = dir_5_6;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_1_6 = dp_1_6 + rubble_1_6 + Math.sqrt(loc_1_6.distanceSquaredTo(target)) * 8.0;
         if (score_1_6 < bestScore) {
             bestScore = score_1_6;
-            bestDir = dir_1_6;
+            bestDirection = dir_1_6;
         }
         score_2_6 = dp_2_6 + rubble_2_6 + Math.sqrt(loc_2_6.distanceSquaredTo(target)) * 8.0;
         if (score_2_6 < bestScore) {
             bestScore = score_2_6;
-            bestDir = dir_2_6;
+            bestDirection = dir_2_6;
         }
         score_3_6 = dp_3_6 + rubble_3_6 + Math.sqrt(loc_3_6.distanceSquaredTo(target)) * 8.0;
         if (score_3_6 < bestScore) {
             bestScore = score_3_6;
-            bestDir = dir_3_6;
+            bestDirection = dir_3_6;
         }
         score_4_6 = dp_4_6 + rubble_4_6 + Math.sqrt(loc_4_6.distanceSquaredTo(target)) * 8.0;
         if (score_4_6 < bestScore) {
             bestScore = score_4_6;
-            bestDir = dir_4_6;
+            bestDirection = dir_4_6;
         }
         score_5_6 = dp_5_6 + rubble_5_6 + Math.sqrt(loc_5_6.distanceSquaredTo(target)) * 8.0;
         if (score_5_6 < bestScore) {
             bestScore = score_5_6;
-            bestDir = dir_5_6;
+            bestDirection = dir_5_6;
         }
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
-        return bestDir;
-// END BOUNDED: minX=2, maxX=6, minY=0, maxY=5
     }
-    public static Direction executeBounded_0_5_0_4() throws GameActionException {
+    public static void executeBounded_0_5_0_4() throws GameActionException {
 // START BOUNDED: minX=0, maxX=5, minY=0, maxY=4
         loc_2_3 = rc.adjacentLocation(Direction.SOUTH);
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
@@ -22659,151 +24059,181 @@ public class Generated13 {
             dp_0_5 = next_0_4;
             dir_0_5 = dir_0_4;
         }
+// END BOUNDED: minX=0, maxX=5, minY=0, maxY=4
+    }
+    public static void directionToTargetBounded_0_5_0_4() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case -2:
-                        return dir_1_0;
+                        bestDirection = dir_1_0;
+                        return;
                     case -1:
-                        return dir_2_0;
+                        bestDirection = dir_2_0;
+                        return;
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_1;
+                        bestDirection = dir_0_1;
+                        return;
                     case -2:
-                        return dir_1_1;
+                        bestDirection = dir_1_1;
+                        return;
                     case -1:
-                        return dir_2_1;
+                        bestDirection = dir_2_1;
+                        return;
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_2;
+                        bestDirection = dir_0_2;
+                        return;
                     case -2:
-                        return dir_1_2;
+                        bestDirection = dir_1_2;
+                        return;
                     case -1:
-                        return dir_2_2;
+                        bestDirection = dir_2_2;
+                        return;
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_3;
+                        bestDirection = dir_0_3;
+                        return;
                     case -2:
-                        return dir_1_3;
+                        bestDirection = dir_1_3;
+                        return;
                     case -1:
-                        return dir_2_3;
+                        bestDirection = dir_2_3;
+                        return;
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_4;
+                        bestDirection = dir_0_4;
+                        return;
                     case -2:
-                        return dir_1_4;
+                        bestDirection = dir_1_4;
+                        return;
                     case -1:
-                        return dir_2_4;
+                        bestDirection = dir_2_4;
+                        return;
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case -3:
-                        return dir_0_5;
+                        bestDirection = dir_0_5;
+                        return;
                     case -2:
-                        return dir_1_5;
+                        bestDirection = dir_1_5;
+                        return;
                     case -1:
-                        return dir_2_5;
+                        bestDirection = dir_2_5;
+                        return;
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_2_0 = dp_2_0 + rubble_2_0 + Math.sqrt(loc_2_0.distanceSquaredTo(target)) * 8.0;
         if (score_2_0 < bestScore) {
             bestScore = score_2_0;
-            bestDir = dir_2_0;
+            bestDirection = dir_2_0;
         }
         score_1_0 = dp_1_0 + rubble_1_0 + Math.sqrt(loc_1_0.distanceSquaredTo(target)) * 8.0;
         if (score_1_0 < bestScore) {
             bestScore = score_1_0;
-            bestDir = dir_1_0;
+            bestDirection = dir_1_0;
         }
         score_1_1 = dp_1_1 + rubble_1_1 + Math.sqrt(loc_1_1.distanceSquaredTo(target)) * 8.0;
         if (score_1_1 < bestScore) {
             bestScore = score_1_1;
-            bestDir = dir_1_1;
+            bestDirection = dir_1_1;
         }
         score_0_1 = dp_0_1 + rubble_0_1 + Math.sqrt(loc_0_1.distanceSquaredTo(target)) * 8.0;
         if (score_0_1 < bestScore) {
             bestScore = score_0_1;
-            bestDir = dir_0_1;
+            bestDirection = dir_0_1;
         }
         score_0_2 = dp_0_2 + rubble_0_2 + Math.sqrt(loc_0_2.distanceSquaredTo(target)) * 8.0;
         if (score_0_2 < bestScore) {
             bestScore = score_0_2;
-            bestDir = dir_0_2;
+            bestDirection = dir_0_2;
         }
         score_0_3 = dp_0_3 + rubble_0_3 + Math.sqrt(loc_0_3.distanceSquaredTo(target)) * 8.0;
         if (score_0_3 < bestScore) {
             bestScore = score_0_3;
-            bestDir = dir_0_3;
+            bestDirection = dir_0_3;
         }
         score_0_4 = dp_0_4 + rubble_0_4 + Math.sqrt(loc_0_4.distanceSquaredTo(target)) * 8.0;
         if (score_0_4 < bestScore) {
             bestScore = score_0_4;
-            bestDir = dir_0_4;
+            bestDirection = dir_0_4;
         }
         score_0_5 = dp_0_5 + rubble_0_5 + Math.sqrt(loc_0_5.distanceSquaredTo(target)) * 8.0;
         if (score_0_5 < bestScore) {
             bestScore = score_0_5;
-            bestDir = dir_0_5;
+            bestDirection = dir_0_5;
         }
         score_1_5 = dp_1_5 + rubble_1_5 + Math.sqrt(loc_1_5.distanceSquaredTo(target)) * 8.0;
         if (score_1_5 < bestScore) {
             bestScore = score_1_5;
-            bestDir = dir_1_5;
+            bestDirection = dir_1_5;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=5, minY=0, maxY=4
     }
-    public static Direction executeBounded_0_5_3_6() throws GameActionException {
+    public static void executeBounded_0_5_3_6() throws GameActionException {
 // START BOUNDED: minX=0, maxX=5, minY=3, maxY=6
         loc_4_3 = rc.adjacentLocation(Direction.NORTH);
         loc_5_3 = loc_4_3.add(Direction.NORTH);
@@ -23081,131 +24511,155 @@ public class Generated13 {
             dp_5_0 = next_4_0;
             dir_5_0 = dir_4_0;
         }
+// END BOUNDED: minX=0, maxX=5, minY=3, maxY=6
+    }
+    public static void directionToTargetBounded_0_5_3_6() throws GameActionException {
         switch (target.x - ourLocationX) {
             case -3:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_0;
+                        bestDirection = dir_3_0;
+                        return;
                     case 1:
-                        return dir_4_0;
+                        bestDirection = dir_4_0;
+                        return;
                     case 2:
-                        return dir_5_0;
+                        bestDirection = dir_5_0;
+                        return;
                 }
                 break;
             case -2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_1;
+                        bestDirection = dir_3_1;
+                        return;
                     case 1:
-                        return dir_4_1;
+                        bestDirection = dir_4_1;
+                        return;
                     case 2:
-                        return dir_5_1;
+                        bestDirection = dir_5_1;
+                        return;
                     case 3:
-                        return dir_6_1;
+                        bestDirection = dir_6_1;
+                        return;
                 }
                 break;
             case -1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_2;
+                        bestDirection = dir_3_2;
+                        return;
                     case 1:
-                        return dir_4_2;
+                        bestDirection = dir_4_2;
+                        return;
                     case 2:
-                        return dir_5_2;
+                        bestDirection = dir_5_2;
+                        return;
                     case 3:
-                        return dir_6_2;
+                        bestDirection = dir_6_2;
+                        return;
                 }
                 break;
             case 0:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_3;
+                        bestDirection = dir_3_3;
+                        return;
                     case 1:
-                        return dir_4_3;
+                        bestDirection = dir_4_3;
+                        return;
                     case 2:
-                        return dir_5_3;
+                        bestDirection = dir_5_3;
+                        return;
                     case 3:
-                        return dir_6_3;
+                        bestDirection = dir_6_3;
+                        return;
                 }
                 break;
             case 1:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_4;
+                        bestDirection = dir_3_4;
+                        return;
                     case 1:
-                        return dir_4_4;
+                        bestDirection = dir_4_4;
+                        return;
                     case 2:
-                        return dir_5_4;
+                        bestDirection = dir_5_4;
+                        return;
                     case 3:
-                        return dir_6_4;
+                        bestDirection = dir_6_4;
+                        return;
                 }
                 break;
             case 2:
                 switch (target.y - ourLocationY) {
                     case 0:
-                        return dir_3_5;
+                        bestDirection = dir_3_5;
+                        return;
                     case 1:
-                        return dir_4_5;
+                        bestDirection = dir_4_5;
+                        return;
                     case 2:
-                        return dir_5_5;
+                        bestDirection = dir_5_5;
+                        return;
                     case 3:
-                        return dir_6_5;
+                        bestDirection = dir_6_5;
+                        return;
                 }
                 break;
         }
-        bestDir = null;
+        bestDirection = null;
         bestScore = Double.MAX_VALUE;
         score_5_5 = dp_5_5 + rubble_5_5 + Math.sqrt(loc_5_5.distanceSquaredTo(target)) * 8.0;
         if (score_5_5 < bestScore) {
             bestScore = score_5_5;
-            bestDir = dir_5_5;
+            bestDirection = dir_5_5;
         }
         score_6_5 = dp_6_5 + rubble_6_5 + Math.sqrt(loc_6_5.distanceSquaredTo(target)) * 8.0;
         if (score_6_5 < bestScore) {
             bestScore = score_6_5;
-            bestDir = dir_6_5;
+            bestDirection = dir_6_5;
         }
         score_6_4 = dp_6_4 + rubble_6_4 + Math.sqrt(loc_6_4.distanceSquaredTo(target)) * 8.0;
         if (score_6_4 < bestScore) {
             bestScore = score_6_4;
-            bestDir = dir_6_4;
+            bestDirection = dir_6_4;
         }
         score_6_3 = dp_6_3 + rubble_6_3 + Math.sqrt(loc_6_3.distanceSquaredTo(target)) * 8.0;
         if (score_6_3 < bestScore) {
             bestScore = score_6_3;
-            bestDir = dir_6_3;
+            bestDirection = dir_6_3;
         }
         score_6_2 = dp_6_2 + rubble_6_2 + Math.sqrt(loc_6_2.distanceSquaredTo(target)) * 8.0;
         if (score_6_2 < bestScore) {
             bestScore = score_6_2;
-            bestDir = dir_6_2;
+            bestDirection = dir_6_2;
         }
         score_6_1 = dp_6_1 + rubble_6_1 + Math.sqrt(loc_6_1.distanceSquaredTo(target)) * 8.0;
         if (score_6_1 < bestScore) {
             bestScore = score_6_1;
-            bestDir = dir_6_1;
+            bestDirection = dir_6_1;
         }
         score_5_1 = dp_5_1 + rubble_5_1 + Math.sqrt(loc_5_1.distanceSquaredTo(target)) * 8.0;
         if (score_5_1 < bestScore) {
             bestScore = score_5_1;
-            bestDir = dir_5_1;
+            bestDirection = dir_5_1;
         }
         score_5_0 = dp_5_0 + rubble_5_0 + Math.sqrt(loc_5_0.distanceSquaredTo(target)) * 8.0;
         if (score_5_0 < bestScore) {
             bestScore = score_5_0;
-            bestDir = dir_5_0;
+            bestDirection = dir_5_0;
         }
         score_4_0 = dp_4_0 + rubble_4_0 + Math.sqrt(loc_4_0.distanceSquaredTo(target)) * 8.0;
         if (score_4_0 < bestScore) {
             bestScore = score_4_0;
-            bestDir = dir_4_0;
+            bestDirection = dir_4_0;
         }
         score_3_0 = dp_3_0 + rubble_3_0 + Math.sqrt(loc_3_0.distanceSquaredTo(target)) * 8.0;
         if (score_3_0 < bestScore) {
             bestScore = score_3_0;
-            bestDir = dir_3_0;
+            bestDirection = dir_3_0;
         }
-        return bestDir;
-// END BOUNDED: minX=0, maxX=5, minY=3, maxY=6
     }
 }
