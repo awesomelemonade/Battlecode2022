@@ -116,8 +116,9 @@ public class Archon implements RunnableBot {
             }
             return true;
         } else {
+            int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
             int numBuilder = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
-            if (numBuilder < 1) {
+            if (numLaboratories < 1 && numBuilder < 1) {
                 tryBuild(RobotType.BUILDER);
                 return true;
             } else {
