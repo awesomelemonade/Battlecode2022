@@ -65,12 +65,6 @@ public class Builder implements RunnableBot {
                 return;
             }
         }
-        if (rc.getRoundNum() <= 1900) {
-            if (tryBuildWithReservations(RobotType.WATCHTOWER)) {
-                movesSinceAction = 0;
-                return;
-            }
-        }
     }
 
     public static void tryMove() throws GameActionException {
