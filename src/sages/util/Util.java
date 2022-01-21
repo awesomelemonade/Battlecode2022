@@ -192,4 +192,128 @@ public class Util {
         int y = location.y;
         return x >= 0 && y >= 0 && x < Constants.MAP_WIDTH && y < Constants.MAP_HEIGHT;
     }
+
+    // Attacker related
+    public static MapLocation getRetreatLocation() throws GameActionException {
+        if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) {
+            return null;
+        }
+        int healthThreshold = (int) Math.round(Math.max(15.0, Math.min(30.0, 40.0 - 0.1 * Communication.getSoldierCombinedHealth())));
+        if (rc.getHealth() <= healthThreshold) {
+            return idealThenNearestVisible();
+        }
+        MapLocation location = nearestVisibleThenIdeal();
+        return location != null && Cache.MY_LOCATION.isWithinDistanceSquared(location, 34) ? location : null;
+    }
+
+    private static MapLocation idealThenNearestVisible() {
+        MapLocation location = getIdealAllyArchonForHeal();
+        return location == null ? getNearestVisibleAllyArchonForHeal() : location;
+    }
+
+    private static MapLocation nearestVisibleThenIdeal() {
+        MapLocation location = getNearestVisibleAllyArchonForHeal();
+        return location == null ? getIdealAllyArchonForHeal() : location;
+    }
+
+    private static MapLocation getIdealAllyArchonForHeal() {
+        double bestScore = Double.MAX_VALUE;
+        MapLocation bestLocation = null;
+        for (int i = Communication.archonLocations.length; --i >= 0; ) {
+            MapLocation loc = Communication.archonLocations[i];
+            if (loc == null) continue;
+            if (Communication.archonPortable[i]) continue;
+            double health = Communication.archonRepairAmounts[i];
+            double score = health / 3.0 + 2.0 * Math.sqrt(loc.distanceSquaredTo(Cache.MY_LOCATION));
+            if (score < bestScore) {
+                bestScore = score;
+                bestLocation = loc;
+            }
+        }
+        return bestLocation;
+    }
+
+    public static MapLocation getNearestVisibleAllyArchonForHeal() {
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        MapLocation bestMapLocation = null;
+        for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+            RobotInfo robot = Cache.ALLY_ROBOTS[i];
+            if (robot.type == RobotType.ARCHON && robot.mode == RobotMode.TURRET) {
+                MapLocation location = robot.location;
+                int distanceSquared = location.distanceSquaredTo(Cache.MY_LOCATION);
+                if (distanceSquared < bestDistanceSquared) {
+                    bestDistanceSquared = distanceSquared;
+                    bestMapLocation = location;
+                }
+            }
+        }
+        return bestMapLocation;
+    }
+
+    private static MapLocation predictedArchonLocation = null;
+    public static void tryMoveTowardsEnemyChunkOrExplore() throws GameActionException {
+        MapLocation location = Communication.getClosestEnemyChunk();
+        if (location == null) {
+            if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
+                predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
+            }
+            location = predictedArchonLocation;
+        }
+        if (location == null) {
+            Util.tryExplore();
+        } else {
+            Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
+            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
+            Util.tryMove(location);
+        }
+    }
+
+    public static void tryMoveAttackingSquare(MapLocation location, int range) throws GameActionException {
+        double bestScore = 0;
+        Direction bestDir = null;
+        for (Direction dir : Constants.ALL_DIRECTIONS) {
+            MapLocation loc = Cache.MY_LOCATION.add(dir);
+            if (dir == Direction.CENTER || rc.canMove(dir)) {
+                int dist = loc.distanceSquaredTo(location);
+                double distScore = 0.5 + dist / (2.0 * range);
+                if (dist > range) distScore = 0.75 - dist / (2.0 * range);
+                double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
+                double cdScore = 1.0 / cooldown;
+                double score = distScore + 10 * cdScore;
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestDir = dir;
+                }
+            }
+        }
+        if (bestDir != null && bestDir != Direction.CENTER) {
+            Util.tryMove(bestDir);
+        }
+    }
+
+    public static void tryMoveAttacker() throws GameActionException {
+        MapLocation retreatLocation = Util.getRetreatLocation();
+        if (retreatLocation != null) {
+            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, retreatLocation, 128, 128, 255);
+            if (!Cache.MY_LOCATION.isWithinDistanceSquared(retreatLocation, 10)) {
+                Util.tryMove(retreatLocation);
+                return;
+            }
+        }
+        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
+        if (closestEnemyAttacker != null) {
+            if (rc.isActionReady()) {
+                Util.tryMoveAttackingSquare(closestEnemyAttacker.location, Constants.ROBOT_TYPE.actionRadiusSquared);
+            } else {
+                Util.tryKiteFrom(closestEnemyAttacker.location);
+            }
+        } else {
+            RobotInfo closestEnemy = Util.getClosestEnemyRobot();
+            if (closestEnemy != null) {
+                Util.tryMoveAttackingSquare(closestEnemy.location, Constants.ROBOT_TYPE.actionRadiusSquared);
+            } else {
+                Util.tryMoveTowardsEnemyChunkOrExplore();
+            }
+        }
+    }
 }

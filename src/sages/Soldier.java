@@ -17,46 +17,10 @@ public class Soldier implements RunnableBot {
             tryAttackLowHealth();
         }
         if (rc.isMovementReady()) {
-            tryMove();
+            Util.tryMoveAttacker();
         }
         if (rc.isActionReady()) {
             tryAttackLowHealth();
-        }
-    }
-
-
-    private static MapLocation predictedArchonLocation = null;
-    public static void tryMove() throws GameActionException {
-        if (tryRetreat()) {
-            return;
-        }
-        RobotInfo closestEnemyAttacker = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
-        if (closestEnemyAttacker != null) {
-            if (rc.isActionReady()) {
-                tryMoveAttackingSquare(closestEnemyAttacker.location, 13);
-            } else {
-                Util.tryKiteFrom(closestEnemyAttacker.location);
-            }
-        } else {
-            RobotInfo closestEnemy = Util.getClosestEnemyRobot();
-            if (closestEnemy != null) {
-                tryMoveAttackingSquare(closestEnemy.location, 13);
-            } else {
-                MapLocation location = Communication.getClosestEnemyChunk();
-                if (location == null) {
-                    if (predictedArchonLocation == null || Communication.getChunkInfo(predictedArchonLocation) != Communication.CHUNK_INFO_ENEMY_PREDICTED) {
-                        predictedArchonLocation = Communication.getRandomPredictedArchonLocation();
-                    }
-                    location = predictedArchonLocation;
-                }
-                if (location == null) {
-                    Util.tryExplore();
-                } else {
-                    Debug.setIndicatorDot(Profile.ATTACKING, Cache.MY_LOCATION, 255, 255, 0);
-                    Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, location, 255, 255, 0);
-                    Util.tryMove(location);
-                }
-            }
         }
     }
 
@@ -96,78 +60,5 @@ public class Soldier implements RunnableBot {
             default:
                 throw new IllegalArgumentException("Unknown Unit Type");
         }
-    }
-
-    public static void tryMoveAttackingSquare(MapLocation location, int range) throws GameActionException {
-        double bestScore = 0;
-        Direction bestDir = null;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                MapLocation loc = rc.getLocation().translate(dx, dy);
-                Direction dir = rc.getLocation().directionTo(loc);
-                if (dir == Direction.CENTER || rc.canMove(dir)) {
-                    int dist = loc.distanceSquaredTo(location);
-                    double distScore = 0.5 + dist / (2.0 * range);
-                    if (dist > range) distScore = 0.75 - dist / (2.0 * range);
-                    double cooldown = 1.0 + rc.senseRubble(loc) / 10.0;
-                    double cdScore = 1.0 / cooldown;
-                    double score = distScore + 10 * cdScore;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestDir = dir;
-                    }
-                }
-            }
-        }
-        if (bestDir != null && bestDir != Direction.CENTER) {
-            Util.tryMove(bestDir);
-        }
-    }
-
-
-    public static boolean tryRetreat() throws GameActionException {
-        if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) return false;
-        MapLocation bestLoc = null;
-        double bestScore = 1e9;
-        if (Communication.archonLocations != null) {
-            for (int i = Communication.archonLocations.length; --i >= 0; ) {
-                MapLocation loc = Communication.archonLocations[i];
-                if (loc == null) continue;
-                if (Communication.archonPortable[i]) continue;
-                double health = Communication.archonRepairAmounts[i];
-                double score = health/3 + 2*Math.sqrt(loc.distanceSquaredTo(Cache.MY_LOCATION));
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestLoc = loc;
-                }
-            }
-        }
-        if (bestLoc == null) {
-            for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
-                RobotInfo robot = Cache.ALLY_ROBOTS[i];
-                if (robot.type == RobotType.ARCHON) {
-                    MapLocation location = robot.location;
-                    int distanceSquared = location.distanceSquaredTo(Cache.MY_LOCATION);
-                    if (distanceSquared < bestScore) {
-                        bestScore = distanceSquared;
-                        bestLoc = location;
-                    }
-                }
-            }
-        }
-        if (bestLoc == null) {
-            return false;
-        }
-
-        int healthThreshold = 15;
-        int dist = bestLoc.distanceSquaredTo(Cache.MY_LOCATION);
-        if (dist <= 10) {
-            return false;
-        } else if (rc.getHealth() <= healthThreshold || dist <= RobotType.ARCHON.actionRadiusSquared) {
-            Debug.setIndicatorLine(Profile.ATTACKING, Cache.MY_LOCATION, bestLoc, 128, 128, 255);
-            Util.tryMove(bestLoc);
-            return true;
-        }
-        return false;
     }
 }
