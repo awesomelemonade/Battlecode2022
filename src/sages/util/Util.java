@@ -193,6 +193,19 @@ public class Util {
         return x >= 0 && y >= 0 && x < Constants.MAP_WIDTH && y < Constants.MAP_HEIGHT;
     }
 
+    public static int getNextVortexOrSingularity() {
+        int currentRound = rc.getRoundNum();
+        AnomalyScheduleEntry[] schedule = rc.getAnomalySchedule();
+        int ret = 2000;
+        for (int i = Math.min(20, schedule.length); --i >= 0;) {
+            AnomalyScheduleEntry entry = schedule[i];
+            if (entry.anomalyType == AnomalyType.VORTEX && entry.roundNumber >= currentRound) {
+                ret = Math.min(ret, entry.roundNumber);
+            }
+        }
+        return ret;
+    }
+
     // Attacker related
     public static MapLocation getRetreatLocation() throws GameActionException {
         if (rc.getHealth() >= rc.getType().getMaxHealth(rc.getLevel())) {

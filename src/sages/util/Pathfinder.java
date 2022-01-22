@@ -19,6 +19,7 @@ public class Pathfinder {
             switch (Constants.ROBOT_TYPE) {
                 case MINER:
                 case BUILDER:
+                case LABORATORY:
                     d = Generated9.execute(target);
                     break;
                 default:

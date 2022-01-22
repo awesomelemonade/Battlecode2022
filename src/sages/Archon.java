@@ -309,7 +309,7 @@ public class Archon implements RunnableBot {
     }
 
     public static MapLocation getTargetMoveLocation() throws GameActionException {
-        MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, RobotType.ARCHON.visionRadiusSquared);
+        MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, ROBOT_TYPE.visionRadiusSquared);
         MapLocation bestLocation = null;
         int bestRubble = Integer.MAX_VALUE;
         int bestDistanceSquared = 0;
@@ -346,19 +346,6 @@ public class Archon implements RunnableBot {
         double unitsMissed = totalTurns / currentCooldown; // units
         double catchUpRate = 1.0 / destinationCooldown - 1.0 / currentCooldown; // number of more units per turn (units / turn)
         double payoffTurns = unitsMissed / catchUpRate + totalTurns;
-        return 10.0 + 1.5 * payoffTurns < getNextVortexOrSingularity() - rc.getRoundNum();
-    }
-
-    public static int getNextVortexOrSingularity() {
-        int currentRound = rc.getRoundNum();
-        AnomalyScheduleEntry[] schedule = rc.getAnomalySchedule();
-        int ret = 2000;
-        for (int i = Math.min(20, schedule.length); --i >= 0;) {
-            AnomalyScheduleEntry entry = schedule[i];
-            if (entry.anomalyType == AnomalyType.VORTEX && entry.roundNumber >= currentRound) {
-                ret = Math.min(ret, entry.roundNumber);
-            }
-        }
-        return ret;
+        return 10.0 + 1.5 * payoffTurns < Util.getNextVortexOrSingularity() - rc.getRoundNum();
     }
 }
