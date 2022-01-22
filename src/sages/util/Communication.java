@@ -268,123 +268,125 @@ public class Communication {
     }
 
     public static void loop() throws GameActionException {
-        clearStaleReservation();
-        clearStalePortableArchon();
-        loadChunks();
-        updateChunkInfo();
-        if (Constants.ROBOT_TYPE != RobotType.ARCHON || Cache.TURN_COUNT > 1) {
-            // Initialize Arrays
-            if (archonLocations == null) {
-                // Read archon locations
-                boolean initialized = false;
-                for (int i = Constants.MAX_ARCHONS; --i >= 0; ) {
-                    int value = rc.readSharedArray(i);
-                    if (value != 0) {
-                        if (!initialized) {
-                            archonLocations = new MapLocation[i + 1];
-                            archonRepairAmounts = new int[i + 1];
-                            archonLocationHeartbeats = new int[i + 1];
-                            archonPortable = new boolean[i + 1];
-                            initialized = true;
+        if (Constants.ROBOT_TYPE != RobotType.LABORATORY) {
+            clearStaleReservation();
+            clearStalePortableArchon();
+            loadChunks();
+            updateChunkInfo();
+            if (Constants.ROBOT_TYPE != RobotType.ARCHON || Cache.TURN_COUNT > 1) {
+                // Initialize Arrays
+                if (archonLocations == null) {
+                    // Read archon locations
+                    boolean initialized = false;
+                    for (int i = Constants.MAX_ARCHONS; --i >= 0; ) {
+                        int value = rc.readSharedArray(i);
+                        if (value != 0) {
+                            if (!initialized) {
+                                archonLocations = new MapLocation[i + 1];
+                                archonRepairAmounts = new int[i + 1];
+                                archonLocationHeartbeats = new int[i + 1];
+                                archonPortable = new boolean[i + 1];
+                                initialized = true;
+                            }
+                            archonLocationHeartbeats[i] = -1;
                         }
-                        archonLocationHeartbeats[i] = -1;
+                    }
+                    if (!initialized) {
+                        throw new IllegalStateException("Cannot read any archon locations");
                     }
                 }
-                if (!initialized) {
-                    throw new IllegalStateException("Cannot read any archon locations");
-                }
-            }
-            // Read archon locations
-            for (int i = archonLocations.length; --i >= 0;) {
-                int sharedArrayIndex = ARCHON_LOCATIONS_OFFSET + i;
-                if (sharedArrayIndex == archonSharedIndex) {
-                    continue;
-                }
-                int value = rc.readSharedArray(sharedArrayIndex);
+                // Read archon locations
+                for (int i = archonLocations.length; --i >= 0; ) {
+                    int sharedArrayIndex = ARCHON_LOCATIONS_OFFSET + i;
+                    if (sharedArrayIndex == archonSharedIndex) {
+                        continue;
+                    }
+                    int value = rc.readSharedArray(sharedArrayIndex);
 
-                // check if heartbeat is correct
-                int prevHeartbeat = archonLocationHeartbeats[i];
-                int heartbeat = ((value >> ARCHON_LOCATIONS_HEARTBEAT_BIT) & 0b1);
-                boolean hasAliveBit = ((value >> ARCHON_LOCATIONS_ALIVE_BIT) & 0b1) == 0b1;
-                if (!hasAliveBit || heartbeat == prevHeartbeat) {
-                    if (hasAliveBit && lastUpdatedArchonLocationHeartbeats + 1 == rc.getRoundNum()) {
-                        // pronounce it dead
-                        rc.writeSharedArray(sharedArrayIndex, value & (0b1111_1111_1111_1111 & (~(1 << ARCHON_LOCATIONS_ALIVE_BIT))));
+                    // check if heartbeat is correct
+                    int prevHeartbeat = archonLocationHeartbeats[i];
+                    int heartbeat = ((value >> ARCHON_LOCATIONS_HEARTBEAT_BIT) & 0b1);
+                    boolean hasAliveBit = ((value >> ARCHON_LOCATIONS_ALIVE_BIT) & 0b1) == 0b1;
+                    if (!hasAliveBit || heartbeat == prevHeartbeat) {
+                        if (hasAliveBit && lastUpdatedArchonLocationHeartbeats + 1 == rc.getRoundNum()) {
+                            // pronounce it dead
+                            rc.writeSharedArray(sharedArrayIndex, value & (0b1111_1111_1111_1111 & (~(1 << ARCHON_LOCATIONS_ALIVE_BIT))));
+                        }
+                        archonLocations[i] = null;
+                        archonRepairAmounts[i] = 0;
+                        archonPortable[i] = false;
+                    } else {
+                        // fetch location
+                        archonLocations[i] = unpack((value >> ARCHON_LOCATIONS_LOCATION_BIT) & ARCHON_LOCATIONS_LOCATION_MASK);
+                        archonRepairAmounts[i] = rc.readSharedArray(ARCHON_REPAIRING_OFFSET + i);
+                        archonPortable[i] = ((value >> ARCHON_LOCATIONS_PORTABLE_BIT) & 0b1) == 0b1;
                     }
-                    archonLocations[i] = null;
-                    archonRepairAmounts[i] = 0;
-                    archonPortable[i] = false;
-                } else {
-                    // fetch location
-                    archonLocations[i] = unpack((value >> ARCHON_LOCATIONS_LOCATION_BIT) & ARCHON_LOCATIONS_LOCATION_MASK);
-                    archonRepairAmounts[i] = rc.readSharedArray(ARCHON_REPAIRING_OFFSET + i);
-                    archonPortable[i] = ((value >> ARCHON_LOCATIONS_PORTABLE_BIT) & 0b1) == 0b1;
+                    archonLocationHeartbeats[i] = heartbeat;
                 }
-                archonLocationHeartbeats[i] = heartbeat;
+                lastUpdatedArchonLocationHeartbeats = rc.getRoundNum();
             }
-            lastUpdatedArchonLocationHeartbeats = rc.getRoundNum();
-        }
-        if (Constants.ROBOT_TYPE == RobotType.ARCHON) {
-            // Broadcast our archon location
-            boolean currentlyPortable = rc.getMode() == RobotMode.PORTABLE;
-            int heartbeat = (rc.readSharedArray(archonSharedIndex) >> ARCHON_LOCATIONS_HEARTBEAT_BIT) & 0b1;
-            rc.writeSharedArray(archonSharedIndex,
-                    (pack(Cache.MY_LOCATION) << ARCHON_LOCATIONS_LOCATION_BIT) |
-                            ((currentlyPortable ? 1 : 0) << ARCHON_LOCATIONS_PORTABLE_BIT) |
-                            ((1 - heartbeat) << ARCHON_LOCATIONS_HEARTBEAT_BIT) |
-                            (1 << ARCHON_LOCATIONS_ALIVE_BIT) |
-                            (1 << ARCHON_LOCATIONS_SET_BIT));
-            if (archonLocations != null) {
-                archonLocations[archonSharedIndex] = Cache.MY_LOCATION;
-            }
-            // Broadcast how much hp we need to heal
-            RobotInfo[] robots = rc.senseNearbyRobots(RobotType.ARCHON.actionRadiusSquared, ALLY_TEAM);
-            int amount = 0;
-            for (RobotInfo robot : robots) {
-                if (rc.canRepair(robot.location)) {
-                    amount += robot.type.health - robot.health;
+            if (Constants.ROBOT_TYPE == RobotType.ARCHON) {
+                // Broadcast our archon location
+                boolean currentlyPortable = rc.getMode() == RobotMode.PORTABLE;
+                int heartbeat = (rc.readSharedArray(archonSharedIndex) >> ARCHON_LOCATIONS_HEARTBEAT_BIT) & 0b1;
+                rc.writeSharedArray(archonSharedIndex,
+                        (pack(Cache.MY_LOCATION) << ARCHON_LOCATIONS_LOCATION_BIT) |
+                                ((currentlyPortable ? 1 : 0) << ARCHON_LOCATIONS_PORTABLE_BIT) |
+                                ((1 - heartbeat) << ARCHON_LOCATIONS_HEARTBEAT_BIT) |
+                                (1 << ARCHON_LOCATIONS_ALIVE_BIT) |
+                                (1 << ARCHON_LOCATIONS_SET_BIT));
+                if (archonLocations != null) {
+                    archonLocations[archonSharedIndex] = Cache.MY_LOCATION;
+                }
+                // Broadcast how much hp we need to heal
+                RobotInfo[] robots = rc.senseNearbyRobots(RobotType.ARCHON.actionRadiusSquared, ALLY_TEAM);
+                int amount = 0;
+                for (RobotInfo robot : robots) {
+                    if (rc.canRepair(robot.location)) {
+                        amount += robot.type.health - robot.health;
+                    }
+                }
+                amount = Math.min(65535, amount);
+                rc.writeSharedArray(archonSharedIndex - ARCHON_LOCATIONS_OFFSET + ARCHON_REPAIRING_OFFSET, amount);
+                if (archonRepairAmounts != null) {
+                    archonRepairAmounts[archonSharedIndex] = amount;
+                }
+                if (archonPortable != null) {
+                    archonPortable[archonSharedIndex] = currentlyPortable;
+                }
+                // Guess enemy archon locations
+                if (chunksLoaded && !guessed) {
+                    guessed = true;
+                    guessEnemyArchonLocations();
                 }
             }
-            amount = Math.min(65535, amount);
-            rc.writeSharedArray(archonSharedIndex - ARCHON_LOCATIONS_OFFSET + ARCHON_REPAIRING_OFFSET, amount);
-            if (archonRepairAmounts != null) {
-                archonRepairAmounts[archonSharedIndex] = amount;
+            if (Cache.TURN_COUNT == 1) {
+                for (int i = NUM_UNIT_TYPES; --i >= 0; ) {
+                    prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
+                    prevPassiveUnitCountValues[i] = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
+                }
+                prevLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
+                prevSoldierCombinedHealthValue = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
+            } else {
+                for (int i = NUM_UNIT_TYPES; --i >= 0; ) {
+                    // unit count
+                    int current = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
+                    currentUnitCount[i] = ((current - prevUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
+                    prevUnitCountValues[i] = current;
+                    // passive count
+                    int currentPassive = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
+                    currentPassiveUnitCount[i] = ((currentPassive - prevPassiveUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
+                    prevPassiveUnitCountValues[i] = currentPassive;
+                }
+                // lead count
+                int currentLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
+                currentLeadCount = (currentLeadCountValue - prevLeadCountValue + LEAD_COUNT_MOD) % LEAD_COUNT_MOD;
+                prevLeadCountValue = currentLeadCountValue;
+                // soldier combined health
+                int currentSoldierCombinedHealthValue = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
+                currentSoldierCombinedHealth = (currentSoldierCombinedHealthValue - prevSoldierCombinedHealthValue + SOLDIER_COMBINED_HEALTH_MOD) % SOLDIER_COMBINED_HEALTH_MOD;
+                prevSoldierCombinedHealthValue = currentSoldierCombinedHealthValue;
             }
-            if (archonPortable != null) {
-                archonPortable[archonSharedIndex] = currentlyPortable;
-            }
-            // Guess enemy archon locations
-            if (chunksLoaded && !guessed) {
-                guessed = true;
-                guessEnemyArchonLocations();
-            }
-        }
-        if (Cache.TURN_COUNT == 1) {
-            for (int i = NUM_UNIT_TYPES; --i >= 0;) {
-                prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
-                prevPassiveUnitCountValues[i] = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
-            }
-            prevLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
-            prevSoldierCombinedHealthValue = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
-        } else {
-            for (int i = NUM_UNIT_TYPES; --i >= 0;) {
-                // unit count
-                int current = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
-                currentUnitCount[i] = ((current - prevUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
-                prevUnitCountValues[i] = current;
-                // passive count
-                int currentPassive = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
-                currentPassiveUnitCount[i] = ((currentPassive - prevPassiveUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
-                prevPassiveUnitCountValues[i] = currentPassive;
-            }
-            // lead count
-            int currentLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
-            currentLeadCount = (currentLeadCountValue - prevLeadCountValue + LEAD_COUNT_MOD) % LEAD_COUNT_MOD;
-            prevLeadCountValue = currentLeadCountValue;
-            // soldier combined health
-            int currentSoldierCombinedHealthValue = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
-            currentSoldierCombinedHealth = (currentSoldierCombinedHealthValue - prevSoldierCombinedHealthValue + SOLDIER_COMBINED_HEALTH_MOD) % SOLDIER_COMBINED_HEALTH_MOD;
-            prevSoldierCombinedHealthValue = currentSoldierCombinedHealthValue;
         }
         int unitCountSharedIndex = UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
         rc.writeSharedArray(unitCountSharedIndex, (rc.readSharedArray(unitCountSharedIndex) + 1) % UNIT_COUNT_MOD);
@@ -448,6 +450,7 @@ public class Communication {
     }
 
     public static void postLoop() throws GameActionException {
+        if (Constants.ROBOT_TYPE == RobotType.LABORATORY) return; // Save Bytecodes
         prevReservationHeartbeatBit = (rc.readSharedArray(RESERVATION_OFFSET) >> RESERVATION_HEARTBEAT_BIT) & 0b1;
         prevArchonPortableHeartbeatBit = (rc.readSharedArray(ARCHON_PORTABLE_OFFSET) >> ARCHON_PORTABLE_HEARTBEAT_BIT) & 0b1;
         updateChunkInfo();

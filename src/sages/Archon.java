@@ -77,14 +77,14 @@ public class Archon implements RunnableBot {
         }
     }
 
-    public boolean tryBuildAttacker() throws GameActionException {
+    public static boolean tryBuildAttacker() throws GameActionException {
         if (rc.getTeamGoldAmount(ALLY_TEAM) >= RobotType.SAGE.buildCostGold) {
             return tryBuild(RobotType.SAGE);
         }
         return tryBuild(RobotType.SOLDIER);
     }
 
-    public boolean tryBuildDefenders() throws GameActionException {
+    public static boolean tryBuildDefenders() throws GameActionException {
         int sumEnemy = 0;
         for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
             if (Util.isAttacker(robot.type)) {
@@ -109,15 +109,16 @@ public class Archon implements RunnableBot {
         return false;
     }
 
-    public boolean tryBuildEarlygame() throws GameActionException {
+    public static boolean tryBuildEarlygame() throws GameActionException {
         if (wantedEarlygameMiners > 0) {
             if (tryBuild(RobotType.MINER)) {
                 --wantedEarlygameMiners;
             }
             return true;
         } else {
+            int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
             int numBuilder = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
-            if (numBuilder < 1) {
+            if (numLaboratories < 1 && numBuilder < 1) {
                 tryBuild(RobotType.BUILDER);
                 return true;
             } else {
@@ -126,7 +127,7 @@ public class Archon implements RunnableBot {
         }
     }
 
-    public boolean tryBuildLategame() throws GameActionException {
+    public static boolean tryBuildLategame() throws GameActionException {
         if (rc.getRoundNum() < 1900) return false;
         if (rc.getTeamLeadAmount(ALLY_TEAM) < 500) {
             if (averageIncome >= 5) {
@@ -144,7 +145,7 @@ public class Archon implements RunnableBot {
         return true;
     }
 
-    public void tryBuildRatio(double builder, double miner, double attacker) throws GameActionException {
+    public static void tryBuildRatio(double builder, double miner, double attacker) throws GameActionException {
         double prod = (builder <= 0 ? 1 : builder) * (miner <= 0 ? 1 : miner) * (attacker <= 0 ? 1 : attacker);
         double builderScore = builder <= 0 ? Integer.MAX_VALUE : Communication.getAliveRobotTypeCount(RobotType.BUILDER) * (prod/builder);
         double minerScore = miner <= 0 ? Integer.MAX_VALUE : Communication.getAliveRobotTypeCount(RobotType.MINER) * (prod/miner);
@@ -163,7 +164,7 @@ public class Archon implements RunnableBot {
         }
     }
 
-    public boolean tryBuildRich() throws GameActionException {
+    public static boolean tryBuildRich() throws GameActionException {
         if (rc.getTeamLeadAmount(ALLY_TEAM) < 500) return false;
         if (averageIncomePerMiner >= 0.6) {
             tryBuildRatio(1, 2, 6);
@@ -173,7 +174,7 @@ public class Archon implements RunnableBot {
         return true;
     }
 
-    public boolean tryBuildPoor() throws GameActionException {
+    public static boolean tryBuildPoor() throws GameActionException {
         if (rc.getTeamLeadAmount(ALLY_TEAM) >= 500) return false;
         // 1:2 at 0.6, 1:1 at 1
         double ratio = Math.max(0.5, -2.5 * averageIncomePerMiner + 3.5);
@@ -181,7 +182,7 @@ public class Archon implements RunnableBot {
         return true;
     }
 
-    public boolean tryBuild(RobotType type) throws GameActionException {
+    public static boolean tryBuild(RobotType type) throws GameActionException {
         int reservedLead = Communication.getReservedLead();
         int reservedGold = Communication.getReservedGold();
 
@@ -222,7 +223,7 @@ public class Archon implements RunnableBot {
             return; // We should probably be saving to build units
         }
         MapLocation bestLocation = null;
-        double bestScore = -Double.MAX_VALUE;
+        int bestScore = Integer.MIN_VALUE;
         if (Cache.ENEMY_ROBOTS.length > 0) {
             // If we see any enemies
             // Repair the lowest health so they can survive
@@ -233,11 +234,11 @@ public class Archon implements RunnableBot {
                     continue;
                 }
                 int health = robot.health;
-                int maxHealth = robot.type.getMaxHealth(robot.level);
+                int maxHealth = robot.type.health;
                 if (health >= maxHealth) {
                     continue;
                 }
-                double score = (Util.isAttacker(robot.type) ? 1000 : 0) + maxHealth - health;
+                int score = (Util.isAttacker(robot.type) ? 1000 : 0) + maxHealth - health;
                 if (score > bestScore) {
                     bestScore = score;
                     bestLocation = location;
@@ -253,11 +254,11 @@ public class Archon implements RunnableBot {
                     continue;
                 }
                 int health = robot.health;
-                int maxHealth = robot.type.getMaxHealth(robot.level);
+                int maxHealth = robot.type.health;
                 if (health >= maxHealth) {
                     continue;
                 }
-                double score = (Util.isAttacker(robot.type) ? 1000 : 0) + health;
+                int score = (Util.isAttacker(robot.type) ? 1000 : 0) + health;
                 if (score > bestScore) {
                     bestScore = score;
                     bestLocation = location;
@@ -308,7 +309,7 @@ public class Archon implements RunnableBot {
     }
 
     public static MapLocation getTargetMoveLocation() throws GameActionException {
-        MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, RobotType.ARCHON.visionRadiusSquared);
+        MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, ROBOT_TYPE.visionRadiusSquared);
         MapLocation bestLocation = null;
         int bestRubble = Integer.MAX_VALUE;
         int bestDistanceSquared = 0;
@@ -345,19 +346,6 @@ public class Archon implements RunnableBot {
         double unitsMissed = totalTurns / currentCooldown; // units
         double catchUpRate = 1.0 / destinationCooldown - 1.0 / currentCooldown; // number of more units per turn (units / turn)
         double payoffTurns = unitsMissed / catchUpRate + totalTurns;
-        return 10.0 + 1.5 * payoffTurns < getNextVortexOrSingularity() - rc.getRoundNum();
-    }
-
-    public static int getNextVortexOrSingularity() {
-        int currentRound = rc.getRoundNum();
-        AnomalyScheduleEntry[] schedule = rc.getAnomalySchedule();
-        int ret = 2000;
-        for (int i = Math.min(20, schedule.length); --i >= 0;) {
-            AnomalyScheduleEntry entry = schedule[i];
-            if (entry.anomalyType == AnomalyType.VORTEX && entry.roundNumber >= currentRound) {
-                ret = Math.min(ret, entry.roundNumber);
-            }
-        }
-        return ret;
+        return 10.0 + 1.5 * payoffTurns < Util.getNextVortexOrSingularity() - rc.getRoundNum();
     }
 }

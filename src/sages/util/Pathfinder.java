@@ -15,16 +15,19 @@ public class Pathfinder {
     public static boolean execute(MapLocation target) {
         Debug.setIndicatorLine(Profile.PATHFINDER, Cache.MY_LOCATION, target, 0, 0, 255);
         try {
-            if (Constants.ROBOT_TYPE == RobotType.MINER) {
-                Direction d = Generated9.execute(target);
-                if (d != null && d != Direction.CENTER) {
-                    return Util.tryMove(d);
-                }
-            } else {
-                Direction d = Generated13.execute(target);
-                if (d != null && d != Direction.CENTER) {
-                    return Util.tryMove(d);
-                }
+            Direction d;
+            switch (Constants.ROBOT_TYPE) {
+                case MINER:
+                case BUILDER:
+                case LABORATORY:
+                    d = Generated9.execute(target);
+                    break;
+                default:
+                    d = Generated13.execute(target);
+                    break;
+            }
+            if (d != null && d != Direction.CENTER) {
+                return Util.tryMove(d);
             }
             return false;
         } catch (GameActionException e) {

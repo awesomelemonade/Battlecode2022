@@ -53,9 +53,6 @@ public class RobotPlayer {
             try {
                 while (true) {
                     currentTurn = controller.getRoundNum();
-                    if (Constants.DEBUG_RESIGN && (currentTurn >= 800 || currentTurn >= 350 && controller.getRobotCount() < 10)) {
-                        controller.resign();
-                    }
                     Util.loop();
                     bot.loop();
                     Util.postLoop();

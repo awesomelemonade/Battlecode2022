@@ -76,9 +76,10 @@ public class Builder implements RunnableBot {
     }
 
     public static MapLocation getNewGuardLocation() throws GameActionException {
-        for (int i = 20; --i >= 0;) { // Only try 20 times
-            int dx = (int) (7.0 * Math.random() - 3.0);
-            int dy = (int) (7.0 * Math.random() - 3.0);
+        for (int i = 10; --i >= 0;) { // Only try 10 times
+            int random = (int) (49 * Math.random());
+            int dx = random / 7 - 3;
+            int dy = random % 7 - 3;
             MapLocation potential = guardTarget.translate(dx, dy);
             if (Util.onTheMap(potential) && !Cache.MY_LOCATION.isWithinDistanceSquared(potential, 2)) {
                 return potential;
@@ -117,10 +118,18 @@ public class Builder implements RunnableBot {
     }
 
     public static boolean tryMoveToRepair() throws GameActionException {
-        MapLocation repairTargetLocation = LambdaUtil.arraysStreamMin(Cache.ALLY_ROBOTS,
-                r -> ROBOT_TYPE.canRepair(r.type) && r.health < r.type.getMaxHealth(r.level),
-                Comparator.comparingInt(r -> Cache.MY_LOCATION.distanceSquaredTo(r.location)))
-                .map(r -> r.location).orElse(null);
+        MapLocation repairTargetLocation = null;
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+            RobotInfo robot = Cache.ALLY_ROBOTS[i];
+            if (ROBOT_TYPE.canRepair(robot.type) && robot.health < robot.type.getMaxHealth(robot.level)) {
+                int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(robot.location);
+                if (distanceSquared < bestDistanceSquared) {
+                    bestDistanceSquared = distanceSquared;
+                    repairTargetLocation = robot.location;
+                }
+            }
+        }
         if (repairTargetLocation == null) return false;
         int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(repairTargetLocation);
         if (distanceSquared <= ROBOT_TYPE.actionRadiusSquared) {
