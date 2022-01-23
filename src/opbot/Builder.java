@@ -21,8 +21,9 @@ public class Builder implements RunnableBot {
 
     public static void tryAction() throws GameActionException {
         if (!rc.isActionReady()) return;
+        int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
         int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
-        if (numLaboratories < 1) {
+        if (numLaboratories * 8 <= numSoldiers) {
             if (tryBuildWithReservations(RobotType.LABORATORY)) {
                 return;
             }
