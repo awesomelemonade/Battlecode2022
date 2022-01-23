@@ -78,11 +78,14 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean tryBuildAttacker() throws GameActionException {
-        int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
-        if (numSoldiers < 5) {
-            return tryBuild(RobotType.SOLDIER);
-        }
         return tryBuild(RobotType.SAGE);
+    }
+
+    public static boolean tryBuildAttackerForDefense() throws GameActionException {
+        if (rc.getTeamGoldAmount(ALLY_TEAM) >= RobotType.SAGE.buildCostGold) {
+            return tryBuild(RobotType.SAGE);
+        }
+        return tryBuild(RobotType.SOLDIER);
     }
 
     public static boolean tryBuildDefenders() throws GameActionException {
@@ -103,7 +106,7 @@ public class Archon implements RunnableBot {
         boolean winnable = 1.5 * sumAlly + 5 * RobotType.SOLDIER.health >= sumEnemy;
         if (beingAttacked) {
             if (winnable || rc.getArchonCount() == 1) {
-                tryBuildAttacker();
+                tryBuildAttackerForDefense();
             }
             return true;
         }
