@@ -276,7 +276,6 @@ public class Communication {
             if (Constants.ROBOT_TYPE != RobotType.ARCHON || Cache.TURN_COUNT > 1) {
                 // Initialize Arrays
                 if (archonLocations == null) {
-                    // Read archon locations
                     boolean initialized = false;
                     for (int i = Constants.MAX_ARCHONS; --i >= 0; ) {
                         int value = rc.readSharedArray(i);
@@ -388,6 +387,7 @@ public class Communication {
                 prevSoldierCombinedHealthValue = currentSoldierCombinedHealthValue;
             }
         }
+        // Increment unit count
         int unitCountSharedIndex = UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
         rc.writeSharedArray(unitCountSharedIndex, (rc.readSharedArray(unitCountSharedIndex) + 1) % UNIT_COUNT_MOD);
     }

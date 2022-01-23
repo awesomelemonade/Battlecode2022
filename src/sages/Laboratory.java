@@ -1,11 +1,12 @@
 package sages;
 
-import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotMode;
+import battlecode.common.RobotType;
 import sages.util.*;
 
+import static sages.util.Constants.ALLY_TEAM;
 import static sages.util.Constants.rc;
 
 public class Laboratory implements RunnableBot {
@@ -25,7 +26,7 @@ public class Laboratory implements RunnableBot {
                     turnsStuck = 0;
                 }
             }
-            if (rc.canTransmute()) {
+            if (rc.getTeamLeadAmount(ALLY_TEAM) - rc.getTransmutationRate() >= RobotType.MINER.buildCostLead && rc.canTransmute()) {
                 rc.transmute();
             }
         } else if (rc.getMode() == RobotMode.PORTABLE) {

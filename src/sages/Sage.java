@@ -1,10 +1,7 @@
 package sages;
 
 import battlecode.common.*;
-import sages.util.Cache;
-import sages.util.Constants;
-import sages.util.RunnableBot;
-import sages.util.Util;
+import sages.util.*;
 
 import static sages.util.Constants.rc;
 
@@ -16,7 +13,7 @@ public class Sage implements RunnableBot {
     @Override
     public void loop() throws GameActionException {
         if (rc.isActionReady()) {
-            tryAttackMaxEcon();
+            tryAction();
         }
         if (rc.isMovementReady()) {
             Util.tryMoveAttacker();
@@ -26,23 +23,36 @@ public class Sage implements RunnableBot {
         }
     }
 
+    private static void tryAction() throws GameActionException {
+        // TODO: Check rubble of current square
+        tryAttackMaxEcon();
+    }
+
     private static boolean tryAttackMaxEcon() throws GameActionException {
         RobotInfo bestRobot = null;
-        double bestEcon = 0;
+        double bestScore = -Double.MAX_VALUE;
         for (int i = Cache.ENEMY_ROBOTS.length; --i >= 0;) {
             RobotInfo robot = Cache.ENEMY_ROBOTS[i];
             if (rc.canAttack(robot.location)) {
                 int damage = Math.min(robot.health, RobotType.SAGE.getDamage(1));
                 double econScore = getEconScore(damage, robot.type);
                 if (damage == robot.health) econScore *= 1.5;
-                if (econScore > bestEcon) {
-                    bestEcon = econScore;
+                if (econScore > bestScore) {
+                    bestScore = econScore;
                     bestRobot = robot;
                 }
             }
         }
         if (bestRobot != null) {
-            rc.attack(bestRobot.location);
+            double chargeScore = getChargeScore();
+            Debug.setIndicatorString(chargeScore + " - " + bestScore);
+            if (chargeScore > bestScore) {
+                if (!tryCharge()) {
+                    rc.attack(bestRobot.location);
+                }
+            } else {
+                rc.attack(bestRobot.location);
+            }
             return true;
         }
         return false;

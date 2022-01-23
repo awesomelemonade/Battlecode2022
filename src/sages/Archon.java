@@ -22,7 +22,7 @@ public class Archon implements RunnableBot {
         int numMiners = Communication.getAliveRobotTypeCount(RobotType.MINER);
         int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
         int numWatchtowers = Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER);
-        int sages = Communication.getSoldierCombinedHealth();
+        int soldierCombinedHealth = Communication.getSoldierCombinedHealth();
         if (numMiners == 0) {
             averageIncome = 0;
             averageIncomePerMiner = 0;
@@ -34,7 +34,7 @@ public class Archon implements RunnableBot {
             averageIncome = ratio * Communication.getLeadIncome() + (1 - ratio) * averageIncome;
             averageIncomePerMiner = averageIncome / numMiners;
         }
-        Debug.setIndicatorString("B: " + numBuilders + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", H: " + sages + ", I: " + averageIncome + ", I/M " + (averageIncome / numMiners));
+        Debug.setIndicatorString("B: " + numBuilders + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", H: " + soldierCombinedHealth + ", I: " + averageIncome + ", I/M " + (averageIncome / numMiners));
         if (rc.getMode() == RobotMode.TURRET) {
             if (!Communication.hasPortableArchon()) {
                 MapLocation potentialRelocationTarget = getTargetMoveLocation();
