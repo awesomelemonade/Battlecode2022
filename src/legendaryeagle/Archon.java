@@ -78,6 +78,10 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean tryBuildAttacker() throws GameActionException {
+        int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
+        if (numSoldiers < 5) {
+            return tryBuild(RobotType.SOLDIER);
+        }
         return tryBuild(RobotType.SAGE);
     }
 
@@ -186,7 +190,7 @@ public class Archon implements RunnableBot {
             // There already exists a reservation
             int remainingLead = rc.getTeamLeadAmount(ALLY_TEAM) - type.buildCostLead;
             int remainingGold = rc.getTeamGoldAmount(ALLY_TEAM) - type.buildCostGold;
-            if (remainingLead < reservedLead || remainingGold < reservedGold) {
+            if ((remainingLead < reservedLead && remainingLead < rc.getTeamLeadAmount(ALLY_TEAM)) || (remainingGold < reservedGold && remainingGold < rc.getTeamGoldAmount(ALLY_TEAM))) {
                 return false;
             } else {
                 for (Direction d: Constants.getAttemptOrder(Util.randomAdjacentDirection())) {

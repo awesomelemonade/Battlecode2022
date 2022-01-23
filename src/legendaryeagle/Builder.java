@@ -23,7 +23,8 @@ public class Builder implements RunnableBot {
         if (!rc.isActionReady()) return;
         if (tryFinishPrototypes()) return;
         int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
-        if (rc.getTeamLeadAmount(ALLY_TEAM) >= numLaboratories * RobotType.LABORATORY.buildCostLead) {
+        int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
+        if (rc.getTeamLeadAmount(ALLY_TEAM) >= numLaboratories * RobotType.LABORATORY.buildCostLead && numSoldiers >= 5) {
             if (tryBuildWithReservations(RobotType.LABORATORY)) {
                 return;
             }
@@ -102,7 +103,10 @@ public class Builder implements RunnableBot {
 
     public static boolean tryKiteFromEnemy() throws GameActionException {
         RobotInfo enemy = Util.getClosestEnemyRobot();
-        MapLocation enemyLocation = enemy == null ? Communication.getClosestEnemyChunk() : enemy.location;
+        if (enemy == null) {
+            return false;
+        }
+        MapLocation enemyLocation = enemy.location;
         if (enemyLocation == null) return false;
         if (Cache.MY_LOCATION.isWithinDistanceSquared(enemyLocation, 53)) {
             Util.tryKiteFromGreedy(enemyLocation);
