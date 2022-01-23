@@ -23,7 +23,7 @@ public class Builder implements RunnableBot {
         if (!rc.isActionReady()) return;
         int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
         int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
-        if (numLaboratories * 8 <= numSoldiers) {
+        if (numLaboratories * 4 <= numSoldiers) {
             if (tryBuildWithReservations(RobotType.LABORATORY)) {
                 return;
             }

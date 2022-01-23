@@ -190,13 +190,22 @@ public class Communication {
     private static final int RESERVATION_SET_BIT = 0;
     private static final int RESERVATION_HEARTBEAT_BIT = 1;
     private static final int RESERVATION_GOLD_BIT = 2;
-    private static final int RESERVATION_GOLD_MASK = 0b11;
-    private static final int RESERVATION_LEAD_BIT = 3;
-    private static final int RESERVATION_LEAD_MASK = 0b1111_1111_1111; // 13 bits
-    private static final int RESERVATION_GOLD_INCREMENT = 50;
+    private static final int RESERVATION_GOLD_MASK = 0b1_1_1_1_1; // 5 bits
+    private static final int RESERVATION_LEAD_BIT = 7;
+    private static final int RESERVATION_LEAD_MASK = 0b111_111_111; // 9 bits
+    private static final int RESERVATION_GOLD_INCREMENT = 5;
     private static int prevReservationHeartbeatBit;
 
-    // Note: Can only reserve 50 or 100 gold and up to 2^12 = 4096 lead
+    public static void tryReserve(int gold, int lead) {
+        int reservedGold = getReservedGold();
+        int reservedLead = getReservedLead();
+
+        if (reservedLead == 0 && reservedGold == 0) {
+            reserve(gold, lead);
+        }
+    }
+
+    // Note: Can only reserve 5-155 gold and up to 2^9-1 = 511 lead
     // Only reserves for 1 turn
     public static void reserve(int gold, int lead) {
         try {
