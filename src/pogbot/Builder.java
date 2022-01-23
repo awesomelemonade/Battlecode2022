@@ -196,7 +196,7 @@ public class Builder implements RunnableBot {
             // There already exists a reservation
             int remainingLead = rc.getTeamLeadAmount(ALLY_TEAM) - type.buildCostLead;
             int remainingGold = rc.getTeamGoldAmount(ALLY_TEAM) - type.buildCostGold;
-            if (remainingLead < reservedLead || remainingGold < reservedGold) {
+            if ((remainingLead < reservedLead && type.buildCostLead != 0) || (remainingGold < reservedGold && type.buildCostGold != 0)) {
                 return false;
             } else {
                 return tryBuild(type);
