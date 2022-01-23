@@ -45,9 +45,13 @@ public class Sage implements RunnableBot {
         }
         if (bestRobot != null) {
             double chargeScore = getChargeScore();
-            Debug.setIndicatorString(chargeScore + " - " + bestScore);
-            if (chargeScore > bestScore) {
+            double furyScore = getFuryScore();
+            if (chargeScore >= bestScore && chargeScore >= furyScore) {
                 if (!tryCharge()) {
+                    rc.attack(bestRobot.location);
+                }
+            } else if (furyScore >= chargeScore && furyScore >= bestScore) {
+                if (!tryFury()) {
                     rc.attack(bestRobot.location);
                 }
             } else {
@@ -86,8 +90,22 @@ public class Sage implements RunnableBot {
         double score = 0;
         for (int i = Cache.ENEMY_ROBOTS.length; --i >= 0;) {
             RobotInfo robot = Cache.ENEMY_ROBOTS[i];
-            if (Cache.MY_LOCATION.isWithinDistanceSquared(robot.location, Constants.ROBOT_TYPE.actionRadiusSquared)) {
+            if (!robot.type.isBuilding() && Cache.MY_LOCATION.isWithinDistanceSquared(robot.location, Constants.ROBOT_TYPE.actionRadiusSquared)) {
                 int damage = (int) (AnomalyType.CHARGE.sagePercentage * robot.type.getMaxHealth(robot.level));
+                double econScore = getEconScore(damage, robot.type);
+                if (damage == robot.health) econScore *= 1.5;
+                score += econScore;
+            }
+        }
+        return score;
+    }
+
+    public static double getFuryScore() {
+        double score = 0;
+        for (int i = Cache.ENEMY_ROBOTS.length; --i >= 0;) {
+            RobotInfo robot = Cache.ENEMY_ROBOTS[i];
+            if (robot.type.isBuilding() && Cache.MY_LOCATION.isWithinDistanceSquared(robot.location, Constants.ROBOT_TYPE.actionRadiusSquared)) {
+                int damage = (int) (AnomalyType.FURY.sagePercentage * robot.type.getMaxHealth(robot.level));
                 double econScore = getEconScore(damage, robot.type);
                 if (damage == robot.health) econScore *= 1.5;
                 score += econScore;
@@ -103,6 +121,14 @@ public class Sage implements RunnableBot {
     public static boolean tryCharge() throws GameActionException {
         if (rc.canEnvision(AnomalyType.CHARGE)) {
             rc.envision(AnomalyType.CHARGE);
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean tryFury() throws GameActionException {
+        if (rc.canEnvision(AnomalyType.FURY)) {
+            rc.envision(AnomalyType.FURY);
             return true;
         }
         return false;
