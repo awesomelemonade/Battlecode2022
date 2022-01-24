@@ -53,6 +53,7 @@ public class Archon implements RunnableBot {
             }
             build:
             {
+                if (rc.getTeamGoldAmount(ALLY_TEAM) >= rc.getArchonCount() * RobotType.SAGE.buildCostGold && tryBuildAttacker()) break build;
                 if (tryBuildDefenders()) break build;
                 if (tryBuildEarlygame()) break build;
                 if (tryBuildLategame()) break build;
@@ -176,7 +177,7 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean tryBuildRich() throws GameActionException {
-        if (rc.getTeamLeadAmount(ALLY_TEAM) < 500) return false;
+        if (rc.getTeamLeadAmount(ALLY_TEAM) < 2000) return false;
         if (averageIncomePerMiner >= 0.6) {
             tryBuildRatio(1, 2, 6);
         } else {

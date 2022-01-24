@@ -23,7 +23,7 @@ public class Builder implements RunnableBot {
         if (!rc.isActionReady()) return;
         if (tryFinishPrototypes()) return;
         int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
-        if (rc.getTeamLeadAmount(ALLY_TEAM) >= (numLaboratories + 1) * RobotType.LABORATORY.buildCostLead) {
+        if (rc.getTeamLeadAmount(ALLY_TEAM) >= Math.min(500, numLaboratories * 150)) {
             if (tryBuildWithReservations(RobotType.LABORATORY)) {
                 return;
             }
@@ -222,7 +222,7 @@ public class Builder implements RunnableBot {
             // There already exists a reservation
             int remainingLead = rc.getTeamLeadAmount(ALLY_TEAM) - type.buildCostLead;
             int remainingGold = rc.getTeamGoldAmount(ALLY_TEAM) - type.buildCostGold;
-            if ((remainingLead < reservedLead && remainingLead < rc.getTeamLeadAmount(ALLY_TEAM)) || (remainingGold < reservedGold && remainingGold < rc.getTeamGoldAmount(ALLY_TEAM))) {
+            if ((remainingLead < reservedLead && type.buildCostLead > 0)|| (remainingGold < reservedGold && type.buildCostGold > 0)) {
                 return false;
             } else {
                 return tryBuild(type);
