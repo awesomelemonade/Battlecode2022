@@ -82,7 +82,7 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean tryBuildAttackerForDefense() throws GameActionException {
-        return tryBuildSageSoldierOrReserve();
+        return tryBuildRandomDirection(RobotType.SAGE) || tryBuildRandomDirection(RobotType.SOLDIER);
     }
 
     public static boolean tryBuildDefenders() throws GameActionException {
