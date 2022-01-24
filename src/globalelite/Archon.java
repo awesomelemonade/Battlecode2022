@@ -164,16 +164,13 @@ public class Archon implements RunnableBot {
             if (!tryBuildOrReserve(RobotType.MINER)) {
                 tryBuildAttacker();
             }
-            Debug.setIndicatorDot(Cache.MY_LOCATION, 0, 0, 0);
         } else {
             if (attackerScore < builderScore) {
                 tryBuildAttacker();
-                Debug.setIndicatorDot(Cache.MY_LOCATION, 0, 255, 0);
             } else {
                 if (!tryBuildOrReserve(RobotType.BUILDER)) {
                     tryBuildAttacker();
                 }
-                Debug.setIndicatorDot(Cache.MY_LOCATION, 0, 255, 255);
             }
         }
     }

@@ -17,8 +17,7 @@ public class Builder implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
-        if (laboratoryModeCounter > 0 || wantLaboratory()) {
-            // Can't exit laboratory mode until we build one.
+        if (wantLaboratory()) {
             laboratoryModeCounter++;
         } else {
             laboratoryModeCounter = 0;
@@ -32,7 +31,7 @@ public class Builder implements RunnableBot {
         if (!rc.isActionReady()) return;
         if (tryFinishPrototypes()) return;
         if (laboratoryModeCounter > 0) {
-            if (laboratoryModeCounter > 30 || isGoodLaboratorySpot()) {
+            if (laboratoryModeCounter > 15 || isGoodLaboratorySpot()) {
                 if (tryBuildWithReservations(RobotType.LABORATORY)) {
                     laboratoryModeCounter = 0;
                     return;
@@ -76,9 +75,8 @@ public class Builder implements RunnableBot {
     }
 
     public static boolean isGoodLaboratorySpot() {
-        // Near too many teammates/near enemy archon?
-        MapLocation loc = Communication.getClosestCommunicatedAllyArchonLocation();
-        if (Cache.ALLY_ROBOTS.length >= 1 || Cache.MY_LOCATION.distanceSquaredTo(loc) < 100) {
+        // Near too many teammates/near ally archon?
+        if (Cache.ALLY_ROBOTS.length >= 1) {
             return false;
         }
         int delta = 2;
@@ -87,7 +85,7 @@ public class Builder implements RunnableBot {
             return true;
         }
         // Near enemy?
-        loc = Communication.getClosestEnemyChunk();
+        MapLocation loc = Communication.getClosestEnemyChunk();
         if (loc != null && Cache.MY_LOCATION.distanceSquaredTo(loc) < 100) {
             return false;
         }
@@ -95,21 +93,29 @@ public class Builder implements RunnableBot {
     }
 
     public static boolean tryFindLaboratorySpot() throws GameActionException {
-        // If too crowded, kite from nearest ally
-        if (Cache.ALLY_ROBOTS.length >= 5) {
-            Util.tryKiteFromGreedy(Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> true).location);
-        }
+        /*// If too crowded, kite from nearest ally
+        if (Cache.ALLY_ROBOTS.length >= 1) {
+            MapLocation loc = Util.getClosestRobot(Cache.ALLY_ROBOTS, r -> true).location;
+            Debug.setIndicatorLine(Cache.MY_LOCATION, loc, 255, 0, 0);
+            Util.tryKiteFromGreedy(loc);
+            return true;
+        }*/
         // If lots of space to kite from enemy chunk, do that
         if (!nearBorder()) {
             MapLocation loc = Communication.getClosestEnemyChunk();
             if (loc != null) {
+                Debug.setIndicatorLine(Cache.MY_LOCATION, loc, 255, 255, 0);
                 Util.tryKiteFromGreedy(loc);
+                return true;
+            } else {
+                loc = Communication.getRandomPredictedArchonLocation();
+                if (loc != null) {
+                    Debug.setIndicatorLine(Cache.MY_LOCATION, loc, 0, 255, 128);
+                    Util.tryKiteFromGreedy(loc);
+                }
+                return true;
             }
         }
-        // Kite from predicted enemy archon location
-        MapLocation loc = Communication.getRandomPredictedArchonLocation();
-        if (loc == null) return false;
-        Util.tryKiteFromGreedy(loc);
         return true;
     }
 
