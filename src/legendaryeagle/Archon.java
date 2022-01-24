@@ -342,23 +342,45 @@ public class Archon implements RunnableBot {
     }
 
     public static MapLocation getTargetMoveLocation() throws GameActionException {
+        MapLocation nearestEnemyChunk = Communication.getClosestEnemyChunk();
         MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, ROBOT_TYPE.visionRadiusSquared);
         MapLocation bestLocation = null;
         int bestRubble = Integer.MAX_VALUE;
         int bestDistanceSquared = 0;
-        for (int i = locations.length; --i >= 0;) {
-            MapLocation location = locations[i];
-            if (rc.onTheMap(location)) {
-                if (location.equals(Cache.MY_LOCATION) || !rc.isLocationOccupied(location)) {
-                    int rubble = rc.senseRubble(location);
-                    int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
-                    if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
-                        bestLocation = location;
-                        bestRubble = rubble;
-                        bestDistanceSquared = distanceSquared;
+        if (nearestEnemyChunk == null || Cache.MY_LOCATION.isWithinDistanceSquared(nearestEnemyChunk, 100)) {
+            // tiebreak by distance to my location
+            for (int i = locations.length; --i >= 0;) {
+                MapLocation location = locations[i];
+                if (rc.onTheMap(location)) {
+                    if (location.equals(Cache.MY_LOCATION) || !rc.isLocationOccupied(location)) {
+                        int rubble = rc.senseRubble(location);
+                        int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
+                        if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
+                            bestLocation = location;
+                            bestRubble = rubble;
+                            bestDistanceSquared = distanceSquared;
+                        }
                     }
                 }
             }
+        } else {
+            // Tiebreak by distance to closest enemy chunk
+            Debug.setIndicatorLine(Cache.MY_LOCATION, nearestEnemyChunk, 255, 0, 0);
+            for (int i = locations.length; --i >= 0;) {
+                MapLocation location = locations[i];
+                if (rc.onTheMap(location)) {
+                    if (location.equals(Cache.MY_LOCATION) || !rc.isLocationOccupied(location)) {
+                        int rubble = rc.senseRubble(location);
+                        int distanceSquared = nearestEnemyChunk.distanceSquaredTo(location);
+                        if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
+                            bestLocation = location;
+                            bestRubble = rubble;
+                            bestDistanceSquared = distanceSquared;
+                        }
+                    }
+                }
+            }
+            Debug.setIndicatorLine(Cache.MY_LOCATION, bestLocation, 255, 255, 0);
         }
         return bestLocation;
     }
@@ -378,6 +400,12 @@ public class Archon implements RunnableBot {
         double totalTurns = turnsToDestination + 10.0 * currentCooldown + 10.0 * destinationCooldown; // turns
         double unitsMissed = totalTurns / currentCooldown; // units
         double catchUpRate = 1.0 / destinationCooldown - 1.0 / currentCooldown; // number of more units per turn (units / turn)
+        if (currentRubble == destinationRubble) {
+            if (Communication.getChunkInfo(location) != Communication.CHUNK_INFO_ALLY) {
+                return false;
+            }
+            return 20.0 + 1.8 * totalTurns < Util.getNextVortexOrSingularity() - rc.getRoundNum();
+        }
         double payoffTurns = unitsMissed / catchUpRate + totalTurns;
         return 10.0 + 1.5 * payoffTurns < Util.getNextVortexOrSingularity() - rc.getRoundNum();
     }
