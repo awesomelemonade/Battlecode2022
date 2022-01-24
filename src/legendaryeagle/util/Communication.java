@@ -196,13 +196,15 @@ public class Communication {
     private static final int RESERVATION_GOLD_INCREMENT = 5;
     private static int prevReservationHeartbeatBit;
 
-    public static void tryReserve(int gold, int lead) {
-        int reservedGold = getReservedGold();
-        int reservedLead = getReservedLead();
+    public static boolean isAffordableWithReservations(RobotType type) {
+        return isAffordableWithReservations(type.buildCostGold, type.buildCostLead);
+    }
 
-        if (reservedLead == 0 && reservedGold == 0) {
-            reserve(gold, lead);
-        }
+    public static boolean isAffordableWithReservations(int gold, int lead) {
+        int reservedGold = Communication.getReservedGold();
+        int reservedLead = Communication.getReservedLead();
+        return ! (gold > 0 && rc.getTeamGoldAmount(ALLY_TEAM) - gold < reservedGold ||
+                lead > 0 && rc.getTeamLeadAmount(ALLY_TEAM) - lead < reservedLead);
     }
 
     // Note: Can only reserve 5-155 gold and up to 2^9-1 = 511 lead
@@ -224,6 +226,8 @@ public class Communication {
                 newValue |= (gold / RESERVATION_GOLD_INCREMENT) << RESERVATION_GOLD_BIT;
                 newValue |= lead << RESERVATION_LEAD_BIT;
                 rc.writeSharedArray(RESERVATION_OFFSET, newValue);
+                Debug.setIndicatorDot(Cache.MY_LOCATION, 128, 128, 128);
+                Debug.setIndicatorString(gold + " - " + lead);
             }
         } catch (GameActionException ex) {
             ex.printStackTrace();

@@ -78,14 +78,11 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean tryBuildAttacker() throws GameActionException {
-        return tryBuild(RobotType.SAGE);
+        return tryBuildOrReserve(RobotType.SAGE);
     }
 
     public static boolean tryBuildAttackerForDefense() throws GameActionException {
-        if (rc.getTeamGoldAmount(ALLY_TEAM) >= RobotType.SAGE.buildCostGold) {
-            return tryBuild(RobotType.SAGE);
-        }
-        return tryBuild(RobotType.SOLDIER);
+        return tryBuildSageSoldierOrReserve();
     }
 
     public static boolean tryBuildDefenders() throws GameActionException {
@@ -115,14 +112,14 @@ public class Archon implements RunnableBot {
 
     public static boolean tryBuildEarlygame() throws GameActionException {
         if (wantedEarlygameMiners > 0) {
-            if (tryBuild(RobotType.MINER)) {
+            if (tryBuildOrReserve(RobotType.MINER)) {
                 --wantedEarlygameMiners;
             }
             return true;
         } else {
             int numBuilder = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
             if (numBuilder < 1) {
-                tryBuild(RobotType.BUILDER);
+                tryBuildOrReserve(RobotType.BUILDER);
                 return true;
             } else {
                 return false;
@@ -135,14 +132,14 @@ public class Archon implements RunnableBot {
         if (rc.getTeamLeadAmount(ALLY_TEAM) < 500) {
             if (averageIncome >= 5) {
                 if (Communication.getAliveRobotTypeCount(RobotType.BUILDER) < 2) {
-                    tryBuild(RobotType.BUILDER);
+                    tryBuildOrReserve(RobotType.BUILDER);
                 }
             } else {
                 tryBuildAttacker();
             }
         } else {
             if (Communication.getAliveRobotTypeCount(RobotType.BUILDER) < 2) {
-                tryBuild(RobotType.BUILDER);
+                tryBuildOrReserve(RobotType.BUILDER);
             }
         }
         return true;
@@ -157,12 +154,12 @@ public class Archon implements RunnableBot {
                 Communication.getAliveRobotTypeCount(RobotType.SAGE) +
                 Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER)) * (prod / attacker);
         if (minerScore < attackerScore && minerScore < builderScore && Communication.getAliveRobotTypeCount(RobotType.MINER) <= MAP_WIDTH * MAP_HEIGHT / 18) {
-            tryBuild(RobotType.MINER);
+            tryBuildOrReserve(RobotType.MINER);
         } else {
             if (attackerScore < builderScore) {
                 tryBuildAttacker();
             } else {
-                tryBuild(RobotType.BUILDER);
+                tryBuildOrReserve(RobotType.BUILDER);
             }
         }
     }
@@ -185,45 +182,71 @@ public class Archon implements RunnableBot {
         return true;
     }
 
-    public static boolean tryBuild(RobotType type) throws GameActionException {
+    public static boolean tryBuildOrReserve(RobotType type) throws GameActionException {
         int reservedLead = Communication.getReservedLead();
         int reservedGold = Communication.getReservedGold();
 
         if (reservedLead != 0 || reservedGold != 0) {
             // There already exists a reservation
-            int remainingLead = rc.getTeamLeadAmount(ALLY_TEAM) - type.buildCostLead;
-            int remainingGold = rc.getTeamGoldAmount(ALLY_TEAM) - type.buildCostGold;
-            if ((remainingLead < reservedLead && remainingLead < rc.getTeamLeadAmount(ALLY_TEAM)) || (remainingGold < reservedGold && remainingGold < rc.getTeamGoldAmount(ALLY_TEAM))) {
-                return false;
-            } else {
-                for (Direction d: Constants.getAttemptOrder(Util.randomAdjacentDirection())) {
-                    if (rc.canBuildRobot(type, d)) {
-                        rc.buildRobot(type, d);
-                        return true;
-                    }
-                }
-                return false;
+            if (Communication.isAffordableWithReservations(type)) {
+                return tryBuildRandomDirection(type);
             }
+            return false;
         } else {
             // Build if we can, otherwise reserve
-            Direction idealDirection = type == RobotType.MINER ? getIdealBuildDirectionForMining() : Util.randomAdjacentDirection();
-            for (Direction d: Constants.getAttemptOrder(idealDirection)) {
-                if (rc.canBuildRobot(type, d)) {
-                    rc.buildRobot(type, d);
-                    return true;
-                }
+            if (tryBuildRandomDirection(type)) {
+                return true;
             }
             Communication.reserve(type.buildCostGold, type.buildCostLead);
             return false;
         }
     }
 
+    public static boolean tryBuildSageSoldierOrReserve() throws GameActionException {
+        int teamLead = rc.getTeamLeadAmount(ALLY_TEAM);
+        int teamGold = rc.getTeamGoldAmount(ALLY_TEAM);
+        int reservedLead = Communication.getReservedLead();
+        int reservedGold = Communication.getReservedGold();
+
+        if (reservedLead != 0 || reservedGold != 0) {
+            // There already exists a reservation
+            if (Communication.isAffordableWithReservations(RobotType.SAGE)) {
+                tryBuildRandomDirection(RobotType.SAGE);
+                return true;
+            }
+            if (Communication.isAffordableWithReservations(RobotType.SOLDIER)) {
+                tryBuildRandomDirection(RobotType.SOLDIER);
+                return true;
+            }
+            return false;
+        } else {
+            // Build if we can, otherwise reserve
+            if (teamGold >= RobotType.SAGE.buildCostGold && tryBuildRandomDirection(RobotType.SAGE)) {
+                return true;
+            }
+            if (teamLead >= RobotType.SOLDIER.buildCostLead && tryBuildRandomDirection(RobotType.SOLDIER)) {
+                return true;
+            }
+            // Reserve both gold and lead
+            Communication.reserve(RobotType.SAGE.buildCostGold, RobotType.SOLDIER.buildCostLead);
+            return false;
+        }
+    }
+
+    public static boolean tryBuildRandomDirection(RobotType type) throws GameActionException {
+        Direction idealDirection = Util.randomAdjacentDirection();
+        for (Direction d: Constants.getAttemptOrder(idealDirection)) {
+            if (rc.canBuildRobot(type, d)) {
+                rc.buildRobot(type, d);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void tryRepair() throws GameActionException {
         if (!rc.isActionReady()) {
             return;
-        }
-        if (rc.getTeamLeadAmount(ALLY_TEAM) < 500 && rc.senseRubble(Cache.MY_LOCATION) > 20) {
-            return; // We should probably be saving to build units
         }
         MapLocation bestLocation = null;
         int bestScore = Integer.MIN_VALUE;
