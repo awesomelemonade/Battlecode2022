@@ -497,7 +497,9 @@ public class Communication {
                 RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
                 if (enemies.length == 0) {
                     // Label as ally
-                    setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
+                    if (Util.isAttacker(Constants.ROBOT_TYPE)) {
+                        setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
+                    }
                 } else {
                     // Label as enemy
                     if (LambdaUtil.arraysAnyMatch(enemies, r -> r.type == RobotType.ARCHON)) {
