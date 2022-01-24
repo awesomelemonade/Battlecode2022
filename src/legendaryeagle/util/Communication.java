@@ -505,35 +505,31 @@ public class Communication {
                         setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_ARCHON);
                     } else {
                         // general enemy chunk
-                        int old = getChunkInfo(currentChunkX, currentChunkY);
-                        if (old != CHUNK_INFO_ENEMY_ARCHON) {
-                            setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_GENERAL);
-                        }
+                        setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_GENERAL);
                     }
                 }
-
-                // Update chunk enemy is on
-                RobotInfo closestEnemy = Util.getClosestEnemyRobot();
-                if (closestEnemy != null) {
-                    MapLocation loc = closestEnemy.location;
-                    int chunkX = loc.x / CHUNK_SIZE;
-                    int chunkY = loc.y / CHUNK_SIZE;
-                    if (closestEnemy.type == RobotType.ARCHON) {
-                        setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_ARCHON);
-                    } else {
-                        // general enemy chunk
-                        int old = getChunkInfo(currentChunkX, currentChunkY);
-                        if (old != CHUNK_INFO_ENEMY_ARCHON) {
-                            setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
-                        }
+            }
+            // Update chunk enemy is on
+            RobotInfo closestEnemy = Util.getClosestEnemyRobot();
+            if (closestEnemy != null) {
+                MapLocation loc = closestEnemy.location;
+                int chunkX = loc.x / CHUNK_SIZE;
+                int chunkY = loc.y / CHUNK_SIZE;
+                if (closestEnemy.type == RobotType.ARCHON) {
+                    setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_ARCHON);
+                } else {
+                    // general enemy chunk
+                    int old = getChunkInfo(currentChunkX, currentChunkY);
+                    if (old != CHUNK_INFO_ENEMY_ARCHON) {
+                        setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
                     }
                 }
+            }
 
-                // Update any predicted archon locations
-                MapLocation closestPredictedArchon = enemyPredictedChunkTracker.getNearestChunk(12);
-                if (closestPredictedArchon != null && Cache.MY_LOCATION.isWithinDistanceSquared(closestPredictedArchon, 53)) {
-                    setChunkInfo(closestPredictedArchon, CHUNK_INFO_UNEXPLORED);
-                }
+            // Update any predicted archon locations
+            MapLocation closestPredictedArchon = enemyPredictedChunkTracker.getNearestChunk(12);
+            if (closestPredictedArchon != null && Cache.MY_LOCATION.isWithinDistanceSquared(closestPredictedArchon, 53)) {
+                setChunkInfo(closestPredictedArchon, CHUNK_INFO_UNEXPLORED);
             }
         }
     }
