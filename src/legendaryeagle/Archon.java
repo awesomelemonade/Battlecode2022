@@ -92,14 +92,16 @@ public class Archon implements RunnableBot {
 
     public static boolean tryBuildDefenders() throws GameActionException {
         int sumEnemy = 0;
-        for (RobotInfo robot : Cache.ENEMY_ROBOTS) {
+        for (int i = Cache.ENEMY_ROBOTS.length; --i >= 0;) {
+            RobotInfo robot = Cache.ENEMY_ROBOTS[i];
             if (Util.isAttacker(robot.type)) {
                 sumEnemy += robot.health;
             }
         }
         if (sumEnemy == 0) return false;
         int sumAlly = 0;
-        for (RobotInfo robot : Cache.ALLY_ROBOTS) {
+        for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
+            RobotInfo robot = Cache.ALLY_ROBOTS[i];
             if (Util.isAttacker(robot.type)) {
                 sumAlly += robot.health;
             }
@@ -347,7 +349,9 @@ public class Archon implements RunnableBot {
         MapLocation bestLocation = null;
         int bestRubble = Integer.MAX_VALUE;
         int bestDistanceSquared = 0;
-        if (nearestEnemyChunk == null || Cache.MY_LOCATION.isWithinDistanceSquared(nearestEnemyChunk, 100)) {
+        double threshold = Math.max(5, Math.min(15, Math.sqrt(MAP_WIDTH * MAP_HEIGHT) * 0.25));
+        int thresholdSquared = (int) (threshold * threshold);
+        if (nearestEnemyChunk == null || Cache.MY_LOCATION.isWithinDistanceSquared(nearestEnemyChunk, thresholdSquared)) {
             // tiebreak by distance to my location
             for (int i = locations.length; --i >= 0;) {
                 MapLocation location = locations[i];
@@ -366,21 +370,37 @@ public class Archon implements RunnableBot {
         } else {
             // Tiebreak by distance to closest enemy chunk
             Debug.setIndicatorLine(Cache.MY_LOCATION, nearestEnemyChunk, 255, 0, 0);
+            double currentDistanceToEnemy = Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(nearestEnemyChunk));
+            int currentRubble = rc.senseRubble(Cache.MY_LOCATION);
             for (int i = locations.length; --i >= 0;) {
                 MapLocation location = locations[i];
                 if (rc.onTheMap(location)) {
                     if (location.equals(Cache.MY_LOCATION) || !rc.isLocationOccupied(location)) {
-                        int rubble = rc.senseRubble(location);
-                        int distanceSquared = nearestEnemyChunk.distanceSquaredTo(location);
-                        if (rubble < bestRubble || rubble == bestRubble && distanceSquared < bestDistanceSquared) {
-                            bestLocation = location;
-                            bestRubble = rubble;
-                            bestDistanceSquared = distanceSquared;
+                        if (!location.isWithinDistanceSquared(nearestEnemyChunk, thresholdSquared)) {
+                            int rubble = rc.senseRubble(location);
+                            int distanceToSelf = Cache.MY_LOCATION.distanceSquaredTo(location);
+                            int distanceToEnemy = nearestEnemyChunk.distanceSquaredTo(location);
+                            if (!location.equals(Cache.MY_LOCATION) && rubble == currentRubble) {
+                                if (Communication.getChunkInfo(location) != Communication.CHUNK_INFO_ALLY) {
+                                    continue;
+                                }
+                            }
+                            if (Math.sqrt(distanceToSelf) + Math.sqrt(distanceToEnemy) > 1.15 * currentDistanceToEnemy) {
+                                continue;
+                            }
+                            // location has to be relatively on the way to the enemy chunk
+                            if (rubble < bestRubble || rubble == bestRubble && distanceToEnemy < bestDistanceSquared) {
+                                bestLocation = location;
+                                bestRubble = rubble;
+                                bestDistanceSquared = distanceToEnemy;
+                            }
                         }
                     }
                 }
             }
-            Debug.setIndicatorLine(Cache.MY_LOCATION, bestLocation, 255, 255, 0);
+            if (bestLocation != null) {
+                Debug.setIndicatorLine(Cache.MY_LOCATION, bestLocation, 255, 255, 0);
+            }
         }
         return bestLocation;
     }
@@ -401,9 +421,6 @@ public class Archon implements RunnableBot {
         double unitsMissed = totalTurns / currentCooldown; // units
         double catchUpRate = 1.0 / destinationCooldown - 1.0 / currentCooldown; // number of more units per turn (units / turn)
         if (currentRubble == destinationRubble) {
-            if (Communication.getChunkInfo(location) != Communication.CHUNK_INFO_ALLY) {
-                return false;
-            }
             return 20.0 + 1.8 * totalTurns < Util.getNextVortexOrSingularity() - rc.getRoundNum();
         }
         double payoffTurns = unitsMissed / catchUpRate + totalTurns;

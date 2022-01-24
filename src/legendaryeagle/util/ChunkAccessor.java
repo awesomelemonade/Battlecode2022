@@ -2,8 +2,6 @@ package legendaryeagle.util;
 
 import battlecode.common.MapLocation;
 
-import static legendaryeagle.util.Constants.rc;
-
 public class ChunkAccessor {
     Node[][] nodes;
     LinkedList ll;
@@ -41,7 +39,6 @@ public class ChunkAccessor {
     }
 
     public MapLocation getNearestChunk(int threshold) {
-        MapLocation ourLoc = rc.getLocation();
         MapLocation bestLoc = null;
         int bestDist = (int)1e9;
         Node cur = ll.front;
@@ -52,7 +49,7 @@ public class ChunkAccessor {
             int x = Communication.getChunkMidX(chunkI);
             int y = Communication.getChunkMidY(chunkJ);
             MapLocation loc = new MapLocation(x, y);
-            int dist = ourLoc.distanceSquaredTo(loc);
+            int dist = Cache.MY_LOCATION.distanceSquaredTo(loc);
             if (dist < bestDist) {
                 bestDist = dist;
                 bestLoc = loc;
