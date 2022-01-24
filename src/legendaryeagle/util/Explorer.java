@@ -11,11 +11,11 @@ public class Explorer {
 
     public static void init() {
         if (!Constants.ROBOT_TYPE.isBuilding()) {
-            currentExploreDirection = getInitialExploreLocation();
+            currentExploreDirection = getInitialExploreDirection();
         }
     }
 
-    public static double getInitialExploreLocation() {
+    public static double getInitialExploreDirection() {
         int x = (int) (Math.random() * Constants.MAP_WIDTH);
         int y = (int) (Math.random() * Constants.MAP_HEIGHT);
         return Math.atan2(y - Cache.MY_LOCATION.y, x - Cache.MY_LOCATION.x);

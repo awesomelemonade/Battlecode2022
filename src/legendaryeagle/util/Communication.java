@@ -401,7 +401,11 @@ public class Communication {
             }
         }
         // Increment unit count
-        int unitCountSharedIndex = UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
+        incrementUnitCount(Constants.ROBOT_TYPE);
+    }
+
+    public static void incrementUnitCount(RobotType type) throws GameActionException {
+        int unitCountSharedIndex = UNIT_COUNT_OFFSET + type.ordinal();
         rc.writeSharedArray(unitCountSharedIndex, (rc.readSharedArray(unitCountSharedIndex) + 1) % UNIT_COUNT_MOD);
     }
 

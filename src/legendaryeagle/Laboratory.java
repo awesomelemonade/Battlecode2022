@@ -28,6 +28,8 @@ public class Laboratory implements RunnableBot {
             }
             if (rc.getTeamLeadAmount(ALLY_TEAM) - rc.getTransmutationRate() >= RobotType.MINER.buildCostLead && rc.canTransmute()) {
                 rc.transmute();
+            } else {
+                Debug.setIndicatorDot(Cache.MY_LOCATION, 255, 0, 0);
             }
         } else if (rc.getMode() == RobotMode.PORTABLE) {
             MapLocation relocationTarget = getTargetMoveLocation();

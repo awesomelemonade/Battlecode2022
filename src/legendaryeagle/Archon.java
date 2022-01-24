@@ -10,6 +10,7 @@ public class Archon implements RunnableBot {
     private static double averageIncomePerMiner;
     private static int wantedEarlygameMiners;
     private static int turnsStuck = 0;
+    private static RobotType builtLastTurn = null;
 
     @Override
     public void init() throws GameActionException {
@@ -18,6 +19,10 @@ public class Archon implements RunnableBot {
 
     @Override
     public void loop() throws GameActionException {
+        if (builtLastTurn != null) {
+            Communication.incrementUnitCount(builtLastTurn);
+            builtLastTurn = null;
+        }
         int numBuilders = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
         int numMiners = Communication.getAliveRobotTypeCount(RobotType.MINER);
         int numSoldiers = Communication.getAliveRobotTypeCount(RobotType.SOLDIER);
@@ -238,6 +243,8 @@ public class Archon implements RunnableBot {
         for (Direction d: Constants.getAttemptOrder(idealDirection)) {
             if (rc.canBuildRobot(type, d)) {
                 rc.buildRobot(type, d);
+                Communication.incrementUnitCount(type);
+                builtLastTurn = type;
                 return true;
             }
         }
