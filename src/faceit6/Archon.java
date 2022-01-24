@@ -161,12 +161,16 @@ public class Archon implements RunnableBot {
                 Communication.getAliveRobotTypeCount(RobotType.SAGE) +
                 Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER)) * (prod / attacker);
         if (minerScore < attackerScore && minerScore < builderScore && Communication.getAliveRobotTypeCount(RobotType.MINER) <= MAP_WIDTH * MAP_HEIGHT / 18) {
-            tryBuildOrReserve(RobotType.MINER);
+            if (!tryBuildOrReserve(RobotType.MINER)) {
+                tryBuildAttacker();
+            }
         } else {
             if (attackerScore < builderScore) {
                 tryBuildAttacker();
             } else {
-                tryBuildOrReserve(RobotType.BUILDER);
+                if (!tryBuildOrReserve(RobotType.BUILDER)) {
+                    tryBuildAttacker();
+                }
             }
         }
     }
