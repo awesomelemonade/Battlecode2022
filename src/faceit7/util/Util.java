@@ -11,6 +11,7 @@ public class Util {
 
     public static void init(RobotController controller) throws GameActionException {
         Constants.init(controller);
+        Random.init();
         Cache.init();
         Communication.init();
         Explorer.init();

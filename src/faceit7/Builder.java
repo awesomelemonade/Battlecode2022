@@ -3,24 +3,32 @@ package faceit7;
 import battlecode.common.*;
 import faceit7.util.*;
 
-import java.util.Comparator;
-
 import static faceit7.util.Constants.*;
 
 public class Builder implements RunnableBot {
+    private static RobotInfo[] ALLY_ROBOTS_ACTION_RADIUS = new RobotInfo[0];
+    private static MapLocation justBuiltLocation = null;
     @Override
     public void init() throws GameActionException {
     }
 
     @Override
     public void loop() throws GameActionException {
-        tryAction();
-        tryMove();
-        tryAction();
+        justBuiltLocation = null;
+        if (rc.isActionReady()) {
+            ALLY_ROBOTS_ACTION_RADIUS = rc.senseNearbyRobots(ROBOT_TYPE.actionRadiusSquared, ALLY_TEAM);
+            tryAction();
+        }
+        if (rc.isMovementReady()) {
+            tryMove();
+        }
+        if (rc.isActionReady()) {
+            ALLY_ROBOTS_ACTION_RADIUS = rc.senseNearbyRobots(ROBOT_TYPE.actionRadiusSquared, ALLY_TEAM);
+            tryAction();
+        }
     }
 
     public static void tryAction() throws GameActionException {
-        if (!rc.isActionReady()) return;
         if (tryFinishPrototypes()) return;
         int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
         if (rc.getTeamLeadAmount(ALLY_TEAM) >= Math.min(500, numLaboratories * 150)) {
@@ -34,19 +42,23 @@ public class Builder implements RunnableBot {
     }
 
     public static void tryMove() throws GameActionException {
-        if (!rc.isMovementReady()) return;
-        if (tryKiteFromEnemy()) {
+        if (tryKiteFromVisibleAttacker()) {
             return;
         }
-        if (tryMoveToRepair()) {
+        MapLocation repairTarget = getTryMoveToRepairTarget();
+        if (repairTarget != null) {
+            if (tryMoveToRepair(repairTarget)) {
+                return;
+            }
+        }
+        if (tryKiteFromAllEnemies()) {
             return;
         }
         if (tryGuard()) {
             return;
         }
-        Util.tryExplore(); // should really never happen
+        Util.tryExplore();
     }
-
     private static MapLocation guardTarget = null;
     private static int lastGuardChangeRound = -1;
     private static MapLocation guardLocation = null;
@@ -100,12 +112,19 @@ public class Builder implements RunnableBot {
         return location;
     }
 
-    public static boolean tryKiteFromEnemy() throws GameActionException {
-        RobotInfo enemy = Util.getClosestEnemyRobot();
+
+    public static boolean tryKiteFromVisibleAttacker() throws GameActionException {
+        RobotInfo enemy = Util.getClosestEnemyRobot(r -> Util.isAttacker(r.type));
         if (enemy == null) {
             return false;
+        } else {
+            Util.tryKiteFromGreedy(enemy.location);
+            return true;
         }
-        MapLocation enemyLocation = enemy.location;
+    }
+    public static boolean tryKiteFromAllEnemies() throws GameActionException {
+        RobotInfo enemy = Util.getClosestEnemyRobot();
+        MapLocation enemyLocation = enemy == null ? Communication.getClosestEnemyChunk() : enemy.location;
         if (enemyLocation == null) return false;
         if (Cache.MY_LOCATION.isWithinDistanceSquared(enemyLocation, 53)) {
             Util.tryKiteFromGreedy(enemyLocation);
@@ -114,8 +133,33 @@ public class Builder implements RunnableBot {
         return false;
     }
 
-    public static boolean tryMoveToRepair() throws GameActionException {
-        MapLocation repairTargetLocation = null;
+    public static boolean tryMoveToRepair(MapLocation repairTargetLocation) throws GameActionException {
+        MapLocation[] potentialLocations = rc.getAllLocationsWithinRadiusSquared(repairTargetLocation, 5);
+        MapLocation bestLocation = null;
+        int bestRubble = Integer.MAX_VALUE;
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        for (int i = potentialLocations.length; --i >= 0;) {
+            MapLocation location = potentialLocations[i];
+            if (location.equals(Cache.MY_LOCATION) || rc.canSenseLocation(location) && !rc.isLocationOccupied(location)) {
+                int rubble = rc.senseRubble(location);
+                int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
+                if (rubble < bestRubble || (rubble == bestRubble && distanceSquared < bestDistanceSquared)) {
+                    bestRubble = rubble;
+                    bestDistanceSquared = distanceSquared;
+                    bestLocation = location;
+                }
+            }
+        }
+        MapLocation target = bestLocation == null ? repairTargetLocation : bestLocation;
+        Util.tryMove(target);
+        return true;
+    }
+
+    public static MapLocation getTryMoveToRepairTarget() throws GameActionException {
+        if (justBuiltLocation != null) {
+            return justBuiltLocation;
+        }
+        RobotInfo repairTarget = null;
         int bestDistanceSquared = Integer.MAX_VALUE;
         for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
             RobotInfo robot = Cache.ALLY_ROBOTS[i];
@@ -123,35 +167,11 @@ public class Builder implements RunnableBot {
                 int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(robot.location);
                 if (distanceSquared < bestDistanceSquared) {
                     bestDistanceSquared = distanceSquared;
-                    repairTargetLocation = robot.location;
+                    repairTarget = robot;
                 }
             }
         }
-        if (repairTargetLocation == null) return false;
-        int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(repairTargetLocation);
-        if (distanceSquared <= ROBOT_TYPE.actionRadiusSquared) {
-            // Move towards lowest rubble square that is still <= 5 away and adjacent to current location
-            int bestRubble = Integer.MAX_VALUE;
-            Direction bestDirection = null;
-            for (Direction direction : ALL_DIRECTIONS) {
-                if (direction == Direction.CENTER || rc.canMove(direction)) {
-                    MapLocation location = Cache.MY_LOCATION.add(direction);
-                    if (location.isWithinDistanceSquared(repairTargetLocation, 5)) {
-                        int rubble = rc.senseRubble(location);
-                        if (rubble < bestRubble) {
-                            bestRubble = rubble;
-                            bestDirection = direction;
-                        }
-                    }
-                }
-            }
-            if (bestDirection != null && bestDirection != Direction.CENTER) {
-                Util.tryMove(bestDirection);
-            }
-        } else {
-            Util.tryMove(repairTargetLocation);
-        }
-        return true;
+        return repairTarget == null ? null : repairTarget.location;
     }
 
     public static boolean tryFinishPrototypes() throws GameActionException {
@@ -165,7 +185,7 @@ public class Builder implements RunnableBot {
     }
 
     public static boolean tryRepair() throws GameActionException {
-        MapLocation repairLocation = getBestRepairLocation();
+        MapLocation repairLocation = getBestRepairLocationTarget();
         if (repairLocation == null) return false;
         if (rc.canRepair(repairLocation)) {
             rc.repair(repairLocation);
@@ -177,9 +197,8 @@ public class Builder implements RunnableBot {
     public static MapLocation getBestPrototypeLocation() {
         int bestHealth = Integer.MIN_VALUE;
         MapLocation bestLocation = null;
-        RobotInfo[] nearbyRobots = rc.senseNearbyRobots(ROBOT_TYPE.actionRadiusSquared, ALLY_TEAM);
-        for (int i = nearbyRobots.length; --i >= 0;) {
-            RobotInfo ally = nearbyRobots[i];
+        for (int i = ALLY_ROBOTS_ACTION_RADIUS.length; --i >= 0;) {
+            RobotInfo ally = ALLY_ROBOTS_ACTION_RADIUS[i];
             MapLocation location = ally.location;
             if (ally.mode == RobotMode.PROTOTYPE && rc.canRepair(location)) {
                 int health = ally.health;
@@ -194,12 +213,11 @@ public class Builder implements RunnableBot {
         return bestLocation;
     }
 
-    public static MapLocation getBestRepairLocation() {
+    public static MapLocation getBestRepairLocationTarget() {
         int bestHealth = Integer.MAX_VALUE;
         MapLocation bestLocation = null;
-        RobotInfo[] nearbyRobots = rc.senseNearbyRobots(ROBOT_TYPE.actionRadiusSquared, ALLY_TEAM);
-        for (int i = nearbyRobots.length; --i >= 0;) {
-            RobotInfo ally = nearbyRobots[i];
+        for (int i = ALLY_ROBOTS_ACTION_RADIUS.length; --i >= 0;) {
+            RobotInfo ally = ALLY_ROBOTS_ACTION_RADIUS[i];
             MapLocation location = ally.location;
             if (rc.canRepair(location)) {
                 int health = ally.health;
@@ -258,6 +276,7 @@ public class Builder implements RunnableBot {
         }
         if (bestDirection != null) {
             rc.buildRobot(type, bestDirection);
+            justBuiltLocation = Cache.MY_LOCATION.add(bestDirection);
             return true;
         }
         return false;
@@ -280,6 +299,7 @@ public class Builder implements RunnableBot {
         }
         if (bestDirection != null) {
             rc.buildRobot(type, bestDirection);
+            justBuiltLocation = Cache.MY_LOCATION.add(bestDirection);
             return true;
         }
         return false;

@@ -51,10 +51,6 @@ public class Communication {
     private static final int[] prevUnitCountValues = new int[NUM_UNIT_TYPES];
     private static final int[] currentUnitCount = new int[NUM_UNIT_TYPES];
 
-    private static final int PASSIVE_UNIT_COUNT_OFFSET = 13;
-    private static final int[] prevPassiveUnitCountValues = new int[NUM_UNIT_TYPES];
-    private static final int[] currentPassiveUnitCount = new int[NUM_UNIT_TYPES];
-
     private static final int LEAD_COUNT_MOD = 65536;
     private static final int LEAD_COUNT_OFFSET = 20;
     private static int prevLeadCountValue;
@@ -84,24 +80,8 @@ public class Communication {
         rc.writeSharedArray(LEAD_COUNT_OFFSET, (rc.readSharedArray(LEAD_COUNT_OFFSET) + amountMined) % LEAD_COUNT_MOD);
     }
 
-    @Deprecated
-    public static void setPassive() throws GameActionException {
-        int sharedArrayIndex = PASSIVE_UNIT_COUNT_OFFSET + Constants.ROBOT_TYPE.ordinal();
-        rc.writeSharedArray(sharedArrayIndex, (rc.readSharedArray(sharedArrayIndex) + 1) % UNIT_COUNT_MOD);
-    }
-
     public static int getLeadIncome() {
         return currentLeadCount;
-    }
-
-    @Deprecated
-    public static int getPassiveUnitCount(RobotType type) {
-        return currentPassiveUnitCount[type.ordinal()];
-    }
-
-    @Deprecated
-    public static int getActiveUnitCount(RobotType type) {
-        return getAliveRobotTypeCount(type) - getPassiveUnitCount(type);
     }
 
     public static int getAliveRobotTypeCount(RobotType type) {
@@ -375,7 +355,6 @@ public class Communication {
             if (Cache.TURN_COUNT == 1) {
                 for (int i = NUM_UNIT_TYPES; --i >= 0; ) {
                     prevUnitCountValues[i] = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
-                    prevPassiveUnitCountValues[i] = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
                 }
                 prevLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
                 prevSoldierCombinedHealthValue = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
@@ -385,10 +364,6 @@ public class Communication {
                     int current = rc.readSharedArray(UNIT_COUNT_OFFSET + i);
                     currentUnitCount[i] = ((current - prevUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
                     prevUnitCountValues[i] = current;
-                    // passive count
-                    int currentPassive = rc.readSharedArray(PASSIVE_UNIT_COUNT_OFFSET + i);
-                    currentPassiveUnitCount[i] = ((currentPassive - prevPassiveUnitCountValues[i]) + UNIT_COUNT_MOD) % UNIT_COUNT_MOD;
-                    prevPassiveUnitCountValues[i] = currentPassive;
                 }
                 // lead count
                 int currentLeadCountValue = rc.readSharedArray(LEAD_COUNT_OFFSET);
