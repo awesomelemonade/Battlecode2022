@@ -18,9 +18,10 @@ public class Communication {
 
     public static final int CHUNK_INFO_UNEXPLORED = 0;
     public static final int CHUNK_INFO_ALLY = 1;
-    public static final int CHUNK_INFO_ENEMY_GENERAL = 2;
-    public static final int CHUNK_INFO_ENEMY_ARCHON = 3;
-    public static final int CHUNK_INFO_ENEMY_PREDICTED = 4;
+    public static final int CHUNK_INFO_ENEMY_MINER = 2;
+    public static final int CHUNK_INFO_ENEMY_GENERAL = 3;
+    public static final int CHUNK_INFO_ENEMY_ARCHON = 4;
+    public static final int CHUNK_INFO_ENEMY_PREDICTED = 5;
 
     private static boolean chunksLoaded = false;
     private static boolean guessed = false;
@@ -472,17 +473,34 @@ public class Communication {
                 RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
                 if (enemies.length == 0) {
                     // Label as ally
-                    if (Util.isAttacker(Constants.ROBOT_TYPE)) {
+                    if (Util.isAttacker(Constants.ROBOT_TYPE) || Cache.ALLY_ROBOTS.length >= 2) {
                         setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
                     }
                 } else {
                     // Label as enemy
-                    if (LambdaUtil.arraysAnyMatch(enemies, r -> r.type == RobotType.ARCHON)) {
+                    boolean hasArchon = false;
+                    boolean hasNonMiner = false;
+                    loop: for (int i = enemies.length; --i >= 0;) {
+                        switch (enemies[i].type) {
+                            case ARCHON:
+                                hasArchon = true;
+                                break loop;
+                            default:
+                                hasNonMiner = true;
+                            case MINER:
+                                break;
+                        }
+                    }
+                    if (hasArchon) {
                         // archon chunk
                         setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_ARCHON);
-                    } else {
+                    } else if (hasNonMiner) {
                         // general enemy chunk
                         setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ENEMY_GENERAL);
+                    } else {
+                        // miner chunk
+                        int old = getChunkInfo(currentChunkX, currentChunkY);
+                        setChunkInfo(currentChunkX, currentChunkY, old == CHUNK_INFO_ALLY ? CHUNK_INFO_ENEMY_GENERAL : CHUNK_INFO_ENEMY_MINER);
                     }
                 }
             }
@@ -492,14 +510,24 @@ public class Communication {
                 MapLocation loc = closestEnemy.location;
                 int chunkX = loc.x / CHUNK_SIZE;
                 int chunkY = loc.y / CHUNK_SIZE;
-                if (closestEnemy.type == RobotType.ARCHON) {
-                    setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_ARCHON);
-                } else {
-                    // general enemy chunk
-                    int old = getChunkInfo(currentChunkX, currentChunkY);
-                    if (old != CHUNK_INFO_ENEMY_ARCHON) {
-                        setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
-                    }
+                switch (closestEnemy.type) {
+                    case ARCHON:
+                        setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_ARCHON);
+                        break;
+                    default:
+                        // general enemy chunk
+                        int old = getChunkInfo(currentChunkX, currentChunkY);
+                        if (old != CHUNK_INFO_ENEMY_ARCHON) {
+                            setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
+                        }
+                        break;
+                    case MINER:
+                        // general enemy chunk
+                        int old2 = getChunkInfo(currentChunkX, currentChunkY);
+                        if (old2 != CHUNK_INFO_ENEMY_ARCHON && old2 != CHUNK_INFO_ENEMY_GENERAL) {
+                            setChunkInfo(currentChunkX, currentChunkY, old2 == CHUNK_INFO_ALLY ? CHUNK_INFO_ENEMY_GENERAL : CHUNK_INFO_ENEMY_MINER);
+                        }
+                        break;
                 }
             }
 
@@ -525,6 +553,9 @@ public class Communication {
                             break;
                         case CHUNK_INFO_ALLY:
                             Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 0, 255, 0); // green
+                            break;
+                        case CHUNK_INFO_ENEMY_MINER:
+                            Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 231, 84, 128); // dark pink
                             break;
                         case CHUNK_INFO_ENEMY_GENERAL:
                             Debug.setIndicatorDot(Profile.CHUNK_INFO, location, 255, 200, 200); // pink
