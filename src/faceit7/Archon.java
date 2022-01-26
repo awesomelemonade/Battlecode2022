@@ -87,16 +87,24 @@ public class Archon implements RunnableBot {
         return tryBuildOrReserve(RobotType.SAGE);
     }
 
-    public static boolean tryBuildAttackerForDefense() throws GameActionException {
-        return tryBuildRandomDirection(RobotType.SAGE) || tryBuildRandomDirection(RobotType.SOLDIER);
+    public static boolean tryBuildAttackerForDefense(boolean hasEnemySoldiers) throws GameActionException {
+        if (hasEnemySoldiers) {
+            return tryBuildRandomDirection(RobotType.SAGE) || tryBuildRandomDirection(RobotType.SOLDIER);
+        } else {
+            return tryBuildRandomDirection(RobotType.SAGE);
+        }
     }
 
     public static boolean tryBuildDefenders() throws GameActionException {
         int sumEnemy = 0;
+        boolean hasEnemySoldiers = false;
         for (int i = Cache.ENEMY_ROBOTS.length; --i >= 0;) {
             RobotInfo robot = Cache.ENEMY_ROBOTS[i];
             if (Util.isAttacker(robot.type)) {
                 sumEnemy += robot.health;
+            }
+            if (robot.type == RobotType.SOLDIER) {
+                hasEnemySoldiers = true;
             }
         }
         if (sumEnemy == 0) return false;
@@ -111,7 +119,7 @@ public class Archon implements RunnableBot {
         boolean winnable = 1.5 * sumAlly + 5 * RobotType.SOLDIER.health >= sumEnemy;
         if (beingAttacked) {
             if (winnable || rc.getArchonCount() == 1) {
-                tryBuildAttackerForDefense();
+                tryBuildAttackerForDefense(hasEnemySoldiers);
             }
             return true;
         }
