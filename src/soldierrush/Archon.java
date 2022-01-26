@@ -125,6 +125,7 @@ public class Archon implements RunnableBot {
             }
             return true;
         }
+        return false;
     }
 
     public static boolean tryBuildLategame() throws GameActionException {
