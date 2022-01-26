@@ -84,11 +84,11 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean tryBuildAttacker() throws GameActionException {
-        return tryBuildOrReserve(RobotType.SAGE);
+        return tryBuildOrReserve(RobotType.SOLDIER);
     }
 
     public static boolean tryBuildAttackerForDefense() throws GameActionException {
-        return tryBuildRandomDirection(RobotType.SAGE) || tryBuildRandomDirection(RobotType.SOLDIER);
+        return tryBuildRandomDirection(RobotType.SOLDIER);
     }
 
     public static boolean tryBuildDefenders() throws GameActionException {
@@ -124,14 +124,6 @@ public class Archon implements RunnableBot {
                 --wantedEarlygameMiners;
             }
             return true;
-        } else {
-            int numBuilder = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
-            if (numBuilder < 1) {
-                tryBuildOrReserve(RobotType.BUILDER);
-                return true;
-            } else {
-                return false;
-            }
         }
     }
 
@@ -179,9 +171,9 @@ public class Archon implements RunnableBot {
     public static boolean tryBuildRich() throws GameActionException {
         if (rc.getTeamLeadAmount(ALLY_TEAM) < 2000) return false;
         if (averageIncomePerMiner >= 0.6) {
-            tryBuildRatio(1, 2, 6);
+            tryBuildRatio(0, 2, 6);
         } else {
-            tryBuildRatio(1, 0, 6);
+            tryBuildRatio(0, 0, 6);
         }
         return true;
     }
