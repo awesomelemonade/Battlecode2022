@@ -53,7 +53,7 @@ public class Archon implements RunnableBot {
             averageIncome = ratio * Communication.getLeadIncome() + (1 - ratio) * averageIncome;
             averageIncomePerMiner = averageIncome / numMiners;
         }
-        Communication.setFarming(averageIncomePerMiner < 0.5);
+        Communication.setFarming(averageIncomePerMiner < 0.5 && rc.getRoundNum() > 700 && Communication.getAliveRobotTypeCount(RobotType.SAGE) > 0);
         Debug.setIndicatorString("B: " + numBuilders + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", H: " + soldierCombinedHealth + ", I: " + averageIncome + ", I/M " + (averageIncome / numMiners));
         if (rc.getMode() == RobotMode.TURRET) {
             if (!Communication.hasPortableArchon()) {
