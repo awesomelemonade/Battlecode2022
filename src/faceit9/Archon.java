@@ -366,6 +366,16 @@ public class Archon implements RunnableBot {
         return false;
     }
 
+    public static boolean tryBuildRandomDirection(RobotType type) throws GameActionException {
+        for (Direction direction : Constants.getAttemptOrder(Util.randomAdjacentDirection())) {
+            if (rc.canBuildRobot(type, direction)) {
+                buildRobot(type, direction);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean tryBuildLowestRubble(RobotType type) throws GameActionException {
         RobotInfo enemy = Util.getClosestEnemyRobot();
         Direction directionToEnemy = enemy == null ? Util.randomAdjacentDirection() : Cache.MY_LOCATION.directionTo(enemy.location);

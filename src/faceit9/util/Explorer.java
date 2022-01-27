@@ -9,8 +9,20 @@ public class Explorer {
 
     public static double currentExploreDirection = -1.0;
 
-    public static void init() {
+    public static void init() throws GameActionException {
         if (!Constants.ROBOT_TYPE.isBuilding()) {
+            /*if (Constants.ROBOT_TYPE == RobotType.MINER) {
+                MapLocation target = Communication.getNearestCommedExploreTargetsAndMark();
+                if (target == null) {
+                    currentExploreDirection = getInitialExploreDirection();
+                } else {
+                    Debug.setIndicatorLine(Profile.EXPLORER, Cache.MY_LOCATION, target, 0, 255, 0);
+                    Debug.setIndicatorDot(Profile.EXPLORER, target, 0, 255, 0);
+                    currentExploreDirection = Math.atan2(target.y - Cache.MY_LOCATION.y, target.x - Cache.MY_LOCATION.x);
+                }
+            } else {
+                currentExploreDirection = getInitialExploreDirection();
+            } */
             currentExploreDirection = getInitialExploreDirection();
         }
     }

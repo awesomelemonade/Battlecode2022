@@ -3,8 +3,7 @@ package faceit9.util;
 import battlecode.common.*;
 import faceit9.RobotPlayer;
 
-import static faceit9.util.Constants.ALLY_TEAM;
-import static faceit9.util.Constants.rc;
+import static faceit9.util.Constants.*;
 
 public class Communication {
     private static final int CHUNK_INFO_OFFSET = 28; // 64 - 36 = 28
@@ -52,6 +51,45 @@ public class Communication {
     private static final int NUM_UNIT_TYPES = 7;
     private static final int[] prevUnitCountValues = new int[NUM_UNIT_TYPES];
     private static final int[] currentUnitCount = new int[NUM_UNIT_TYPES];
+
+    /*
+    // 13-19
+    private static final int EXPLORE_TARGET_OFFSET = 13;
+    private static MapLocation[] exploreTargets = null;
+
+    public static MapLocation getNearestCommedExploreTargetsAndMark() throws GameActionException {
+        if (exploreTargets == null) {
+            int width = Constants.MAP_WIDTH - 1;
+            int height = Constants.MAP_HEIGHT - 1;
+            exploreTargets = new MapLocation[] {
+                    new MapLocation(0, 0),
+                    new MapLocation(width, 0),
+                    new MapLocation(0, height),
+                    new MapLocation(width, height),
+                    new MapLocation(MAP_WIDTH / 2, MAP_HEIGHT / 2)
+            };
+        }
+        MapLocation bestTarget = null;
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        int bestIndex = -1;
+        for (int i = exploreTargets.length; --i >= 0;) {
+            if (rc.readSharedArray(EXPLORE_TARGET_OFFSET + i) == 0) {
+                MapLocation target = exploreTargets[i];
+                int distanceSquared = target.distanceSquaredTo(Cache.MY_LOCATION);
+                if (distanceSquared < bestDistanceSquared) {
+                    bestDistanceSquared = distanceSquared;
+                    bestIndex = i;
+                    bestTarget = target;
+                }
+            }
+        }
+        if (bestTarget != null) {
+            rc.writeSharedArray(EXPLORE_TARGET_OFFSET + bestIndex, 1);
+        }
+        return bestTarget;
+    }
+     */
+
 
     private static final int LEAD_COUNT_MOD = 65536;
     private static final int LEAD_COUNT_OFFSET = 20;
