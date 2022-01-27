@@ -8,8 +8,18 @@ import static faceit8.util.Constants.*;
 public class Builder implements RunnableBot {
     private static RobotInfo[] ALLY_ROBOTS_ACTION_RADIUS = new RobotInfo[0];
     private static MapLocation justBuiltLocation = null;
+
+    private static MapLocation cornerA;
+    private static MapLocation cornerB;
+    private static MapLocation cornerC;
+    private static MapLocation cornerD;
+
     @Override
     public void init() throws GameActionException {
+        cornerA = new MapLocation(-1, -1);
+        cornerB = new MapLocation(MAP_WIDTH, -1);
+        cornerC = new MapLocation(-1, MAP_HEIGHT);
+        cornerD = new MapLocation(MAP_WIDTH, MAP_HEIGHT);
     }
 
     @Override
@@ -63,6 +73,34 @@ public class Builder implements RunnableBot {
             return;
         }
         Util.tryExplore();
+    }
+
+    public static boolean tryMoveTowardsLabLocation() throws GameActionException {
+        // Go to best square nearest to corner with least rubble?
+        int bestRubble = Integer.MAX_VALUE;
+        int bestDistanceToCorner = Integer.MAX_VALUE;
+        MapLocation bestLocation = null;
+        MapLocation[] vision = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, 20);
+        for (int i = vision.length; --i >= 0;) {
+            MapLocation location = vision[i];
+            if (rc.onTheMap(location)) {
+                int distanceToCorner = distanceToCorner(location);
+                if (distanceToCorner <= 1) {
+                    distanceToCorner = 3 - distanceToCorner;
+                }
+                int rubble = rc.senseRubble(location);
+                if (rubble < bestRubble || (rubble == bestRubble && distanceToCorner < bestDistanceToCorner)) {
+                    bestRubble = rubble;
+                    bestDistanceToCorner = distanceToCorner;
+                    bestLocation = location;
+                }
+            }
+        }
+        if (bestLocation != null) {
+            Util.tryMove(bestLocation);
+            return true;
+        }
+        return false;
     }
 
     public static MapLocation findBestFarmingLocation() {
@@ -244,7 +282,7 @@ public class Builder implements RunnableBot {
     public static boolean tryBuildOnLowestRubble(RobotType type) throws GameActionException {
         int bestRubble = Integer.MAX_VALUE;
         Direction bestDirection = null;
-        for (Direction d: Constants.getAttemptOrder(Util.randomAdjacentDirection())) {
+        for (Direction d: Constants.getAttemptOrder(directionToCorner())) {
             MapLocation loc = Cache.MY_LOCATION.add(d);
             if (rc.canBuildRobot(type, d)) {
                 int rubble = rc.senseRubble(loc);
@@ -265,7 +303,7 @@ public class Builder implements RunnableBot {
     public static boolean tryBuildOnLattice(RobotType type) throws GameActionException {
         int bestRubble = Integer.MAX_VALUE;
         Direction bestDirection = null;
-        for (Direction d: Constants.getAttemptOrder(Util.randomAdjacentDirection())) {
+        for (Direction d: Constants.getAttemptOrder(directionToCorner())) {
             MapLocation loc = Cache.MY_LOCATION.add(d);
             if ((loc.x + loc.y) % 2 == 0 && loc.x % 2 == 0) {
                 if (rc.canBuildRobot(type, d)) {
@@ -283,5 +321,38 @@ public class Builder implements RunnableBot {
             return true;
         }
         return false;
+    }
+
+    public static Direction directionToCorner() {
+        int distanceSquaredA = Cache.MY_LOCATION.distanceSquaredTo(cornerA);
+        int distanceSquaredB = Cache.MY_LOCATION.distanceSquaredTo(cornerB);
+        int distanceSquaredC = Cache.MY_LOCATION.distanceSquaredTo(cornerC);
+        int distanceSquaredD = Cache.MY_LOCATION.distanceSquaredTo(cornerD);
+        MapLocation bestLocation = null;
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        if (distanceSquaredA < bestDistanceSquared) {
+            bestLocation = cornerA;
+            bestDistanceSquared = distanceSquaredA;
+        }
+        if (distanceSquaredB < bestDistanceSquared) {
+            bestLocation = cornerB;
+            bestDistanceSquared = distanceSquaredB;
+        }
+        if (distanceSquaredC < bestDistanceSquared) {
+            bestLocation = cornerC;
+            bestDistanceSquared = distanceSquaredC;
+        }
+        if (distanceSquaredD < bestDistanceSquared) {
+            bestLocation = cornerD;
+        }
+        if (bestLocation == null) {
+            return Util.randomAdjacentDirection();
+        }
+        Direction direction = Cache.MY_LOCATION.directionTo(bestLocation);
+        return direction == Direction.CENTER ? Util.randomAdjacentDirection() : direction;
+    }
+
+    public static int distanceToCorner(MapLocation location) {
+        return Math.min(Math.min(location.distanceSquaredTo(cornerA), location.distanceSquaredTo(cornerB)), Math.min(location.distanceSquaredTo(cornerC), location.distanceSquaredTo(cornerD)));
     }
 }
