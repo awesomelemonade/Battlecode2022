@@ -1,7 +1,7 @@
 package faceit9.util;
 
 public enum Profile {
-    ERROR_STATE(true),
+    ERROR_STATE(false),
     CHUNK_INFO(false),
     PATHFINDER(false),
     EXPLORER(false),

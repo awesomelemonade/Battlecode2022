@@ -352,9 +352,9 @@ public class Util {
         } else {
             RobotInfo closestEnemy = Util.getClosestEnemyRobot();
             if (closestEnemy != null) {
-                Util.tryMoveAttackingSquare(closestEnemy.location, Constants.ROBOT_TYPE.actionRadiusSquared);
+                Util.tryMoveAttackingSquare(closestEnemy.location, 1);
             } else {
-                Util.tryMoveTowardsEnemyChunkOrExplore();
+                tryMoveTowardsEnemyChunkOrExplore();
             }
         }
     }

@@ -4,8 +4,8 @@ import battlecode.common.*;
 
 public class Constants {
     // TODO: CHECK BEFORE SUBMITTING
-    public static final boolean ENABLE_DEBUG = true;
-    public static final boolean DEBUG_DRAW = true;
+    public static final boolean ENABLE_DEBUG = false;
+    public static final boolean DEBUG_DRAW = false;
     public static final boolean DEBUG_RESIGN = false;
     public static final boolean DEBUG_PRINT = false;
 
