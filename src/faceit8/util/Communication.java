@@ -277,7 +277,9 @@ public class Communication {
             isFarming = rc.readSharedArray(FARMING_OFFSET) == 1;
             clearStaleReservation();
             clearStalePortableArchon();
-            loadChunks();
+            if (Constants.ROBOT_TYPE != RobotType.BUILDER || Cache.TURN_COUNT > 1) {
+                loadChunks();
+            }
             updateChunkInfo();
             if (Constants.ROBOT_TYPE != RobotType.ARCHON || Cache.TURN_COUNT > 1) {
                 // Initialize Arrays
@@ -389,8 +391,14 @@ public class Communication {
             }
         }
         // Increment unit count
-        incrementUnitCount(Constants.ROBOT_TYPE);
+        if (skipIncrementUnitCount) {
+            skipIncrementUnitCount = false;
+        } else {
+            incrementUnitCount(Constants.ROBOT_TYPE);
+        }
     }
+
+    public static boolean skipIncrementUnitCount = false;
 
     public static void incrementUnitCount(RobotType type) throws GameActionException {
         int unitCountSharedIndex = UNIT_COUNT_OFFSET + type.ordinal();

@@ -9,12 +9,14 @@ public class Archon implements RunnableBot {
     private static double averageIncome;
     private static double averageIncomePerMiner;
     private static int wantedEarlygameMiners;
+    private static int spawnedEarlygameMiners;
     private static int turnsStuck = 0;
     private static RobotType builtLastTurn = null;
 
     @Override
     public void init() throws GameActionException {
         wantedEarlygameMiners = Math.min(12, Math.max(4, MAP_WIDTH * MAP_HEIGHT / 200)) / rc.getArchonCount();
+        spawnedEarlygameMiners = 0;
     }
 
     /*private static List<Double> incomes = new ArrayList<>();
@@ -150,19 +152,27 @@ public class Archon implements RunnableBot {
     }
 
     public static boolean tryBuildEarlygame() throws GameActionException {
+        if (spawnedEarlygameMiners >= 2 && Communication.getAliveRobotTypeCount(RobotType.MINER) >= 4) {
+            return tryBuildEarlygameBuilder();
+        }
         if (wantedEarlygameMiners > 0) {
             if (tryBuildOrReserve(RobotType.MINER)) {
                 --wantedEarlygameMiners;
+                spawnedEarlygameMiners++;
             }
             return true;
         } else {
-            int numBuilder = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
-            if (numBuilder < 1) {
-                tryBuildOrReserve(RobotType.BUILDER);
-                return true;
-            } else {
-                return false;
-            }
+            return tryBuildEarlygameBuilder();
+        }
+    }
+
+    public static boolean tryBuildEarlygameBuilder() throws GameActionException {
+        int numBuilder = Communication.getAliveRobotTypeCount(RobotType.BUILDER);
+        if (numBuilder < 1) {
+            tryBuildOrReserve(RobotType.BUILDER);
+            return true;
+        } else {
+            return false;
         }
     }
 

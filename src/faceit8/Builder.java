@@ -36,6 +36,9 @@ public class Builder implements RunnableBot {
             ALLY_ROBOTS_ACTION_RADIUS = rc.senseNearbyRobots(ROBOT_TYPE.actionRadiusSquared, ALLY_TEAM);
             tryAction();
         }
+        if (Cache.ENEMY_ROBOTS.length == 0 && isStuckWithNeighboringLaboratoriesAtFullHealth()) {
+            Communication.skipIncrementUnitCount = true;
+        }
     }
 
     public static void tryAction() throws GameActionException {
@@ -69,34 +72,63 @@ public class Builder implements RunnableBot {
         if (tryKiteFromAllEnemies()) {
             return;
         }
-        if (tryGuard()) {
+        if (tryMoveTowardsLabLocation()) {
             return;
         }
         Util.tryExplore();
     }
 
     public static boolean tryMoveTowardsLabLocation() throws GameActionException {
+        int distanceSquaredA = Cache.MY_LOCATION.distanceSquaredTo(cornerA);
+        int distanceSquaredB = Cache.MY_LOCATION.distanceSquaredTo(cornerB);
+        int distanceSquaredC = Cache.MY_LOCATION.distanceSquaredTo(cornerC);
+        int distanceSquaredD = Cache.MY_LOCATION.distanceSquaredTo(cornerD);
+        MapLocation bestCorner = null;
+        int bestCornerDistanceSquared = Integer.MAX_VALUE;
+        if (distanceSquaredA < bestCornerDistanceSquared) {
+            bestCorner = cornerA;
+            bestCornerDistanceSquared = distanceSquaredA;
+        }
+        if (distanceSquaredB < bestCornerDistanceSquared) {
+            bestCorner = cornerB;
+            bestCornerDistanceSquared = distanceSquaredB;
+        }
+        if (distanceSquaredC < bestCornerDistanceSquared) {
+            bestCorner = cornerC;
+            bestCornerDistanceSquared = distanceSquaredC;
+        }
+        if (distanceSquaredD < bestCornerDistanceSquared) {
+            bestCorner = cornerD;
+        }
+        if (bestCorner == null) {
+            return false;
+        }
+        if (bestCornerDistanceSquared > 100) { // Magic value
+            Util.tryMove(bestCorner);
+            return true;
+        }
+
         // Go to best square nearest to corner with least rubble?
-        int bestRubble = Integer.MAX_VALUE;
-        int bestDistanceToCorner = Integer.MAX_VALUE;
+        double bestScore = Double.MAX_VALUE;
         MapLocation bestLocation = null;
-        MapLocation[] vision = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, 20);
+        MapLocation[] vision = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, 5);
         for (int i = vision.length; --i >= 0;) {
             MapLocation location = vision[i];
-            if (rc.onTheMap(location)) {
-                int distanceToCorner = distanceToCorner(location);
-                if (distanceToCorner <= 1) {
-                    distanceToCorner = 3 - distanceToCorner;
+            if (Cache.MY_LOCATION.equals(location) || rc.onTheMap(location) && !rc.isLocationOccupied(location)) {
+                int distanceToCorner = bestCorner.distanceSquaredTo(location);
+                if (distanceToCorner <= 5) {
+                    distanceToCorner = 15 - distanceToCorner;
                 }
                 int rubble = rc.senseRubble(location);
-                if (rubble < bestRubble || (rubble == bestRubble && distanceToCorner < bestDistanceToCorner)) {
-                    bestRubble = rubble;
-                    bestDistanceToCorner = distanceToCorner;
+                double score = rubble * 10000000.0 + distanceToCorner * 10000.0 + Cache.MY_LOCATION.distanceSquaredTo(location);
+                if (score < bestScore) {
+                    bestScore = score;
                     bestLocation = location;
                 }
             }
         }
         if (bestLocation != null) {
+            Debug.setIndicatorLine(Cache.MY_LOCATION, bestLocation, 128, 128, 128);
             Util.tryMove(bestLocation);
             return true;
         }
@@ -172,7 +204,7 @@ public class Builder implements RunnableBot {
     }
     public static boolean tryKiteFromAllEnemies() throws GameActionException {
         RobotInfo enemy = Util.getClosestEnemyRobot();
-        MapLocation enemyLocation = enemy == null ? Communication.getClosestEnemyChunk() : enemy.location;
+        MapLocation enemyLocation = enemy == null ? null : enemy.location;
         if (enemyLocation == null) return false;
         if (Cache.MY_LOCATION.isWithinDistanceSquared(enemyLocation, 53)) {
             Util.tryKiteFromGreedy(enemyLocation);
@@ -211,12 +243,17 @@ public class Builder implements RunnableBot {
         int bestDistanceSquared = Integer.MAX_VALUE;
         for (int i = Cache.ALLY_ROBOTS.length; --i >= 0;) {
             RobotInfo robot = Cache.ALLY_ROBOTS[i];
-            if (ROBOT_TYPE.canRepair(robot.type) && robot.health < robot.type.getMaxHealth(robot.level)) {
-                int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(robot.location);
-                if (distanceSquared < bestDistanceSquared) {
-                    bestDistanceSquared = distanceSquared;
-                    repairTarget = robot;
-                }
+            switch (robot.type) {
+                case LABORATORY:
+                case ARCHON:
+                case WATCHTOWER:
+                    if (robot.health < robot.type.getMaxHealth(robot.level)) {
+                        int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(robot.location);
+                        if (distanceSquared < bestDistanceSquared) {
+                            bestDistanceSquared = distanceSquared;
+                            repairTarget = robot;
+                        }
+                    }
             }
         }
         return repairTarget == null ? null : repairTarget.location;
@@ -352,7 +389,18 @@ public class Builder implements RunnableBot {
         return direction == Direction.CENTER ? Util.randomAdjacentDirection() : direction;
     }
 
-    public static int distanceToCorner(MapLocation location) {
-        return Math.min(Math.min(location.distanceSquaredTo(cornerA), location.distanceSquaredTo(cornerB)), Math.min(location.distanceSquaredTo(cornerC), location.distanceSquaredTo(cornerD)));
+    public static boolean isStuckWithNeighboringLaboratoriesAtFullHealth() throws GameActionException {
+        for (int i = ORDINAL_DIRECTIONS.length; --i >= 0;) {
+            MapLocation location = Cache.MY_LOCATION.add(ORDINAL_DIRECTIONS[i]);
+            if (rc.onTheMap(location)) {
+                // Check for laboratory
+                RobotInfo robot = rc.senseRobotAtLocation(location);
+                if (!(robot != null && robot.team == ALLY_TEAM && robot.type == RobotType.LABORATORY &&
+                        robot.mode == RobotMode.TURRET && robot.health == robot.type.getMaxHealth(robot.level))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -71,7 +71,7 @@ public class Miner implements RunnableBot {
         if (leadLocs.length < 20) {
             for (int i = leadLocs.length; --i >= 0;) {
                 MapLocation loc = leadLocs[i];
-                if (loc.equals(rc.getLocation())) continue;
+                if (loc.equals(Cache.MY_LOCATION)) continue;
                 double dx = loc.x - ourX;
                 double dy = loc.y - ourY;
                 double dis2 = loc.distanceSquaredTo(ourLoc);
