@@ -3,9 +3,6 @@ package faceit7;
 import battlecode.common.*;
 import faceit7.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static faceit7.util.Constants.*;
 
 public class Archon implements RunnableBot {
@@ -104,9 +101,9 @@ public class Archon implements RunnableBot {
 
     public static boolean tryBuildAttackerForDefense(boolean hasEnemySoldiers) throws GameActionException {
         if (hasEnemySoldiers) {
-            return tryBuildRandomDirection(RobotType.SAGE) || tryBuildRandomDirection(RobotType.SOLDIER);
+            return tryBuildDefenderDirection(RobotType.SAGE) || tryBuildDefenderDirection(RobotType.SOLDIER);
         } else {
-            return tryBuildRandomDirection(RobotType.SAGE);
+            return tryBuildDefenderDirection(RobotType.SAGE);
         }
     }
 
@@ -272,9 +269,7 @@ public class Archon implements RunnableBot {
         Direction idealDirection = Util.randomAdjacentDirection();
         for (Direction d: Constants.getAttemptOrder(idealDirection)) {
             if (rc.canBuildRobot(type, d)) {
-                rc.buildRobot(type, d);
-                Communication.incrementUnitCount(type);
-                builtLastTurn = type;
+                buildRobot(type, d);
                 return true;
             }
         }
@@ -371,6 +366,42 @@ public class Archon implements RunnableBot {
         }
     }
 
+    public static boolean tryBuildDefenderDirection(RobotType type) throws GameActionException {
+        RobotInfo enemy = Util.getClosestEnemyRobot();
+        if (enemy == null) {
+            return tryBuildRandomDirection(type);
+        }
+        MapLocation enemyLocation = enemy.location;
+        Direction directionToEnemy = Cache.MY_LOCATION.directionTo(enemyLocation);
+        if (Cache.MY_LOCATION.isWithinDistanceSquared(enemyLocation, 13)) {
+            // Spawn on lowest rubble
+            int bestRubble = Integer.MAX_VALUE;
+            Direction bestDirection = null;
+            for (Direction direction : Constants.getAttemptOrder(directionToEnemy)) {
+                if (rc.canBuildRobot(type, direction)) {
+                    MapLocation location = Cache.MY_LOCATION.add(direction):
+                    int rubble = rc.senseRubble(location);
+                    if (rubble < bestRubble) {
+                        bestRubble = rubble;
+                        bestDirection = direction;
+                    }
+                }
+            }
+            if (bestDirection != null) {
+                buildRobot(type, bestDirection);
+            }
+        } else {
+            // Spawn in the direction of the enemy
+            for (Direction direction : Constants.getAttemptOrder(directionToEnemy)) {
+                if (rc.canBuildRobot(type, direction)) {
+                    buildRobot(type, direction);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static MapLocation getTargetMoveLocation() throws GameActionException {
         MapLocation nearestEnemyChunk = Communication.getClosestEnemyChunk();
         MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, ROBOT_TYPE.visionRadiusSquared);
@@ -461,5 +492,11 @@ public class Archon implements RunnableBot {
         }
         double payoffTurns = unitsMissed / catchUpRate + totalTurns;
         return 10.0 + 1.5 * payoffTurns < Util.getNextVortexOrSingularity() - rc.getRoundNum();
+    }
+
+    public static void buildRobot(RobotType type, Direction direction) throws GameActionException {
+        rc.buildRobot(type, direction);
+        Communication.incrementUnitCount(type);
+        builtLastTurn = type;
     }
 }
