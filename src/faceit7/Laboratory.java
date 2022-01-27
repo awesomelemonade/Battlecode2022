@@ -26,7 +26,7 @@ public class Laboratory implements RunnableBot {
                     turnsStuck = 0;
                 }
             }
-            if (rc.getTeamLeadAmount(ALLY_TEAM) - rc.getTransmutationRate() >= RobotType.MINER.buildCostLead) {
+            if (rc.getTeamLeadAmount(ALLY_TEAM) - rc.getTransmutationRate() >= Communication.getReservedLead()) {
                 if (rc.canTransmute()) {
                     rc.transmute();
                 }
