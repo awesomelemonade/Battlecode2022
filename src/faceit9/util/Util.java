@@ -1,11 +1,11 @@
-package faceit8.util;
+package faceit9.util;
 
 import battlecode.common.*;
 
 import java.util.function.Predicate;
 
-import static faceit8.util.Constants.ALL_DIRECTIONS;
-import static faceit8.util.Constants.rc;
+import static faceit9.util.Constants.ALL_DIRECTIONS;
+import static faceit9.util.Constants.rc;
 
 public class Util {
 

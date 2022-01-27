@@ -1,9 +1,9 @@
-package faceit8;
+package faceit9;
 
 import battlecode.common.*;
-import faceit8.util.*;
+import faceit9.util.*;
 
-import static faceit8.util.Constants.*;
+import static faceit9.util.Constants.*;
 
 public class Builder implements RunnableBot {
     private static RobotInfo[] ALLY_ROBOTS_ACTION_RADIUS = new RobotInfo[0];

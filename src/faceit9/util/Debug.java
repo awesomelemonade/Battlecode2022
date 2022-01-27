@@ -1,8 +1,8 @@
-package faceit8.util;
+package faceit9.util;
 
 import battlecode.common.MapLocation;
 
-import static faceit8.util.Constants.rc;
+import static faceit9.util.Constants.rc;
 
 public class Debug {
     public static final int id = -1;

@@ -1,9 +1,9 @@
-package faceit8;
+package faceit9;
 
 import battlecode.common.*;
-import faceit8.util.*;
+import faceit9.util.*;
 
-import static faceit8.util.Constants.rc;
+import static faceit9.util.Constants.rc;
 
 public class Soldier implements RunnableBot {
     @Override
@@ -42,7 +42,7 @@ public class Soldier implements RunnableBot {
         }
     }
 
-    // Prioritize soldiers = faceit8 = watchtowers > miners > builders > archons > laboratories
+    // Prioritize soldiers = faceit9 = watchtowers > miners > builders > archons > laboratories
     public static int getUnitTypePriority(RobotType type) {
         switch (type) {
             case SOLDIER:

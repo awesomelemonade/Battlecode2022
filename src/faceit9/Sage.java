@@ -1,9 +1,9 @@
-package faceit8;
+package faceit9;
 
 import battlecode.common.*;
-import faceit8.util.*;
+import faceit9.util.*;
 
-import static faceit8.util.Constants.rc;
+import static faceit9.util.Constants.rc;
 
 public class Sage implements RunnableBot {
     @Override

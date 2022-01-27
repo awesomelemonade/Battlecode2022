@@ -1,10 +1,10 @@
-package faceit8;
+package faceit9;
 
 import battlecode.common.*;
-import faceit8.util.*;
+import faceit9.util.*;
 
-import static faceit8.util.Cache.ALLY_ROBOTS;
-import static faceit8.util.Constants.*;
+import static faceit9.util.Cache.ALLY_ROBOTS;
+import static faceit9.util.Constants.*;
 
 public class Miner implements RunnableBot {
     int spawnRound;

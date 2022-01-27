@@ -1,4 +1,4 @@
-package faceit8.util;
+package faceit9.util;
 
 public enum Profile {
     ERROR_STATE(true),

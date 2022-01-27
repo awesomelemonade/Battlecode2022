@@ -1,13 +1,13 @@
-package faceit8;
+package faceit9;
 
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotMode;
 import battlecode.common.RobotType;
-import faceit8.util.*;
+import faceit9.util.*;
 
-import static faceit8.util.Constants.ALLY_TEAM;
-import static faceit8.util.Constants.rc;
+import static faceit9.util.Constants.ALLY_TEAM;
+import static faceit9.util.Constants.rc;
 
 public class Laboratory implements RunnableBot {
     private static int turnsStuck = 0;

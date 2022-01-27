@@ -1,8 +1,8 @@
-package faceit8.util;
+package faceit9.util;
 
 import battlecode.common.*;
 
-import static faceit8.util.Constants.rc;
+import static faceit9.util.Constants.rc;
 
 public class Explorer {
     private static Direction previousDirection = Util.randomAdjacentDirection();

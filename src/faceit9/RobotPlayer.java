@@ -1,10 +1,10 @@
-package faceit8;
+package faceit9;
 
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
-import faceit8.util.*;
+import faceit9.util.*;
 
 public class RobotPlayer {
     public static int currentTurn;

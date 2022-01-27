@@ -1,10 +1,10 @@
-package faceit8.util;
+package faceit9.util;
 
 import battlecode.common.MapLocation;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
 
-import static faceit8.util.Constants.rc;
+import static faceit9.util.Constants.rc;
 
 public class Cache { // Cache variables that are constant throughout a turn
     public static RobotInfo[] ALLY_ROBOTS, ENEMY_ROBOTS;

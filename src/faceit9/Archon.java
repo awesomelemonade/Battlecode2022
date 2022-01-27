@@ -1,9 +1,9 @@
-package faceit8;
+package faceit9;
 
 import battlecode.common.*;
-import faceit8.util.*;
+import faceit9.util.*;
 
-import static faceit8.util.Constants.*;
+import static faceit9.util.Constants.*;
 
 public class Archon implements RunnableBot {
     private static double averageIncome;
@@ -242,59 +242,17 @@ public class Archon implements RunnableBot {
         if (reservedLead != 0 || reservedGold != 0) {
             // There already exists a reservation
             if (Communication.isAffordableWithReservations(type)) {
-                return tryBuildRandomDirection(type);
+                return tryBuildLowestRubble(type);
             }
             return false;
         } else {
             // Build if we can, otherwise reserve
-            if (tryBuildRandomDirection(type)) {
+            if (tryBuildLowestRubble(type)) {
                 return true;
             }
             Communication.reserve(type.buildCostGold, type.buildCostLead);
             return false;
         }
-    }
-
-    public static boolean tryBuildSageSoldierOrReserve() throws GameActionException {
-        int teamLead = rc.getTeamLeadAmount(ALLY_TEAM);
-        int teamGold = rc.getTeamGoldAmount(ALLY_TEAM);
-        int reservedLead = Communication.getReservedLead();
-        int reservedGold = Communication.getReservedGold();
-
-        if (reservedLead != 0 || reservedGold != 0) {
-            // There already exists a reservation
-            if (Communication.isAffordableWithReservations(RobotType.SAGE)) {
-                tryBuildRandomDirection(RobotType.SAGE);
-                return true;
-            }
-            if (Communication.isAffordableWithReservations(RobotType.SOLDIER)) {
-                tryBuildRandomDirection(RobotType.SOLDIER);
-                return true;
-            }
-            return false;
-        } else {
-            // Build if we can, otherwise reserve
-            if (teamGold >= RobotType.SAGE.buildCostGold && tryBuildRandomDirection(RobotType.SAGE)) {
-                return true;
-            }
-            if (teamLead >= RobotType.SOLDIER.buildCostLead && tryBuildRandomDirection(RobotType.SOLDIER)) {
-                return true;
-            }
-            // Reserve both gold and lead
-            Communication.reserve(RobotType.SAGE.buildCostGold, RobotType.SOLDIER.buildCostLead);
-            return false;
-        }
-    }
-
-    public static boolean tryBuildRandomDirection(RobotType type) throws GameActionException {
-        Direction idealDirection = Util.randomAdjacentDirection();
-        for (Direction d: Constants.getAttemptOrder(idealDirection)) {
-            if (rc.canBuildRobot(type, d)) {
-                buildRobot(type, d);
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void tryRepair() throws GameActionException {
@@ -390,27 +348,12 @@ public class Archon implements RunnableBot {
     public static boolean tryBuildDefenderDirection(RobotType type) throws GameActionException {
         RobotInfo enemy = Util.getClosestEnemyRobot();
         if (enemy == null) {
-            return tryBuildRandomDirection(type);
+            return tryBuildLowestRubble(type, Util.randomAdjacentDirection());
         }
         MapLocation enemyLocation = enemy.location;
         Direction directionToEnemy = Cache.MY_LOCATION.directionTo(enemyLocation);
         if (Cache.MY_LOCATION.isWithinDistanceSquared(enemyLocation, 13)) {
-            // Spawn on lowest rubble
-            int bestRubble = Integer.MAX_VALUE;
-            Direction bestDirection = null;
-            for (Direction direction : Constants.getAttemptOrder(directionToEnemy)) {
-                if (rc.canBuildRobot(type, direction)) {
-                    MapLocation location = Cache.MY_LOCATION.add(direction);
-                    int rubble = rc.senseRubble(location);
-                    if (rubble < bestRubble) {
-                        bestRubble = rubble;
-                        bestDirection = direction;
-                    }
-                }
-            }
-            if (bestDirection != null) {
-                buildRobot(type, bestDirection);
-            }
+            return tryBuildLowestRubble(type, directionToEnemy);
         } else {
             // Spawn in the direction of the enemy
             for (Direction direction : Constants.getAttemptOrder(directionToEnemy)) {
@@ -419,6 +362,33 @@ public class Archon implements RunnableBot {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public static boolean tryBuildLowestRubble(RobotType type) throws GameActionException {
+        RobotInfo enemy = Util.getClosestEnemyRobot();
+        Direction directionToEnemy = enemy == null ? Util.randomAdjacentDirection() : Cache.MY_LOCATION.directionTo(enemy.location);
+        return tryBuildLowestRubble(type, directionToEnemy);
+    }
+
+    public static boolean tryBuildLowestRubble(RobotType type, Direction directionToEnemy) throws GameActionException {
+        // Spawn on lowest rubble
+        int bestRubble = Integer.MAX_VALUE;
+        Direction bestDirection = null;
+        for (Direction direction : Constants.getAttemptOrder(directionToEnemy)) {
+            if (rc.canBuildRobot(type, direction)) {
+                MapLocation location = Cache.MY_LOCATION.add(direction);
+                int rubble = rc.senseRubble(location);
+                if (rubble < bestRubble) {
+                    bestRubble = rubble;
+                    bestDirection = direction;
+                }
+            }
+        }
+        if (bestDirection != null) {
+            buildRobot(type, bestDirection);
+            return true;
         }
         return false;
     }
