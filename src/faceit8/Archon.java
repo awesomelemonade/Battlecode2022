@@ -53,15 +53,10 @@ public class Archon implements RunnableBot {
         Communication.setFarming(averageIncomePerMiner < 0.5 && rc.getRoundNum() > 700 && Communication.getAliveRobotTypeCount(RobotType.SAGE) > 0);
         Debug.setIndicatorString("B: " + numBuilders + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", H: " + soldierCombinedHealth + ", I: " + averageIncome + ", I/M " + (averageIncome / numMiners));
         if (rc.getMode() == RobotMode.TURRET) {
-            if (!Communication.hasPortableArchon()) {
-                MapLocation potentialRelocationTarget = getTargetMoveLocation();
-                if (potentialRelocationTarget != null && !Cache.MY_LOCATION.equals(potentialRelocationTarget) && isWorthToMove(potentialRelocationTarget)) {
-                    if (rc.canTransform()) {
-                        rc.transform();
-                        Communication.setPortableArchon();
-                        turnsStuck = 0;
-                    }
-                }
+            if (shouldTransformToPortable()) {
+                rc.transform();
+                Communication.setPortableArchon();
+                turnsStuck = 0;
             }
             build:
             {
@@ -93,6 +88,22 @@ public class Archon implements RunnableBot {
                 Util.tryMove(relocationTarget);
             }
         }
+    }
+
+    public static boolean shouldTransformToPortable() throws GameActionException {
+        if (!rc.canTransform()) {
+            return false;
+        }
+        if (!Communication.hasPortableArchon()) {
+            MapLocation potentialRelocationTarget = getTargetMoveLocation();
+            if (potentialRelocationTarget != null && !Cache.MY_LOCATION.equals(potentialRelocationTarget) && isWorthToMove(potentialRelocationTarget)) {
+                return true;
+            }
+        }
+        if (Cache.ENEMY_ROBOTS.length == 0 && Util.getNextVortexOrSingularity() == rc.getRoundNum()) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean tryBuildAttacker() throws GameActionException {
@@ -379,7 +390,7 @@ public class Archon implements RunnableBot {
             Direction bestDirection = null;
             for (Direction direction : Constants.getAttemptOrder(directionToEnemy)) {
                 if (rc.canBuildRobot(type, direction)) {
-                    MapLocation location = Cache.MY_LOCATION.add(direction):
+                    MapLocation location = Cache.MY_LOCATION.add(direction);
                     int rubble = rc.senseRubble(location);
                     if (rubble < bestRubble) {
                         bestRubble = rubble;

@@ -16,15 +16,26 @@ public class Laboratory implements RunnableBot {
 
     }
 
+    public static boolean shouldTransformToPortable() throws GameActionException {
+        if (!rc.canTransform()) {
+            return false;
+        }
+        if (Util.getNextVortexOrSingularity() == rc.getRoundNum()) {
+            return true;
+        }
+        MapLocation potentialRelocationTarget = getTargetMoveLocation();
+        if (potentialRelocationTarget != null && !Cache.MY_LOCATION.equals(potentialRelocationTarget) && isWorthToMove(potentialRelocationTarget)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void loop() throws GameActionException {
         if (rc.getMode() == RobotMode.TURRET) {
-            MapLocation potentialRelocationTarget = getTargetMoveLocation();
-            if (potentialRelocationTarget != null && !Cache.MY_LOCATION.equals(potentialRelocationTarget) && isWorthToMove(potentialRelocationTarget)) {
-                if (rc.canTransform()) {
-                    rc.transform();
-                    turnsStuck = 0;
-                }
+            if (shouldTransformToPortable()) {
+                rc.transform();
+                turnsStuck = 0;
             }
             int reservedLead = Communication.getReservedLead();
             if (reservedLead != RobotType.MINER.buildCostLead) { // Laboratories only respect miner reservations

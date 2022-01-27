@@ -379,7 +379,7 @@ public class Archon implements RunnableBot {
             Direction bestDirection = null;
             for (Direction direction : Constants.getAttemptOrder(directionToEnemy)) {
                 if (rc.canBuildRobot(type, direction)) {
-                    MapLocation location = Cache.MY_LOCATION.add(direction):
+                    MapLocation location = Cache.MY_LOCATION.add(direction);
                     int rubble = rc.senseRubble(location);
                     if (rubble < bestRubble) {
                         bestRubble = rubble;
