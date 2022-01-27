@@ -1,5 +1,7 @@
 package faceit7.util;
 
+import java.util.Arrays;
+
 import static faceit7.util.Constants.rc;
 
 public class Random {
@@ -23,4 +25,17 @@ public class Random {
         }
     }
     */
+
+    /*public static void main(String[] args) {
+        int[] buckets = new int[256];
+        for (int i = 0; i < RANDOM_256_LENGTH; i++) {
+            buckets[rand256()]++;
+        }
+        System.out.println(Arrays.toString(buckets));
+        int[] nums = new int[10000];
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = rand256();
+        }
+        System.out.println(Arrays.toString(nums));
+    }*/
 }

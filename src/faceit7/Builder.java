@@ -29,14 +29,19 @@ public class Builder implements RunnableBot {
     }
 
     public static void tryAction() throws GameActionException {
-        if (tryFinishPrototypes()) return;
+        RobotInfo repairTarget = getBestRepairTarget();
+        if (repairTarget != null && repairTarget.mode == RobotMode.PROTOTYPE) {
+            tryRepair(repairTarget.location);
+            return;
+        }
         int numLaboratories = Communication.getAliveRobotTypeCount(RobotType.LABORATORY);
         if (rc.getTeamLeadAmount(ALLY_TEAM) >= Math.min(500, numLaboratories * 150)) {
             if (tryBuildWithReservations(RobotType.LABORATORY)) {
                 return;
             }
         }
-        if (tryRepair()) {
+        if (repairTarget != null) {
+            tryRepair(repairTarget.location);
             return;
         }
     }
@@ -83,11 +88,10 @@ public class Builder implements RunnableBot {
 
     public static MapLocation getNewGuardLocation() throws GameActionException {
         for (int i = 10; --i >= 0;) { // Only try 10 times
-            int random = (int) (49 * Math.random());
-            int dx = random / 7 - 3;
-            int dy = random % 7 - 3;
+            int dx = Random.rand256() % 7 - 3;
+            int dy = Random.rand256() % 7 - 3;
             MapLocation potential = guardTarget.translate(dx, dy);
-            if (Util.onTheMap(potential) && !Cache.MY_LOCATION.isWithinDistanceSquared(potential, 2)) {
+            if (Util.onTheMap(potential) && !Cache.MY_LOCATION.isAdjacentTo(potential)) {
                 return potential;
             }
         }
@@ -174,62 +178,32 @@ public class Builder implements RunnableBot {
         return repairTarget == null ? null : repairTarget.location;
     }
 
-    public static boolean tryFinishPrototypes() throws GameActionException {
-        MapLocation repairLocation = getBestPrototypeLocation();
-        if (repairLocation == null) return false;
-        if (rc.canRepair(repairLocation)) {
-            rc.repair(repairLocation);
+    public static boolean tryRepair(MapLocation location) throws GameActionException {
+        if (rc.canRepair(location)) {
+            rc.repair(location);
             return true;
         }
         return false;
     }
 
-    public static boolean tryRepair() throws GameActionException {
-        MapLocation repairLocation = getBestRepairLocationTarget();
-        if (repairLocation == null) return false;
-        if (rc.canRepair(repairLocation)) {
-            rc.repair(repairLocation);
-            return true;
-        }
-        return false;
-    }
-
-    public static MapLocation getBestPrototypeLocation() {
-        int bestHealth = Integer.MIN_VALUE;
-        MapLocation bestLocation = null;
+    // Prioritizes prototype > turret, low health > high health
+    public static RobotInfo getBestRepairTarget() {
+        int bestScore = Integer.MAX_VALUE;
+        RobotInfo bestTarget = null;
         for (int i = ALLY_ROBOTS_ACTION_RADIUS.length; --i >= 0;) {
             RobotInfo ally = ALLY_ROBOTS_ACTION_RADIUS[i];
-            MapLocation location = ally.location;
-            if (ally.mode == RobotMode.PROTOTYPE && rc.canRepair(location)) {
+            if (rc.canRepair(ally.location)) {
                 int health = ally.health;
                 if (health < ally.type.getMaxHealth(ally.level)) {
-                    if (health > bestHealth) {
-                        bestHealth = health;
-                        bestLocation = location;
+                    int score = health - (ally.mode == RobotMode.PROTOTYPE ? 10000 : 0);
+                    if (score < bestScore) {
+                        bestScore = score;
+                        bestTarget = ally;
                     }
                 }
             }
         }
-        return bestLocation;
-    }
-
-    public static MapLocation getBestRepairLocationTarget() {
-        int bestHealth = Integer.MAX_VALUE;
-        MapLocation bestLocation = null;
-        for (int i = ALLY_ROBOTS_ACTION_RADIUS.length; --i >= 0;) {
-            RobotInfo ally = ALLY_ROBOTS_ACTION_RADIUS[i];
-            MapLocation location = ally.location;
-            if (rc.canRepair(location)) {
-                int health = ally.health;
-                if (health < ally.type.getMaxHealth(ally.level)) {
-                    if (health < bestHealth) {
-                        bestHealth = health;
-                        bestLocation = location;
-                    }
-                }
-            }
-        }
-        return bestLocation;
+        return bestTarget;
     }
 
     public static boolean tryBuildWithReservations(RobotType type) throws GameActionException {

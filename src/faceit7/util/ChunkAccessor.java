@@ -40,7 +40,7 @@ public class ChunkAccessor {
 
     public MapLocation getNearestChunk(int threshold) {
         MapLocation bestLoc = null;
-        int bestDist = (int)1e9;
+        int bestDist = Integer.MAX_VALUE;
         Node cur = ll.front;
         int cnt = Math.min(threshold, ll.size);
         for (int i = cnt; --i >= 0;) {
