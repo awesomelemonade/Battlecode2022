@@ -377,8 +377,10 @@ public class Archon implements RunnableBot {
         MapLocation bestLocation = null;
         int bestRubble = Integer.MAX_VALUE;
         int bestDistanceSquared = 0;
-        double threshold = Math.max(5, Math.min(15, Math.sqrt(MAP_WIDTH * MAP_HEIGHT) * 0.25));
+        double threshold = Math.max(8, Math.min(15, Math.sqrt(MAP_WIDTH * MAP_HEIGHT) * 0.25));
+        double thresholdPlus3 = threshold + 3.0;
         int thresholdSquared = (int) (threshold * threshold);
+        int thresholdPlus3Squared = (int) (thresholdPlus3 * thresholdPlus3);
         if (nearestEnemyChunk == null || Cache.MY_LOCATION.isWithinDistanceSquared(nearestEnemyChunk, thresholdSquared)) {
             // tiebreak by distance to my location
             for (int i = locations.length; --i >= 0;) {
@@ -400,6 +402,7 @@ public class Archon implements RunnableBot {
             Debug.setIndicatorLine(Cache.MY_LOCATION, nearestEnemyChunk, 255, 0, 0);
             double currentDistanceToEnemy = Math.sqrt(Cache.MY_LOCATION.distanceSquaredTo(nearestEnemyChunk));
             int currentRubble = rc.senseRubble(Cache.MY_LOCATION);
+            boolean conservativeMoving = rc.getMode() == RobotMode.TURRET && Cache.MY_LOCATION.isWithinDistanceSquared(nearestEnemyChunk, thresholdPlus3Squared);
             for (int i = locations.length; --i >= 0;) {
                 MapLocation location = locations[i];
                 if (rc.onTheMap(location)) {
@@ -407,12 +410,17 @@ public class Archon implements RunnableBot {
                         if (!location.isWithinDistanceSquared(nearestEnemyChunk, thresholdSquared)) {
                             int rubble = rc.senseRubble(location);
                             int distanceToSelf = Cache.MY_LOCATION.distanceSquaredTo(location);
-                            int distanceToEnemy = nearestEnemyChunk.distanceSquaredTo(location);
-                            if (!location.equals(Cache.MY_LOCATION) && rubble == currentRubble) {
-                                if (Communication.getChunkInfo(location) != Communication.CHUNK_INFO_ALLY) {
+                            if (distanceToSelf != 0) {
+                                if (conservativeMoving && distanceToSelf <= 5) {
                                     continue;
                                 }
+                                if (rubble == currentRubble) {
+                                    if (Communication.getChunkInfo(location) != Communication.CHUNK_INFO_ALLY) {
+                                        continue;
+                                    }
+                                }
                             }
+                            int distanceToEnemy = nearestEnemyChunk.distanceSquaredTo(location);
                             if (Math.sqrt(distanceToSelf) + Math.sqrt(distanceToEnemy) > 1.15 * currentDistanceToEnemy) {
                                 continue;
                             }

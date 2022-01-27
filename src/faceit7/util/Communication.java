@@ -484,7 +484,7 @@ public class Communication {
                 RobotInfo[] enemies = rc.senseNearbyRobots(chunkMid, 8, Constants.ENEMY_TEAM); // 8 = dist squared for 5 x 5
                 if (enemies.length == 0) {
                     // Label as ally
-                    if (Util.isAttacker(Constants.ROBOT_TYPE) || Cache.ALLY_ROBOTS.length >= 2) {
+                    if (Util.isAttacker(Constants.ROBOT_TYPE) || Cache.ALLY_ROBOTS.length >= 3) {
                         setChunkInfo(currentChunkX, currentChunkY, CHUNK_INFO_ALLY);
                     }
                 } else {
@@ -527,16 +527,16 @@ public class Communication {
                         break;
                     default:
                         // general enemy chunk
-                        int old = getChunkInfo(currentChunkX, currentChunkY);
+                        int old = getChunkInfo(chunkX, chunkY);
                         if (old != CHUNK_INFO_ENEMY_ARCHON) {
                             setChunkInfo(chunkX, chunkY, CHUNK_INFO_ENEMY_GENERAL);
                         }
                         break;
                     case MINER:
                         // general enemy chunk
-                        int old2 = getChunkInfo(currentChunkX, currentChunkY);
+                        int old2 = getChunkInfo(chunkX, chunkY);
                         if (old2 != CHUNK_INFO_ENEMY_ARCHON && old2 != CHUNK_INFO_ENEMY_GENERAL) {
-                            setChunkInfo(currentChunkX, currentChunkY, old2 == CHUNK_INFO_ALLY ? CHUNK_INFO_ENEMY_GENERAL : CHUNK_INFO_ENEMY_MINER);
+                            setChunkInfo(chunkX, chunkY, old2 == CHUNK_INFO_ALLY ? CHUNK_INFO_ENEMY_GENERAL : CHUNK_INFO_ENEMY_MINER);
                         }
                         break;
                 }
