@@ -119,7 +119,7 @@ public class Archon implements RunnableBot {
         boolean winnable = 1.5 * sumAlly + 5 * RobotType.SOLDIER.health >= sumEnemy;
         if (beingAttacked) {
             if (winnable || rc.getArchonCount() == 1) {
-                tryBuildAttackerForDefense(hasEnemySoldiers);
+                tryBuildAttackerForDefense(hasEnemySoldiers || Communication.getAliveRobotTypeCount(RobotType.LABORATORY) < 1);
             }
             return true;
         }
