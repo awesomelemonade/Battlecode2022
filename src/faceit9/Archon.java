@@ -12,6 +12,8 @@ public class Archon implements RunnableBot {
     private static int spawnedEarlygameMiners;
     private static int turnsStuck = 0;
     private static RobotType builtLastTurn = null;
+    private static boolean builtFarmer = false;
+    private static int lastBuiltFarmer = -1;
 
     @Override
     public void init() throws GameActionException {
@@ -52,7 +54,7 @@ public class Archon implements RunnableBot {
             averageIncome = ratio * Communication.getLeadIncome() + (1 - ratio) * averageIncome;
             averageIncomePerMiner = averageIncome / numMiners;
         }
-        Communication.setFarming(averageIncomePerMiner < 0.5 && rc.getRoundNum() > 700 && Communication.getAliveRobotTypeCount(RobotType.SAGE) > 0);
+        Communication.setFarming((averageIncomePerMiner < 0.5 || Communication.getAliveRobotTypeCount(RobotType.MINER) < 15) && rc.getRoundNum() > 300 && Communication.getAliveRobotTypeCount(RobotType.SAGE) > 2);
         Debug.setIndicatorString("B: " + numBuilders + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", H: " + soldierCombinedHealth + ", I: " + averageIncome + ", I/M " + (averageIncome / numMiners));
         if (rc.getMode() == RobotMode.TURRET) {
             if (shouldTransformToPortable()) {
@@ -203,6 +205,23 @@ public class Archon implements RunnableBot {
                 Communication.getAliveRobotTypeCount(RobotType.SAGE) +
                 Communication.getAliveRobotTypeCount(RobotType.WATCHTOWER)) * (prod / attacker);
         if (minerScore < attackerScore && minerScore < builderScore && Communication.getAliveRobotTypeCount(RobotType.MINER) <= MAP_WIDTH * MAP_HEIGHT / 18) {
+            // if farming, alternate
+            if (Communication.isFarming) {
+                if (builtFarmer) {
+                    if (tryBuildOrReserve(RobotType.MINER)) {
+                        builtFarmer = false;
+                    } else {
+                        tryBuildAttacker();
+                    }
+                } else {
+                    if (tryBuildOrReserve(RobotType.BUILDER)) {
+                        builtFarmer = true;
+                        lastBuiltFarmer = rc.getRoundNum();
+                    } else {
+                        tryBuildAttacker();
+                    }
+                }
+            }
             if (!tryBuildOrReserve(RobotType.MINER)) {
                 tryBuildAttacker();
             }
@@ -230,6 +249,9 @@ public class Archon implements RunnableBot {
     public static boolean tryBuildPoor() throws GameActionException {
         if (rc.getTeamLeadAmount(ALLY_TEAM) >= 500) return false;
         // 1:2 at 0.6, 1:1 at 1
+        if (Communication.isFarming && rc.getRoundNum() - lastBuiltFarmer >= 5) {
+            tryBuildOrReserve(RobotType.BUILDER);
+        }
         double ratio = Math.max(0.5, -2.5 * averageIncomePerMiner + 3.5);
         tryBuildRatio(0, 1, ratio);
         return true;

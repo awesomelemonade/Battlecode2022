@@ -14,6 +14,8 @@ public class Builder implements RunnableBot {
     private static MapLocation cornerC;
     private static MapLocation cornerD;
 
+    private static boolean shouldSeppuku = false;
+
     @Override
     public void init() throws GameActionException {
         cornerA = new MapLocation(-1, -1);
@@ -25,6 +27,9 @@ public class Builder implements RunnableBot {
     @Override
     public void loop() throws GameActionException {
         justBuiltLocation = null;
+        boolean stuckWithNeighboringLaboratoriesAtFullHealth = isStuckWithNeighboringLaboratoriesAtFullHealth();
+        shouldSeppuku = Communication.isFarming && !stuckWithNeighboringLaboratoriesAtFullHealth && Communication.getAliveRobotTypeCount(RobotType.BUILDER) > 1 && rc.getTeamLeadAmount(ALLY_TEAM) < 2000;
+        Debug.setIndicatorString(shouldSeppuku ? "T" : "F");
         if (rc.isActionReady()) {
             ALLY_ROBOTS_ACTION_RADIUS = rc.senseNearbyRobots(ROBOT_TYPE.actionRadiusSquared, ALLY_TEAM);
             tryAction();
@@ -36,7 +41,7 @@ public class Builder implements RunnableBot {
             ALLY_ROBOTS_ACTION_RADIUS = rc.senseNearbyRobots(ROBOT_TYPE.actionRadiusSquared, ALLY_TEAM);
             tryAction();
         }
-        if (Cache.ENEMY_ROBOTS.length == 0 && isStuckWithNeighboringLaboratoriesAtFullHealth()) {
+        if (Cache.ENEMY_ROBOTS.length == 0 && stuckWithNeighboringLaboratoriesAtFullHealth) {
             Communication.skipIncrementUnitCount = true;
         }
     }
@@ -72,10 +77,52 @@ public class Builder implements RunnableBot {
         if (tryKiteFromAllEnemies()) {
             return;
         }
+        if (shouldSeppuku) {
+            if (tryMoveForSeppuku()) {
+                return;
+            }
+        }
         if (tryMoveTowardsLabLocation()) {
             return;
         }
         Util.tryExplore();
+    }
+
+    public static boolean tryMoveForSeppuku() throws GameActionException {
+        MapLocation closestArchon = Communication.getClosestCommunicatedAllyTurretArchonLocation();
+        if (closestArchon == null) {
+            Util.tryExplore();
+            return true;
+        }
+        // look for locations nearby
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        MapLocation bestLocation = null;
+        MapLocation[] locations = rc.getAllLocationsWithinRadiusSquared(Cache.MY_LOCATION, 10);
+        for (int i = locations.length; --i >= 0;) {
+            MapLocation location = locations[i];
+            if (Cache.MY_LOCATION.equals(location) || (rc.onTheMap(location) && !rc.isLocationOccupied(location))) {
+                if (rc.senseRubble(location) == 0) {
+                    // we can seppuku here
+                    int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(closestArchon);
+                    if (distanceSquared < bestDistanceSquared) {
+                        bestLocation = location;
+                        bestDistanceSquared = distanceSquared;
+                    }
+                }
+            }
+        }
+        if (bestLocation == null) {
+            Util.tryExplore();
+        } else {
+            if (Cache.MY_LOCATION.equals(bestLocation)) {
+                Debug.println("DISINTEGRATE BEFORE");
+                rc.disintegrate();
+                Debug.println("DISINTEGRATE AFTER");
+            } else {
+                Util.tryMove(bestLocation);
+            }
+        }
+        return true;
     }
 
     public static boolean tryMoveTowardsLabLocation() throws GameActionException {

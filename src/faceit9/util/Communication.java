@@ -106,12 +106,13 @@ public class Communication {
     private static int currentSoldierCombinedHealth;
 
     private static final int FARMING_OFFSET = 27;
-    private static boolean isFarming = false;
+    public static boolean isFarming = false;
 
     public static void setFarming(boolean farming) throws GameActionException {
         if (isFarming != farming) {
             rc.writeSharedArray(FARMING_OFFSET, farming ? 1 : 0);
         }
+        isFarming = farming;
     }
 
     public static void setSoldierHealthInfo(int health) throws GameActionException {
@@ -678,6 +679,23 @@ public class Communication {
         for (int i = archonLocations.length; --i >= 0;) {
             MapLocation location = archonLocations[i];
             if (location != null) {
+                int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
+                if (distanceSquared < bestDistanceSquared) {
+                    bestDistanceSquared = distanceSquared;
+                    bestLocation = location;
+                }
+            }
+        }
+        return bestLocation;
+    }
+
+    public static MapLocation getClosestCommunicatedAllyTurretArchonLocation() {
+        MapLocation bestLocation = null;
+        int bestDistanceSquared = Integer.MAX_VALUE;
+        if (archonLocations == null) return null;
+        for (int i = archonLocations.length; --i >= 0;) {
+            MapLocation location = archonLocations[i];
+            if (location != null && !archonPortable[i]) {
                 int distanceSquared = Cache.MY_LOCATION.distanceSquaredTo(location);
                 if (distanceSquared < bestDistanceSquared) {
                     bestDistanceSquared = distanceSquared;
