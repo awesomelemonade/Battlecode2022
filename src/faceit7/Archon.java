@@ -3,6 +3,9 @@ package faceit7;
 import battlecode.common.*;
 import faceit7.util.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static faceit7.util.Constants.*;
 
 public class Archon implements RunnableBot {
@@ -16,6 +19,17 @@ public class Archon implements RunnableBot {
     public void init() throws GameActionException {
         wantedEarlygameMiners = Math.min(12, Math.max(4, MAP_WIDTH * MAP_HEIGHT / 200)) / rc.getArchonCount();
     }
+
+    /*private static List<Double> incomes = new ArrayList<>();
+    private static List<Double> incomePerMiner = new ArrayList<>();
+    public static void debug_test() {
+        incomes.add(averageIncome);
+        incomePerMiner.add(averageIncomePerMiner);
+        if (rc.getRoundNum() % 100 == 0) {
+            System.out.println(incomes);
+            System.out.println(incomePerMiner);
+        }
+    }*/
 
     @Override
     public void loop() throws GameActionException {
@@ -39,6 +53,7 @@ public class Archon implements RunnableBot {
             averageIncome = ratio * Communication.getLeadIncome() + (1 - ratio) * averageIncome;
             averageIncomePerMiner = averageIncome / numMiners;
         }
+        Communication.setFarming(averageIncomePerMiner < 0.5);
         Debug.setIndicatorString("B: " + numBuilders + ", M: " + numMiners + ", S: " + numSoldiers + ", W: " + numWatchtowers + ", H: " + soldierCombinedHealth + ", I: " + averageIncome + ", I/M " + (averageIncome / numMiners));
         if (rc.getMode() == RobotMode.TURRET) {
             if (!Communication.hasPortableArchon()) {

@@ -64,6 +64,12 @@ public class Builder implements RunnableBot {
         }
         Util.tryExplore();
     }
+
+    public static MapLocation findBestFarmingLocation() {
+        // Has to be far away from closest enemy miner (and other) chunks (solidly ally?)
+        return null;
+    }
+
     private static MapLocation guardTarget = null;
     private static int lastGuardChangeRound = -1;
     private static MapLocation guardLocation = null;

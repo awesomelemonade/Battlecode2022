@@ -67,6 +67,15 @@ public class Communication {
     private static int prevSoldierCombinedHealthValue;
     private static int currentSoldierCombinedHealth;
 
+    private static final int FARMING_OFFSET = 27;
+    private static boolean isFarming = false;
+
+    public static void setFarming(boolean farming) throws GameActionException {
+        if (isFarming != farming) {
+            rc.writeSharedArray(FARMING_OFFSET, farming ? 1 : 0);
+        }
+    }
+
     public static void setSoldierHealthInfo(int health) throws GameActionException {
         int currentCounter = (rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_A) << 16) | rc.readSharedArray(SOLDIER_COMBINED_HEALTH_OFFSET_B);
         int newCounter = (currentCounter + health) % SOLDIER_COMBINED_HEALTH_MOD;
@@ -265,6 +274,7 @@ public class Communication {
 
     public static void loop() throws GameActionException {
         if (Constants.ROBOT_TYPE != RobotType.LABORATORY) {
+            isFarming = rc.readSharedArray(FARMING_OFFSET) == 1;
             clearStaleReservation();
             clearStalePortableArchon();
             loadChunks();
